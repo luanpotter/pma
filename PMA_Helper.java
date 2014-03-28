@@ -9,7 +9,7 @@ import java.util.HashSet;
 
 final class PMA_Helper {
 	private static final String CONFIG = "config.dat", FILE = "log.dat", BKP_FILE = "log.dat.bkp";
-	
+
 	//configuration variables
 	private static int task_id;
 	private static String description;
@@ -22,17 +22,17 @@ final class PMA_Helper {
 	public static void main(String[] args) {
 		{
 			java.util.Calendar now = java.util.Calendar.getInstance();
-			dateNow = new Date(now.get(java.util.Calendar.YEAR), now.get(java.util.Calendar.MONTH), now.get(java.util.Calendar.DAY_OF_MONTH));
-			timeNow = new Time(now.get(java.util.Calendar.HOUR), now.get(java.util.Calendar.MINUTE));
+			dateNow = new Date(now.get(java.util.Calendar.YEAR), now.get(java.util.Calendar.MONTH) + 1, now.get(java.util.Calendar.DAY_OF_MONTH));
+			timeNow = new Time(now.get(java.util.Calendar.HOUR_OF_DAY), now.get(java.util.Calendar.MINUTE));
 			System.out.println("Current day: " + dateNow);
 			System.out.println("Current hour: " + timeNow);
 			System.out.println("Now running...");
 		}
-		
+
 		if (args == null || args.length != 1 || args[0] == null || args[0].isEmpty()) {
 			halt("Wrong arguments. Must be used: pma period");
 		}
-		
+
 		readConfigs();
 
 		switch (args[0]) {
@@ -62,10 +62,10 @@ final class PMA_Helper {
 				}
 				break;
 		}
-		
+
 		System.out.println("Command was executed successfully.");
 	}
-	
+
 	private static void readConfigs() {
 		try (BufferedReader b = new BufferedReader(new FileReader(new File(CONFIG)))) {
 			String line;
@@ -81,11 +81,11 @@ final class PMA_Helper {
 				for (int i = 2; i < ar.length; i++)
 					value += ":" + ar[i];
 				value = value.trim();
-				
+
 				if (set.contains(key))
 					halt("Duplicated key found at config file. Choose the correct one and try again.");
 				set.add(key);
-				
+
 				switch (key) {
 				case "task":
 					try {
@@ -102,10 +102,10 @@ final class PMA_Helper {
 					break;
 				}
 			}
-			
+
 			if (!set.contains("task"))
 				halt("Required key 'task' not found in the config.");
-			
+
 			if (!set.contains("message")) {
 				description = "Development.";
 			}
@@ -181,7 +181,7 @@ final class PMA_Helper {
 				}
 				line_number++;
 			}
-			
+
 			createDayAtPma(curDay, startTime, cur, currentInterval);
 			file.delete();
 		} catch (EOFException ex) {
@@ -193,9 +193,10 @@ final class PMA_Helper {
 		//create day
 		String command_day = "./pma_create_day -d " + date + " -s " + start + " -e " + end + " -i " + interval;
 		runCommand(command_day);
-		
+
 		//create task
-		String command_task = "./pma_create_task -d " + date + " -e " + interval.getTotalMinutes() + " -s concluded " + task_id + " " + description;
+		int totalTime = end.getDifference(start) - interval.getTotalMinutes();
+		String command_task = "./pma_create_task -d " + date + " -e " + totalTime + " -s concluded " + task_id + " " + description;
 		runCommand(command_task);
 	}
 
@@ -207,7 +208,7 @@ final class PMA_Helper {
 			halt("Unexpected error! Unable to run command: " + e.getMessage());
 		}
 	}
-	
+
 	private static void halt(String t) {
 		System.err.println(t);
 		System.exit(1);
