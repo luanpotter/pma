@@ -273,10 +273,10 @@ final class PMA_Helper {
 				throw new IllegalArgumentException("String must be in format hh:mm");
 			this.hours = Integer.parseInt(p[0]);
 			if (this.hours < 0 || this.hours >= 24)
-				throw new IllegalArgumentException("Hours must be between 0 and 24");
+				throw new IllegalArgumentException("Hours must be between 0 and 24, " + this.hours + " found.");
 			this.minutes = Integer.parseInt(p[1]);
 			if (this.minutes < 0 || this.minutes >= 60)
-				throw new IllegalArgumentException("Minutes must be between 0 and 60");
+				throw new IllegalArgumentException("Minutes must be between 0 and 60, " + this.minutes + " found.");
 		}
 
 		public Time(int minutes) {
@@ -315,7 +315,10 @@ final class PMA_Helper {
 
 		@Override
 		public String toString() {
-			return PMA_Helper.toString(hours) + ':' + PMA_Helper.toString(getRoundedMinutes());
+			int minutes = getRoundedMinutes();
+			int hours = this.hours + minutes / 60;
+			minutes %= 60;
+			return PMA_Helper.toString(hours) + ':' + PMA_Helper.toString(minutes);
 		}
 	}
 }
