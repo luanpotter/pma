@@ -61,6 +61,9 @@ final class PMA_Helper {
 					halt("Error while reading " + FILE + " file: " + ex.getMessage());
 				}
 				break;
+			default:
+				halt("Wrong argument for pma.");
+				break;
 		}
 
 		System.out.println("Command was executed successfully.");
