@@ -14,10 +14,10 @@ final class PMA_Helper {
 	private static int task_id;
 	private static String description;
 
-	private PMA_Helper() {}
-
 	private static Date dateNow;
 	private static Time timeNow;
+
+	private PMA_Helper() {}
 
 	public static void main(String[] args) {
 		{
@@ -29,8 +29,8 @@ final class PMA_Helper {
 			System.out.println("Now running...");
 		}
 
-		if (args == null || args.length != 1 || args[0] == null || args[0].isEmpty()) {
-			halt("Wrong arguments. Must be used: pma period");
+		if (args == null || args.length < 1) {
+			halt("Wrong arguments. Must be used: pma action");
 		}
 
 		readConfigs();
