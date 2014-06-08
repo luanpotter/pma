@@ -33,7 +33,8 @@ public class Action implements Callable {
     for (int i = 0; i < sections.length; i++) {
       String section = sections[i];
       if (section.charAt(0) == ':') {
-        if (!aliases.get(args[i]).equals(section)) {
+        String connector = aliases.get(args[i]);
+        if (!section.equals(connector)) {
           return null; //no match
         }
       } else {

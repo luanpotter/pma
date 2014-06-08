@@ -1,6 +1,7 @@
 package main;
 
 import parser.*;
+import parser.config.*;
 import java.io.*;
 import java.util.*;
 
@@ -47,6 +48,13 @@ public class Config implements Serializable {
     }
   }
 
+  public static Caller setupCaller() {
+    Caller caller = new Caller();
+    caller.registerClass("config", new ConfigController(INSTANCE.parser));
+
+    return caller;
+  }
+
   public static Call[] parse(String[] args) {
     return INSTANCE.parser.parse(args);
   }
@@ -79,6 +87,8 @@ public class Config implements Serializable {
     callables.add(new Action(PMAKeyword.LIST, ":list :tasks"));
     callables.add(new Action(PMAKeyword.LIST, ":list :tasks :from projectId"));
 
+    callables.addAll(ConfigController.getDefaultActions());
+
     return callables;
   }
 
@@ -104,6 +114,9 @@ public class Config implements Serializable {
     aliases.put("from", ":from");
     aliases.put("de", ":from");
 
+    aliases.put("to", ":to");
+    aliases.put("para", ":to");
+
     aliases.put("backup", ":backup");
 
     aliases.put("projects", ":projects");
@@ -111,6 +124,15 @@ public class Config implements Serializable {
     
     aliases.put("tasks", ":tasks");
     aliases.put("tarefas", ":tasks");
+
+    aliases.put("config", ":config");
+    aliases.put("configurar", ":config");
+
+    aliases.put("aliases", ":aliases");
+    aliases.put("nomes", ":aliases");
+
+    aliases.put("add", ":add");
+    aliases.put("adicionar", ":add");
 
     return aliases;
   }

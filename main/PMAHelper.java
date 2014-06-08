@@ -24,9 +24,8 @@ final class PMAHelper {
 
 	public static void main(String[] args) {
 		Call[] c = Config.parse(args);
-		Caller caller = new Caller();
-		caller.registerClass("config", ConfigController.class);
-		caller.call(c[0], null);
+		Caller caller = Config.setupCaller();
+		caller.call(c[0]);
 		{
 			java.util.Calendar now = java.util.Calendar.getInstance();
 			dateNow = new Date(now.get(java.util.Calendar.YEAR), now.get(java.util.Calendar.MONTH) + 1, now.get(java.util.Calendar.DAY_OF_MONTH));
