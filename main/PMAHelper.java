@@ -1,3 +1,6 @@
+package main;
+
+import parser.*;
 import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.File;
@@ -7,7 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
 
-final class PMA_Helper {
+final class PMAHelper {
 	private static final String CONFIG = "config.dat", FILE = "log.dat", BKP_FILE = "log.dat.bkp";
 
 	//configuration variables
@@ -17,9 +20,13 @@ final class PMA_Helper {
 	private static Date dateNow;
 	private static Time timeNow;
 
-	private PMA_Helper() {}
+	private PMAHelper() {}
 
 	public static void main(String[] args) {
+		Call[] c = Config.parse(args);
+		Caller caller = new Caller();
+		caller.registerClass("config", ConfigController.class);
+		caller.call(c[0], null);
 		{
 			java.util.Calendar now = java.util.Calendar.getInstance();
 			dateNow = new Date(now.get(java.util.Calendar.YEAR), now.get(java.util.Calendar.MONTH) + 1, now.get(java.util.Calendar.DAY_OF_MONTH));
@@ -256,7 +263,7 @@ final class PMA_Helper {
 
 		@Override
 		public String toString() {
-			return PMA_Helper.toString(year) + '-' + PMA_Helper.toString(month) + '-' + PMA_Helper.toString(day);
+			return PMAHelper.toString(year) + '-' + PMAHelper.toString(month) + '-' + PMAHelper.toString(day);
 		}
 	}
 
@@ -321,7 +328,7 @@ final class PMA_Helper {
 			int minutes = getRoundedMinutes();
 			int hours = this.hours + minutes / 60;
 			minutes %= 60;
-			return PMA_Helper.toString(hours) + ':' + PMA_Helper.toString(minutes);
+			return PMAHelper.toString(hours) + ':' + PMAHelper.toString(minutes);
 		}
 	}
 }
