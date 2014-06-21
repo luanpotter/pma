@@ -62,4 +62,6 @@ public class Action implements Callable {
       return new Call[] { call };
     }
   }
+
+  public String toString() { return this.pattern; }
 }

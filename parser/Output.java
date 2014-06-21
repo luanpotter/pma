@@ -15,11 +15,15 @@ public class Output {
     this.lines = Arrays.asList(lines);
   }
 
+  public void add(String line) {
+    this.lines.add(line);
+  }
+
   public void append(Output o) {
     this.lines.addAll(o.lines);
   }
 
-  public void print(PrintWriter p) {
+  public void print(PrintStream p) {
     for (String line : lines) {
       p.println(line);
     }

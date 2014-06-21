@@ -16,9 +16,7 @@ public class ConfigController implements Controller {
     "Alias already set to something else."
   };
   
-  //todo: methods for configuring the actions, tasks, etc
-
-  public Output aliases(Map<String, String> args) {
+  public Output addAlias(Map<String, String> args) {
     final String[] REQUIRED = new String[] { "alias", "connector" };
     Caller.permit(REQUIRED, args);
 
@@ -27,10 +25,16 @@ public class ConfigController implements Controller {
     return new Output(MESSAGES[results ? 0 : 1]);
   }
 
+  public Output listAliases(Map<String, String> args) {
+    return parser.listAliasesFor(args.get("keyword") == null ? null : ':' + args.get("keyword"));
+  }
+
   public static List<Callable> getDefaultActions() {
     List<Callable> callables = new ArrayList<>(1);
 
-    callables.add(new Action(ConfigKeyword.ALIASES, ":config :aliases :add alias :to connector"));
+    callables.add(new Action(ConfigKeyword.ADD_ALIAS, ":config :aliases :add alias :to connector"));
+    callables.add(new Action(ConfigKeyword.LIST_ALIASES, ":config :aliases :list"));
+    callables.add(new Action(ConfigKeyword.LIST_ALIASES, ":config :aliases :list keyword"));
 
     return callables;
   }

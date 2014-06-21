@@ -64,4 +64,24 @@ public class Parser implements Serializable {
   public String getAlias(String alias) {
     return this.aliases.get(alias);
   }
+
+  public Output listAliases() {
+    return listAliasesFor(null);
+  }
+
+  public Output listAliasesFor(String keyword) {
+    Output output = new Output();
+
+    for (Map.Entry<String, String> entry : aliases.entrySet()) {
+      if (keyword == null) {
+        output.add(entry.getKey() + ": " + entry.getValue().substring(1));
+      } else {
+        if (keyword.equals(entry.getValue())) {
+          output.add(entry.getKey());
+        }
+      }
+    }
+
+    return output;
+  }
 }
