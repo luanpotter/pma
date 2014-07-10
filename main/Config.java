@@ -51,6 +51,7 @@ public class Config implements Serializable {
   public static Caller setupCaller() {
     Caller caller = new Caller();
     caller.registerClass("config", new ConfigController(INSTANCE.parser));
+    caller.registerClass("help", new HelpController(INSTANCE.parser));
 
     return caller;
   }
@@ -88,6 +89,7 @@ public class Config implements Serializable {
     callables.add(new Action(PMAKeyword.LIST, ":list :tasks :from projectId"));
 
     callables.addAll(ConfigController.getDefaultActions());
+    callables.addAll(HelpController.getDefaultActions());
 
     return callables;
   }
@@ -111,6 +113,9 @@ public class Config implements Serializable {
     aliases.put("list", ":list");
     aliases.put("listar", ":list");
 
+    aliases.put("for", ":for");
+    aliases.put("em", ":for");
+
     aliases.put("from", ":from");
     aliases.put("de", ":from");
 
@@ -124,6 +129,9 @@ public class Config implements Serializable {
     
     aliases.put("tasks", ":tasks");
     aliases.put("tarefas", ":tasks");
+
+    aliases.put("help", ":help");
+    aliases.put("ajuda", ":help");
 
     aliases.put("config", ":config");
     aliases.put("configurar", ":config");

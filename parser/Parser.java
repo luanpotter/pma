@@ -8,6 +8,12 @@ public class Parser implements Serializable {
   private Map<String, String> aliases;
   private List<Callable> callables;
 
+  public static final List<Class<? extends Keyword>> KEYWORD_LIST = new ArrayList<>();
+  static {
+    KEYWORD_LIST.add(parser.config.HelpKeyword.class);
+    KEYWORD_LIST.add(parser.config.ConfigKeyword.class);
+  }
+
   public Parser() {
     this(new HashMap<String, String>(), new ArrayList<Callable>());
   }
