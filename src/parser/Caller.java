@@ -52,7 +52,7 @@ public class Caller {
       Controller controller = controllers.get(className);
 
       if (controller == null) {
-        throw new IllegalArgumentException("Controller class '" + className + "'' not found");
+        throw new IllegalArgumentException("Controller class '" + className + "' not found");
       }
 
       Method method = controller.getClass().getMethod(methodName, Map.class);
