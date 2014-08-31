@@ -3,7 +3,14 @@ package parser;
 import java.util.Map;
 import java.util.HashMap;
 
-public interface Controller {
+public abstract class Controller<T extends Context> {
+
+  protected T context;
+
+  public Controller<T> setContext(T context) {
+    this.context = context;
+    return this;
+  }
 
   public static void empty(Map<String, String> args) {
     if (args.size() != 0) {

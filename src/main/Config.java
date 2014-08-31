@@ -7,8 +7,7 @@ import java.util.*;
 
 public class Config implements Serializable {
 
-  static { setupCallerConstants(); }
-  private static void setupCallerConstants() {
+  static {
     Parser.KEYWORD_LIST.add(main.PMAKeyword.class);
   }
 
@@ -40,7 +39,7 @@ public class Config implements Serializable {
     }
   }
 
-  private Parser parser;
+  private PMAContext context;
   private String logFileName, backupFileName;
 
   private Config() { }
@@ -53,22 +52,25 @@ public class Config implements Serializable {
     }
   }
 
-  public static Caller setupCaller() {
+  private static Caller defaultCaller(PMAContext context) {
     Caller caller = new Caller();
-    caller.registerClass("config", new ConfigController(INSTANCE.parser));
-    caller.registerClass("help", new HelpController(INSTANCE.parser));
-    caller.registerClass("pma", new PMAController(INSTANCE.parser));
+    caller.registerClass("config", new ConfigController().setContext(context));
+    caller.registerClass("help", new HelpController().setContext(context));
+    caller.registerClass("pma", new PMAController().setContext(context));
 
     return caller;
   }
 
-  public static Call[] parse(String[] args) {
-    return INSTANCE.parser.parse(args);
+  public static void main() {
+    INSTANCE.context.main();
   }
 
   private void init() {
     this.defaultFileNames();
-    this.defaultParser();
+    this.context = new PMAContext();
+    Parser parser = this.defaultParser();
+    Caller caller = this.defaultCaller(this.context);
+    this.context.setup(parser, caller);
   }
 
   private void defaultFileNames() {
@@ -76,8 +78,8 @@ public class Config implements Serializable {
     backupFileName = "log.bkp.dat";
   }
 
-  private void defaultParser() {
-    this.parser = new Parser(this.defaultAliases(), this.defaultCallables());
+  private Parser defaultParser() {
+    return new Parser(this.defaultAliases(), this.defaultCallables());
   }
 
   private ArrayList<Callable> defaultCallables() {

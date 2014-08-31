@@ -15,46 +15,18 @@ final class PMAHelper {
 	private static int task_id;
 	private static String description;
 
-	private static Date dateNow;
-	private static Time timeNow;
+	private static Moment now;
 
 	private PMAHelper() { throw new RuntimeException("Should not be instanciated."); }
 
-	private static Caller caller;
-
-	private static void execute(String[] params) {
-		caller.callAndPrint(Config.parse(params));
-	}
-
 	public static void main(String[] args) {
-		caller = Config.setupCaller();
-		System.out.println("Welcome to PMA Helper. Type commands as you which, type help for help and enter nothing to exit.");
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
-			while(true) {
-				String line = reader.readLine();
-				if (line.isEmpty()) {
-					break;
-				}
-				execute(line.split(" "));
-			}
-		} catch (IOException ex) {
-			System.err.println("Unexpected Exception: " + ex.getMessage());
-			ex.printStackTrace();
-		}
+		Config.main();
 		System.exit(0);
-
-		{
-			java.util.Calendar now = java.util.Calendar.getInstance();
-			dateNow = new Date(now.get(java.util.Calendar.YEAR), now.get(java.util.Calendar.MONTH) + 1, now.get(java.util.Calendar.DAY_OF_MONTH));
-			timeNow = new Time(now.get(java.util.Calendar.HOUR_OF_DAY), now.get(java.util.Calendar.MINUTE));
-			System.out.println("Current day: " + dateNow);
-			System.out.println("Current hour: " + timeNow);
-			System.out.println("Now running...");
-		}
 
 		if (args == null || args.length < 1) {
 			halt("Wrong arguments. Must be used: pma action");
 		}
+		now = new Moment();
 
 		readConfigs();
 
@@ -150,7 +122,7 @@ final class PMAHelper {
 
 	private static void logWithChar(char c, String fileName) {
 		try (PrintWriter p = new PrintWriter(new FileWriter(new File(fileName), true))) {
-			p.println(c + dateNow.toString() + '+' + timeNow.toString());
+			p.println(c + now.toString());
 		} catch (IOException ex) {
 			halt("Unable to write to file: " + fileName);
 		}

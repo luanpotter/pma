@@ -3,6 +3,7 @@ package parser;
 import java.io.*;
 import java.util.*;
 
+//TODO add status code and make conditional tasks
 public class Output {
   
   private List<String> lines;

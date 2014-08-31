@@ -8,7 +8,9 @@
     <target name="compile">
         <delete dir="${build.dir}" />
         <mkdir dir="${build.dir}" />
-        <javac includeantruntime="false" srcdir="${src.dir}" destdir="${build.dir}" />
+        <javac includeantruntime="false" srcdir="${src.dir}" destdir="${build.dir}">
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
     </target>
     <target name="run" depends="dist">
         <java jar="${dist.dir}/${dist.jar}" fork="yes" />

@@ -3,22 +3,16 @@ package parser.config;
 import parser.*;
 import java.util.*;
 
-public class HelpController implements Controller {
-
-  private Parser parser;
-
-  public HelpController(Parser parser) {
-    this.parser = parser;
-  }
+public class HelpController extends Controller<Context> {
 
   public Output list(Map<String, String> args) {
     Controller.empty(args);
-    return parser.listCallables();
+    return context.getParser().listCallables();
   }
 
   public Output show(Map<String, String> args) {
     Controller.required(args, "command");
-    return parser.listCallables(args.get("command"));
+    return context.getParser().listCallables(args.get("command"));
   }
 
   public static List<Callable> getDefaultActions() {
