@@ -57,6 +57,7 @@ public class Config implements Serializable {
     Caller caller = new Caller();
     caller.registerClass("config", new ConfigController(INSTANCE.parser));
     caller.registerClass("help", new HelpController(INSTANCE.parser));
+    caller.registerClass("pma", new PMAController(INSTANCE.parser));
 
     return caller;
   }

@@ -61,7 +61,7 @@ public class Caller {
     } catch (IllegalAccessException ex) {
       throw new RuntimeException("Unhandled exception thrown by controller '" + className + ":" + methodName + "'", ex);
     } catch (ReflectiveOperationException ex) {
-      throw new IllegalArgumentException("Controller method '" + methodName + "'' not found in controller '" + className + "'", ex);
+      throw new IllegalArgumentException("Controller method '" + methodName + "' not found in controller '" + className + "'", ex);
     }
   }
 }
