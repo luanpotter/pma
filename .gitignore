@@ -1,3 +1,4 @@
 *.class
+*.dat
 dist/
 build/
