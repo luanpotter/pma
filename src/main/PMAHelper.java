@@ -1,14 +1,12 @@
 package main;
 
 import parser.*;
-import java.io.BufferedReader;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.util.Set;
 import java.util.HashSet;
+
+import date.*;
+import static utils.NumberUtils.toString;
 
 final class PMAHelper {
 	private static final String CONFIG = "config.dat", FILE = "log.dat", BKP_FILE = "log.dat.bkp";
@@ -20,13 +18,29 @@ final class PMAHelper {
 	private static Date dateNow;
 	private static Time timeNow;
 
-	private PMAHelper() {}
+	private PMAHelper() { throw new RuntimeException("Should not be instanciated."); }
+
+	private static Caller caller;
+
+	private static void execute(String[] params) {
+		caller.callAndPrint(Config.parse(params));
+	}
 
 	public static void main(String[] args) {
-		Call[] c = Config.parse(args);
-		Caller caller = Config.setupCaller();
-		Output o = caller.call(c[0]);
-		o.print(System.out);
+		caller = Config.setupCaller();
+		System.out.println("Welcome to PMA Helper. Type commands as you which, type help for help and enter nothing to exit.");
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+			while(true) {
+				String line = reader.readLine();
+				if (line.isEmpty()) {
+					break;
+				}
+				execute(line.split(" "));
+			}
+		} catch (IOException ex) {
+			System.err.println("Unexpected Exception: " + ex.getMessage());
+			ex.printStackTrace();
+		}
 		System.exit(0);
 
 		{
@@ -82,7 +96,7 @@ final class PMAHelper {
 		try (BufferedReader b = new BufferedReader(new FileReader(new File(CONFIG)))) {
 			String line;
 			int ln = 0;
-			HashSet<String> set = new HashSet<>();
+			Set<String> set = new HashSet<>();
 			while((line = b.readLine()) != null) {
 				ln++;
 				String[] ar = line.split(":");
@@ -224,113 +238,5 @@ final class PMAHelper {
 	private static void halt(String t) {
 		System.err.println(t);
 		System.exit(1);
-	}
-
-	public static String toString(int num, int digits) {
-		String ns = String.valueOf(num);
-		while (ns.length() < digits)
-			ns = '0' + ns;
-		return ns;
-	}
-
-	private static String toString(int num) {
-		return toString(num, 2);
-	}
-
-	private static class Date {
-		private int year, month, day;
-
-		public Date(String date) {
-			String[] p = date.split("-");
-			if (p.length != 3)
-				throw new IllegalArgumentException("String must be in format yyyy-mm-dd");
-			this.year = Integer.parseInt(p[0]);
-			this.month = Integer.parseInt(p[1]);
-			this.day = Integer.parseInt(p[2]);
-		}
-
-		public Date(int year, int month, int day) {
-			this.year = year;
-			this.month = month;
-			this.day = day;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (! (o instanceof Date))
-				return false;
-			Date d = (Date) o;
-			return this.year == d.year && this.month == d.month && this.day == d.day;
-		}
-
-		@Override
-		public String toString() {
-			return PMAHelper.toString(year) + '-' + PMAHelper.toString(month) + '-' + PMAHelper.toString(day);
-		}
-	}
-
-	private static class Time {
-		private int hours, minutes;
-
-		public Time() {}
-
-		public Time(Time t) {
-			this.hours = t.hours;
-			this.minutes = t.minutes;
-		}
-
-		public Time(String t) {
-			String[] p = t.split(":");
-			if (p.length != 2)
-				throw new IllegalArgumentException("String must be in format hh:mm");
-			this.hours = Integer.parseInt(p[0]);
-			if (this.hours < 0 || this.hours >= 24)
-				throw new IllegalArgumentException("Hours must be between 0 and 24, " + this.hours + " found.");
-			this.minutes = Integer.parseInt(p[1]);
-			if (this.minutes < 0 || this.minutes >= 60)
-				throw new IllegalArgumentException("Minutes must be between 0 and 60, " + this.minutes + " found.");
-		}
-
-		public Time(int minutes) {
-			this.hours = minutes / 60;
-			if (this.hours < 0 || this.hours >= 24)
-				throw new IllegalArgumentException("Hours must be between 0 and 24");
-			this.minutes = minutes % 60;
-		}
-
-		public Time(int hours, int minutes) {
-			this.hours = hours;
-			this.minutes = minutes;
-		}
-
-		public int getRoundedMinutes() {
-			return Math.round((float) minutes / 5) * 5;
-		}
-
-		public int getTotalMinutes() {
-			return hours * 60 + getRoundedMinutes();
-		}
-
-		public int getActualTotalMinutes() {
-			return hours * 60 + minutes;
-		}
-
-		public int getDifference(Time h) {
-			return this.getActualTotalMinutes() - h.getActualTotalMinutes();
-		}
-
-		public void addMinutes(int minutes) {
-			this.minutes += minutes;
-			this.hours += this.minutes / 60;
-			this.minutes %= 60;
-		}
-
-		@Override
-		public String toString() {
-			int minutes = getRoundedMinutes();
-			int hours = this.hours + minutes / 60;
-			minutes %= 60;
-			return PMAHelper.toString(hours) + ':' + PMAHelper.toString(minutes);
-		}
 	}
 }

@@ -3,6 +3,8 @@ package parser.config;
 import parser.Keyword;
 
 public enum ConfigKeyword implements Keyword {
+  LIST_KEYWORDS("config:listKeywords"),
+
   ADD_ALIAS("config:addAlias"),
   LIST_ALIASES("config:listAliases"),
   REMOVE_ALIAS("config:removeAlias");

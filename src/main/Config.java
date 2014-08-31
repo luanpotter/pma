@@ -7,6 +7,11 @@ import java.util.*;
 
 public class Config implements Serializable {
 
+  static { setupCallerConstants(); }
+  private static void setupCallerConstants() {
+    Parser.KEYWORD_LIST.add(main.PMAKeyword.class);
+  }
+
   private static final String FILE_NAME = "config.dat";
   private static final Config INSTANCE;
   static {
@@ -76,17 +81,17 @@ public class Config implements Serializable {
 
   private ArrayList<Callable> defaultCallables() {
     ArrayList<Callable> callables = new ArrayList<>();
-    callables.add(new Action(PMAKeyword.HERE, ":here"));
-    callables.add(new Action(PMAKeyword.EXIT, ":exit"));
-    callables.add(new Action(PMAKeyword.EXIT, ":exit :to taskNameOrId"));
-    callables.add(new Action(PMAKeyword.SAVE, ":save"));
-    callables.add(new Action(PMAKeyword.LOG, ":log"));
-    callables.add(new Action(PMAKeyword.LOG, ":log :backup"));
-    callables.add(new Action(PMAKeyword.TODAY, ":today"));
-    callables.add(new Action(PMAKeyword.LIST, ":list"));
-    callables.add(new Action(PMAKeyword.LIST, ":list :projects"));
-    callables.add(new Action(PMAKeyword.LIST, ":list :tasks"));
-    callables.add(new Action(PMAKeyword.LIST, ":list :tasks :from projectId"));
+    callables.add(new Action(PMAKeyword.HERE, new Pattern(":here"), "Start counting on default task"));
+    callables.add(new Action(PMAKeyword.HERE, new Pattern(":here taskNameOrId"), "Start counting on taskNameOrId task"));
+    callables.add(new Action(PMAKeyword.EXIT, new Pattern(":exit"), "Exit to break"));
+    callables.add(new Action(PMAKeyword.EXIT, new Pattern(":exit :to taskNameOrId"), "Exit current task and start counting on taskNameOrId task"));
+    callables.add(new Action(PMAKeyword.SAVE, new Pattern(":save"), "Save current day on web service"));
+    callables.add(new Action(PMAKeyword.LOG, new Pattern(":log"), "Show current log"));
+    callables.add(new Action(PMAKeyword.LOG, new Pattern(":log :backup"), "Show current log backup"));
+    callables.add(new Action(PMAKeyword.TODAY, new Pattern(":today"), "Show what has been done today already"));
+    callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :projects"), "List all projects"));
+    callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :tasks"), "List all tasks"));
+    callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :tasks :from projectId"), "List all tasks from projectId project"));
 
     callables.addAll(ConfigController.getDefaultActions());
     callables.addAll(HelpController.getDefaultActions());
@@ -135,6 +140,9 @@ public class Config implements Serializable {
 
     aliases.put("config", ":config");
     aliases.put("configurar", ":config");
+
+    aliases.put("keywords", ":keywords");
+    aliases.put("palavras-chave", ":keywords");
 
     aliases.put("aliases", ":aliases");
     aliases.put("nomes", ":aliases");

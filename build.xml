@@ -1,0 +1,25 @@
+<project name="pma" default="dist">
+
+    <property name="src.dir" value="src" />
+    <property name="build.dir" value="build" />
+    <property name="dist.dir" value="dist" />
+    <property name="dist.jar" value="pma.jar" />
+
+    <target name="compile">
+        <delete dir="${build.dir}" />
+        <mkdir dir="${build.dir}" />
+        <javac includeantruntime="false" srcdir="${src.dir}" destdir="${build.dir}" />
+    </target>
+    <target name="run" depends="dist">
+        <java jar="${dist.dir}/${dist.jar}" fork="yes" />
+    </target>
+    <target name="dist" depends="compile">
+       <delete dir="${dist.dir}" />
+       <mkdir dir="${dist.dir}" />
+       <jar destfile="${dist.dir}/${dist.jar}" basedir="${build.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="main.PMAHelper" />
+            </manifest>
+       </jar>
+    </target>
+</project>

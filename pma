@@ -1,0 +1,3 @@
+ant dist
+rm -rf config.dat
+java -jar dist/pma.jar $#
