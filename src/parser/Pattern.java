@@ -2,8 +2,9 @@ package parser;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.io.Serializable;
 
-public class Pattern {
+public class Pattern implements Serializable {
   private String[] sections;
   private boolean continuous;
 

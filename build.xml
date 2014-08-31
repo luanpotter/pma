@@ -20,7 +20,7 @@
        <mkdir dir="${dist.dir}" />
        <jar destfile="${dist.dir}/${dist.jar}" basedir="${build.dir}">
             <manifest>
-                <attribute name="Main-Class" value="main.PMAHelper" />
+                <attribute name="Main-Class" value="main.PMAContext" />
             </manifest>
        </jar>
     </target>
