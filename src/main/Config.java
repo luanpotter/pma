@@ -1,6 +1,8 @@
 package main;
 
 import parser.Parser;
+import models.Project;
+
 import java.io.*;
 import java.util.*;
 
@@ -38,6 +40,7 @@ public class Config implements Serializable {
     }
   }
 
+  private List<Project> projectsCache;
   private Parser parser;
   private String logFileName, backupFileName;
   private int defaultTaskId;
@@ -61,12 +64,17 @@ public class Config implements Serializable {
     return Setup.setupContext(INSTANCE.parser);
   }
 
+  public void update() {
+    projectsCache = PMAWrapper.getProjects();
+  }
+
   private void initDefaults() {
     this.logFileName = "log.dat";
     this.backupFileName = "log.bkp.dat";
     this.defaultTaskId = -1;
     this.defaultDescription = null;
     this.parser = Setup.defaultParser();
+    this.update();
   }
 
   public String getLogFileName() {
@@ -76,10 +84,16 @@ public class Config implements Serializable {
   public String getBackupFileName() {
     return backupFileName;
   }
+
   public int getDefaultTaskId() {
     return defaultTaskId;
   }
+
   public String getDefaultDescription() {
     return defaultDescription;
+  }
+
+  public List<Project> getProjects() {
+    return this.projectsCache;
   }
 }
