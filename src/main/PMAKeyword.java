@@ -3,12 +3,12 @@ package main;
 import parser.*;
 
 public enum PMAKeyword implements Keyword {
-  HERE("pma:here"),
-  EXIT("pma:exit"),
-  SAVE("pma:save"),
-  LOG("pma:log"),
-  TODAY("pma:today"),
-  LIST("pma:list");
+  HERE("logging:here"),
+  EXIT("logging:exit"),
+  SAVE("parser:save"),
+  LOG("parser:log"),
+  TODAY("parser:today"),
+  LIST("info:list");
 
   public String controller;
 

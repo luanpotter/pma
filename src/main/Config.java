@@ -1,29 +1,18 @@
 package main;
 
 import parser.Parser;
-import models.Project;
+import utils.SimpleObjectAccess;
 
 import java.io.*;
 import java.util.*;
 
 public class Config implements Serializable {
 
-  static {
-    Parser.KEYWORD_LIST.add(main.PMAKeyword.class);
-  }
-
   private static final String FILE_NAME = "config.dat";
   private static final Config INSTANCE;
   static {
-    File f = new File(FILE_NAME);
-    if (f.exists()) {
-      Config obj = null;
-      try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
-        obj = (Config) stream.readObject();
-      } catch (IOException | ClassNotFoundException ex) {
-        System.err.println("Error found when loading config file! Error: " + ex.getMessage());
-        System.exit(1);
-      }
+    Config obj = SimpleObjectAccess.<Config>readFrom(FILE_NAME);
+    if (obj != null) {
       INSTANCE = obj;
     } else {
       INSTANCE = new Config();
@@ -40,10 +29,9 @@ public class Config implements Serializable {
     }
   }
 
-  private List<Project> projectsCache;
   private Parser parser;
   private String logFileName, backupFileName;
-  private int defaultTaskId;
+  private long defaultTaskId;
   private String defaultDescription;
 
   private Config() { }
@@ -64,17 +52,12 @@ public class Config implements Serializable {
     return Setup.setupContext(INSTANCE.parser);
   }
 
-  public void update() {
-    projectsCache = PMAWrapper.getProjects();
-  }
-
   private void initDefaults() {
     this.logFileName = "log.dat";
     this.backupFileName = "log.bkp.dat";
-    this.defaultTaskId = -1;
+    this.defaultTaskId = -1l;
     this.defaultDescription = null;
     this.parser = Setup.defaultParser();
-    this.update();
   }
 
   public String getLogFileName() {
@@ -85,15 +68,11 @@ public class Config implements Serializable {
     return backupFileName;
   }
 
-  public int getDefaultTaskId() {
+  public long getDefaultTaskId() {
     return defaultTaskId;
   }
 
   public String getDefaultDescription() {
     return defaultDescription;
-  }
-
-  public List<Project> getProjects() {
-    return this.projectsCache;
   }
 }

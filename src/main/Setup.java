@@ -5,11 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
+import controllers.*;
 import parser.*;
 import parser.config.*;
+import utils.MapBuilder;
 
 public final class Setup {
   
+  static {
+    Parser.KEYWORD_LIST.add(main.PMAKeyword.class);
+  }
+
   private Setup() {
     throw new RuntimeException("Should not be instanciated.");
   }
@@ -33,7 +39,9 @@ public final class Setup {
     Caller caller = new Caller();
     caller.registerClass("config", new ConfigController().setContext(context));
     caller.registerClass("help", new HelpController().setContext(context));
-    caller.registerClass("pma", new LoggingController().setContext(context));
+    caller.registerClass("logging", new LoggingController().setContext(context));
+    //caller.registerClass("parser", new ParserController().setContext(context));
+    caller.registerClass("info", new InfoController().setContext(context));
 
     return caller;
   }
@@ -48,9 +56,9 @@ public final class Setup {
     callables.add(new Action(PMAKeyword.LOG, new Pattern(":log"), "Show current log"));
     callables.add(new Action(PMAKeyword.LOG, new Pattern(":log :backup"), "Show current log backup"));
     callables.add(new Action(PMAKeyword.TODAY, new Pattern(":today"), "Show what has been done today already"));
-    callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :projects"), "List all projects"));
-    callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :tasks"), "List all tasks"));
-    callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :tasks :from projectId"), "List all tasks from projectId project"));
+    callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :projects"), MapBuilder.<String, String>as("type", "projects"), "List all projects"));
+    callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :tasks"), MapBuilder.<String, String>as("type", "tasks"), "List all tasks"));
+    callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :tasks :from projectNameOrId"), MapBuilder.<String, String>as("type", "tasks"), "List all tasks from projectNameOrId project"));
 
     callables.addAll(ConfigController.getDefaultActions());
     callables.addAll(HelpController.getDefaultActions());
@@ -60,6 +68,7 @@ public final class Setup {
 
   private static Map<String, String> defaultAliases() {
     Map<String, String> aliases = new HashMap<>();
+
     aliases.put("here", ":here");
     aliases.put("cheguei", ":cheguei");
 

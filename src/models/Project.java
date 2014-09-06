@@ -7,7 +7,7 @@ import main.PMAWrapper;
 
 public class Project implements Serializable {
 
-  private int id;
+  private long id;
   private String client;
   private String name;
 
@@ -15,11 +15,15 @@ public class Project implements Serializable {
 
   public Project(String projectInfo) {
     String[] parts = projectInfo.split("\\|");
-    assert parts.length == 3;
+    assert parts.length >= 3;
 
     this.client = parts[0].trim();
-    this.name = parts[1].trim();
-    this.id = Integer.parseInt(parts[2].trim());
+    this.name = parts[1];
+    for (int i = 2; i < parts.length - 1; i++) {
+      this.name += "|" + parts[i];
+    }
+    this.name = this.name.trim().replace("_", " ");
+    this.id = Long.parseLong(parts[parts.length - 1].trim());
 
     this.tasks = PMAWrapper.getTasksFromProject(this.id);
   }
@@ -31,6 +35,18 @@ public class Project implements Serializable {
       }
     }
     return null;
+  }
+
+  public long getId() {
+    return this.id;
+  }
+
+  public String getName() {
+    return this.name;
+  }
+
+  public List<Task> getTasks() {
+    return this.tasks;
   }
 
   @Override

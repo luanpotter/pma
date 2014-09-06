@@ -25,7 +25,7 @@ public final class PMAWrapper {
     return -1; // TODO
   }
 
-  public static List<Task> getTasksFromProject(int projectId) {
+  public static List<Task> getTasksFromProject(long projectId) {
     final List<Task> tasks = new ArrayList<>();
     consumeOutput("pma_tasks " + projectId, task -> tasks.add(new Task(task)));
     return tasks;
@@ -48,7 +48,11 @@ public final class PMAWrapper {
     try (BufferedReader r = new BufferedReader(new InputStreamReader(runCommand(command)))) {
       String line;
       while((line = r.readLine()) != null && !line.isEmpty()) {
-        consumer.accept(line);
+        if (line.equals("token inválido")) {
+          throw new RuntimeException("Not logged in! Run pma_token before you start.");
+        } else {
+          consumer.accept(line);
+        }
       }
     } catch (IOException ex) {
       PMAHelper.halt("Unexpected error! Unable to parse results: " + ex.getMessage());
