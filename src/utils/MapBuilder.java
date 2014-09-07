@@ -24,7 +24,7 @@ public final class MapBuilder {
     }
   }
 
-  public static <K, V> Map<K, V> as(K key, V value) {
+  public static <K, V> Map<K, V> from(K key, V value) {
     return with(key, value).build();
   }
 

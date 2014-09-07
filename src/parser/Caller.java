@@ -43,7 +43,7 @@ public class Caller {
     } catch (IllegalAccessException ex) {
       throw new RuntimeException("Really unexpected exception", ex);
     } catch (InvocationTargetException ex) {
-      throw new RuntimeException("Unhandled exception thrown by controller '" + m.getDeclaringClass().getName() + ":" + m.getName() + "'", ex);
+      return ExceptionHandler.handleController(ex, m.getDeclaringClass().getName() + ":" + m.getName());
     }
   }
 

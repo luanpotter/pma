@@ -42,6 +42,34 @@ public class Projects implements Serializable {
     return tasks;
   }
 
+  public Task getTask(String nameOrId) {
+    try {
+      long id = Long.parseLong(nameOrId);
+      return getTaskById(id);
+    } catch (NumberFormatException ex) {
+      return getTaskByName(nameOrId);
+    }
+  }
+
+  public Task getTaskById(final long id) {
+    return getTaskThat(t -> t.getId() == id);
+  }
+
+  public Task getTaskByName(final String name) {
+    return getTaskThat(t -> t.getName().equals(name));
+  }
+
+  private Task getTaskThat(Predicate<Task> pred) {
+    for (Project p : projectsCache) {
+      for (Task t : p.getTasks()) {
+        if (pred.test(t)) {
+          return t;
+        }
+      }
+    }
+    return null;
+  }
+
   public Project getProject(String nameOrId) {
     try {
       long id = Long.parseLong(nameOrId);

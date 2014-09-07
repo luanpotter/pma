@@ -45,11 +45,11 @@ public final class PMAWrapper {
   }
 
   private static void consumeOutput(String command, Consumer<String> consumer) {
-    try (BufferedReader r = new BufferedReader(new InputStreamReader(runCommand(command)))) {
+    try (BufferedReader r = new BufferedReader(new InputStreamReader(runCommand(command), "ISO-8859-1"))) {
       String line;
       while((line = r.readLine()) != null && !line.isEmpty()) {
         if (line.equals("token inválido")) {
-          throw new RuntimeException("Not logged in! Run pma_token before you start.");
+          throw new NotLoggedIn();
         } else {
           consumer.accept(line);
         }
@@ -60,7 +60,7 @@ public final class PMAWrapper {
   }
 
   private static InputStream runCommand(String command) {
-    System.out.println("Command generated: " + command);
+    //System.out.println("Command generated: " + command);
     try {
       Process process = Runtime.getRuntime().exec(command);
       process.waitFor();

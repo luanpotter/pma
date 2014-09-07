@@ -8,7 +8,8 @@ public enum PMAKeyword implements Keyword {
   SAVE("parser:save"),
   LOG("parser:log"),
   TODAY("parser:today"),
-  LIST("info:list");
+  LIST("info:list"),
+  UPDATE("info:update");
 
   public String controller;
 

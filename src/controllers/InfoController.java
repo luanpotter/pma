@@ -22,6 +22,12 @@ public class InfoController extends Controller<PMAContext> {
     }
   }
 
+  public Output update(Map<String, String> params) {
+    Controller.optional(params);
+    context.p().update();
+    return new Output("Projects and tasks successfully updated.");
+  }
+
   private Output listProjects() {
     Output output = new Output();
     for (Project p : context.p().getProjects()) {
@@ -37,13 +43,16 @@ public class InfoController extends Controller<PMAContext> {
     if (projectNameOrId == null) {
       tasks = context.p().getTasks();
     } else {
-      tasks = context.p().getProject(projectNameOrId).getTasks();
+      Project project = context.p().getProject(projectNameOrId);
+      if (project == null) {
+        return new Output("Invalid project name or id.");
+      }
+      tasks = project.getTasks();
     }
 
     for (Task t : tasks) {
       output.add(t.toString());
     }
     return output;
-
   }
 }
