@@ -1,0 +1,3 @@
+[submodule "pma-scripts"]
+	path = pma-scripts
+	url = git@github.com:raonifn/pma-scripts.git
