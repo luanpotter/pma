@@ -62,7 +62,9 @@ public final class PMAWrapper {
   private static InputStream runCommand(String command) {
     //System.out.println("Command generated: " + command);
     try {
-      Process process = Runtime.getRuntime().exec(command);
+      String fullCommand = "./pma-scripts/bin/" + command;
+      System.out.println(fullCommand);
+      Process process = Runtime.getRuntime().exec(fullCommand);
       process.waitFor();
       return process.getInputStream();
     } catch (InterruptedException | IOException e) {
