@@ -10,7 +10,7 @@ import java.util.*;
 
 public class Projects implements Serializable {
 
-  private static final String FILE_NAME = "data.dat";
+  private static final String FILE_NAME = "projs.dat";
 
   private List<Project> projectsCache;
 

@@ -21,10 +21,6 @@ public final class PMAWrapper {
     return projects;
   }
 
-  public static int getTaskId(String name) {
-    return -1; // TODO
-  }
-
   public static List<Task> getTasksFromProject(long projectId) {
     final List<Task> tasks = new ArrayList<>();
     consumeOutput("pma_tasks " + projectId, task -> tasks.add(new Task(task)));
@@ -60,7 +56,6 @@ public final class PMAWrapper {
   }
 
   private static InputStream runCommand(String command) {
-    //System.out.println("Command generated: " + command);
     try {
       String fullCommand = "./pma-scripts/bin/" + command;
       System.out.println(fullCommand);

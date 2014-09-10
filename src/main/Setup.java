@@ -22,12 +22,9 @@ public final class Setup {
   }
 
   public static PMAContext setupContext() {
-    return setupContext(defaultParser());
-  }
-
-  public static PMAContext setupContext(Parser parser) {
     PMAContext context = new PMAContext();
     Caller caller = defaultCaller(context);
+    Parser parser = Setup.defaultParser();
     context.setup(parser, caller);
     return context;
   }
@@ -43,6 +40,7 @@ public final class Setup {
     caller.registerClass("logging", new LoggingController().setContext(context));
     caller.registerClass("parser", new ParserController().setContext(context));
     caller.registerClass("info", new InfoController().setContext(context));
+    caller.registerClass("options", new OptionsController().setContext(context));
 
     return caller;
   }
@@ -61,6 +59,10 @@ public final class Setup {
     callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :tasks :from projectNameOrId"), MapBuilder.<String, String>from("type", "tasks"), "List all tasks from projectNameOrId project"));
     callables.add(new Action(PMAKeyword.UPDATE, new Pattern(":update"), "Update the list of projects and tasks"));
 
+    callables.add(new Action(OptionsKeyword.LIST, new Pattern(":options"), "List all options with their values"));
+    callables.add(new Action(OptionsKeyword.GET, new Pattern(":options :get option"), "Return the current value of option"));
+    callables.add(new Action(OptionsKeyword.SET, new Pattern(":options :set option value"), "Set the value of option to value"));
+
     callables.addAll(ConfigController.getDefaultActions());
     callables.addAll(HelpController.getDefaultActions());
 
@@ -69,6 +71,10 @@ public final class Setup {
 
   private static Map<String, String> defaultAliases() {
     Map<String, String> aliases = new HashMap<>();
+
+    aliases.put("options", ":options");
+    aliases.put("get", ":get");
+    aliases.put("set", ":set");
 
     aliases.put("here", ":here");
     aliases.put("cheguei", ":cheguei");

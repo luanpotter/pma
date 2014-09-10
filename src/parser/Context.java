@@ -3,8 +3,9 @@ package parser;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.Serializable;
 
-public abstract class Context {
+public abstract class Context implements Serializable {
 
   private Parser parser;
   private Caller caller;

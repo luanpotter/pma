@@ -6,12 +6,13 @@ public final class SimpleObjectAccess {
   
   private SimpleObjectAccess() { throw new RuntimeException("Should not be instanciated"); }
 
-  public static void saveTo(String fileName, Object object) {
+  public static <T> T saveTo(String fileName, T object) {
     try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(fileName))) {
       stream.writeObject(object);
     } catch (IOException ex) {
       throw new RuntimeException(ex);
     }
+    return object;
   }
 
   public static <T> T readFrom(String fileName) {
