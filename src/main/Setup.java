@@ -10,12 +10,14 @@ import parser.*;
 import parser.config.*;
 import utils.MapBuilder;
 import utils.SimpleObjectAccess;
+import main.PMAParser.InvalidFormatException;
 
 public final class Setup {
   
   static {
     Parser.KEYWORD_LIST.add(main.PMAKeyword.class);
     ExceptionHandler.HANDLERS.put(NotLoggedIn.class, e -> new Output(e.getMessage()));
+    ExceptionHandler.HANDLERS.put(InvalidFormatException.class, e -> new Output(e.getMessage()));
   }
 
   private Setup() {

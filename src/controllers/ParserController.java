@@ -21,25 +21,22 @@ public class ParserController extends Controller<PMAContext> {
     for (Day day : days) {
       res.append(day.save());
     }
+
     return res;
   }
 
-  public Output log(Map<String, String> params) {
+  public Output log(Map<String, String> params) throws InvalidFormatException {
     Controller.optional(params, "backup");
     boolean bkp = "true".equals(params.get("backup"));
 
     String fileName = context.o().get(bkp ? Option.BACKUP_FILE : Option.LOG_FILE);
-    try {
-      List<Day> days = PMAParser.parseLogs(fileName, true);
+    List<Day> days = PMAParser.parseLogs(fileName, true);
 
-      Output out = new Output(days.size() + " days parsed;");
-      for (Day day : days) {
-        out.add(day.toString());
-      }
-      return out;
-    } catch (InvalidFormatException ex) {
-      throw new RuntimeException(ex); //TODO output
+    Output out = new Output(days.size() + " days parsed;");
+    for (Day day : days) {
+      out.add(day.toString()); //TODO output properly
     }
+    return out;
   }
 
   public Output today(Map<String, String> params) {

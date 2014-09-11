@@ -15,8 +15,40 @@ public class PMAParser {
     private static final long serialVersionUID = 376344169681487559L;
 
     public InvalidFormatException(String error, int line) {
-      super("Invalid log file!" + error + " [at line " + line + "]");
+      super("Invalid log file! " + error + " [at line " + line + "]");
     }   
+  }
+
+  private static Date parseDate(String[] parts, int lineNumber) throws InvalidFormatException {
+    try {
+      return new Date(parts[0]);
+    } catch (NumberFormatException ex) {
+      throw new InvalidFormatException("Invalid date, must be in the format yyyy-mm-dd", lineNumber);
+    }
+  }
+
+  private static Time parseTime(String[] parts, int lineNumber) throws InvalidFormatException {
+    try {
+      return new Time(parts[1]);
+    } catch (NumberFormatException ex) {
+      throw new InvalidFormatException("Invalid time, must be in the format hh:mm", lineNumber);
+    }
+  }
+
+  private static long parseTask(String[] parts, int lineNumber) throws InvalidFormatException {
+    try {
+      return parts.length >= 3 ? Long.parseLong(parts[2]) : -1l;
+    } catch (NumberFormatException ex) {
+      throw new InvalidFormatException("Invalid task id, must be a number", lineNumber);
+    }
+  }
+
+  private static String parseDesc(String[] parts, int lineNumber) {
+    String desc = parts.length >= 4 ? parts[3] : ".";
+    for (int i = 4; i < parts.length; i++) {
+      desc += "+" + parts[i];
+    }
+    return desc;
   }
 
   public static List<Day> parseLogs(String fileName, boolean keepFile) throws InvalidFormatException {
@@ -44,18 +76,14 @@ public class PMAParser {
           continue;
         }
         String[] parts = line.split("\\+");
-        if (parts.length < 2 || parts.length > 4) {
-          throw new InvalidFormatException("Each line must have 1-3 '+' signs: date+time[+task[+desc]]; found " + (parts.length - 1), lineNumber);
+        if (parts.length < 2) {
+          throw new InvalidFormatException("Each line must have at least 1 '+' signs: date+time[+task[+desc]]; found " + (parts.length - 1), lineNumber);
         }
-        Date date = new Date(parts[0]);
-        Time time = new Time(parts[1]);
-        long task;
-        try {
-          task = parts.length >= 3 ? Long.parseLong(parts[2]) : -1l;
-        } catch (NumberFormatException ex) {
-          throw new InvalidFormatException("Invalid task id, must be a number", lineNumber);
-        }
-        String desc = parts.length == 4 ? parts[3] : ".";
+        Date date = parseDate(parts, lineNumber);
+        Time time = parseTime(parts, lineNumber);
+        long task = parseTask(parts, lineNumber);
+        String desc = parseDesc(parts, lineNumber);
+
         Appointment currentAppointment = task == -1 ? null : new Appointment(task, desc);
 
         if (currentDay == null) {
