@@ -9,10 +9,10 @@ public final class SimpleObjectAccess {
   public static <T> T saveTo(String fileName, T object) {
     try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(fileName))) {
       stream.writeObject(object);
+      return object;
     } catch (IOException ex) {
       throw new RuntimeException(ex);
     }
-    return object;
   }
 
   public static <T> T readFrom(String fileName) {

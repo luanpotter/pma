@@ -3,15 +3,18 @@ package main;
 import parser.Parser;
 import utils.SimpleObjectAccess;
 
+import java.util.function.BiConsumer;
 import java.io.*;
 import java.util.*;
 
 public class Options implements Serializable {
 
-  private static final String FILE_NAME = "config.dat";
+  private static final String FILE_NAME = "options.dat";
+
+  public static class InvalidOptionExcpetion extends Exception { }
 
   public enum Option {
-    LOG_FILE_NAME("log.dat"), BACKUP_FILE_NAME("log.bkp.dat"), DEFAULT_TASK_ID, DEFAULT_DESCRIPTION;
+    LOG_FILE("log.dat"), BACKUP_FILE("log.bkp.dat"), DEFAULT_TASK, DEFAULT_DESCRIPTION;
 
     private String defaultValue;
 
@@ -44,11 +47,12 @@ public class Options implements Serializable {
 
   private Map<Option, String> options;
 
-  public Options() {
-    this.options = new EnumMap<>();
+  public Options defaults() {
+    this.options = new EnumMap<>(Option.class);
     for (Option option : Option.values()) {
       this.options.put(option, option.getDefault());
     }
+    return this;
   }
 
   public String get(Option o) {
@@ -56,10 +60,10 @@ public class Options implements Serializable {
   }
 
   public void set(Option o, String value) {
-    return this.options.put(o, value);
+    this.options.put(o, value);
   }
 
-  public String get(String name, String value) throws InvalidOptionExcpetion {
+  public String get(String name) throws InvalidOptionExcpetion {
     return get(Option.toOption(name));
   }
 
@@ -67,12 +71,22 @@ public class Options implements Serializable {
     set(Option.toOption(name), value);
   }
 
+  public void list(BiConsumer<Option, String> consumer) {
+    for (Option key : this.options.keySet()) {
+      consumer.accept(key, this.options.get(key));
+    }
+  }
+
+  public void save() {
+    SimpleObjectAccess.saveTo(FILE_NAME, this);
+  }
+
   public static Options readOrCreate() {
     Options config = SimpleObjectAccess.<Options>readFrom(FILE_NAME);
     if (config != null) {
       return config;
     } else {
-      return SimpleObjectAccess.saveTo(FILE_NAME, new Options());
+      return SimpleObjectAccess.saveTo(FILE_NAME, new Options().defaults());
     }
   }
 }

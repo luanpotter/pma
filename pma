@@ -3,5 +3,4 @@ export PATH=/usr/lib/jvm/java-8-oracle/bin:$PATH
 export JAVA_HOME=/usr/lib/jvm/java-8-oracle/
 javac -version
 ant dist
-rm -rf config.dat
 java -jar dist/pma.jar $#

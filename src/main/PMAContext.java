@@ -13,7 +13,7 @@ public class PMAContext extends Context {
   }
 
   public static void main(String[] args) {
-    Config.createContext().main();
+    Setup.setupContext().main();
   }
 
   public Options o() {
@@ -24,8 +24,19 @@ public class PMAContext extends Context {
     return this.projects;
   }
 
+  public void saveParser() {
+    Setup.saveParser(this.parser);
+  }
+
+  @Override
+  public void quit(int status) {
+    print("Bye, bye!");
+    saveParser();
+    super.quit(status);
+  }
+
   @Override
   public void emptyLineHandler() {
-    System.exit(0);
+    quit(0);
   }
 }

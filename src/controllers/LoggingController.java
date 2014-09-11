@@ -3,6 +3,7 @@ package controllers;
 import java.util.Map;
 import java.io.*;
 
+import main.Options.Option;
 import main.*;
 import date.*;
 import models.*;
@@ -16,7 +17,7 @@ public class LoggingController extends Controller<PMAContext> {
 
     String nameOrId = params.get("taskNameOrId");
     if (nameOrId == null) {
-      nameOrId = String.valueOf(Config.c().getDefaultTaskId());
+      nameOrId = String.valueOf(context.o().get(Option.DEFAULT_TASK));
     }
 
     Task task = context.p().getTask(nameOrId);
@@ -38,9 +39,9 @@ public class LoggingController extends Controller<PMAContext> {
   }
 
   private void log(char c, Moment m, long taskId) {
-    log(Config.c().getLogFileName(), c, m, taskId);
+    log(context.o().get(Option.LOG_FILE), c, m, taskId);
 
-    String backup = Config.c().getBackupFileName();
+    String backup = context.o().get(Option.BACKUP_FILE);
     if (backup != null) {
       log(backup, c, m, taskId);
     }

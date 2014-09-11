@@ -16,20 +16,14 @@ public class Caller {
     controllers.put(name, controller);
   }
 
-  public void callAndPrint(Call[] calls) {
-    Output output;
-    if (calls == null) {
-      output = new Output("Command not recognized. Type help for help.");
-    } else {
-      output = call(calls);
-    }
-    output.print(System.out);
-  }
-
   public Output call(Call[] calls) {
     Output results = new Output();
-    for (Call call : calls) {
-      results.append(call(call));
+    if (calls == null) {
+      results.add("Command not recognized. Type help for help.");
+    } else {
+      for (Call call : calls) {
+        results.append(call(call));
+      }
     }
 
     return results;

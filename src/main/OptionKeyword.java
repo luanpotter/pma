@@ -9,7 +9,7 @@ public enum OptionKeyword implements Keyword {
 
   public String controller;
 
-  private PMAKeyword(String controller) {
+  private OptionKeyword(String controller) {
     this.controller = controller;
   }
 

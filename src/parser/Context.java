@@ -7,8 +7,8 @@ import java.io.Serializable;
 
 public abstract class Context implements Serializable {
 
-  private Parser parser;
-  private Caller caller;
+  protected Parser parser;
+  protected Caller caller;
 
   public abstract void emptyLineHandler();
 
@@ -42,7 +42,19 @@ public abstract class Context implements Serializable {
     }
   }
 
+  public void quit(int status) {
+    System.exit(status);
+  }
+
+  public void print(String str) {
+    this.print(new Output(str));
+  }
+
+  public void print(Output output) {
+    output.print(System.out);
+  }
+
   public void execute(String[] params) {
-    caller.callAndPrint(parser.parse(params));
+    print(caller.call(parser.parse(params)));
   }
 }

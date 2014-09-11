@@ -19,14 +19,17 @@ public class Projects implements Serializable {
     if (projs != null) {
       return projs;
     } else {
-      Projects p = new Projects().update();
-      SimpleObjectAccess.saveTo(FILE_NAME, p);
-      return p;
+      return new Projects().update();
     }
+  }
+
+  public void save() {
+    SimpleObjectAccess.saveTo(FILE_NAME, this);
   }
 
   public Projects update() {
     projectsCache = PMAWrapper.getProjects();
+    this.save();
     return this;
   }
 

@@ -9,6 +9,7 @@ import controllers.*;
 import parser.*;
 import parser.config.*;
 import utils.MapBuilder;
+import utils.SimpleObjectAccess;
 
 public final class Setup {
   
@@ -24,9 +25,24 @@ public final class Setup {
   public static PMAContext setupContext() {
     PMAContext context = new PMAContext();
     Caller caller = defaultCaller(context);
-    Parser parser = Setup.defaultParser();
+    Parser parser = getParser();
     context.setup(parser, caller);
     return context;
+  }
+
+  private static final String PARSER_FILE_NAME = "parser.dat";
+
+  public static void saveParser(Parser parser) {
+    SimpleObjectAccess.saveTo(PARSER_FILE_NAME, parser);
+  }
+
+  public static Parser getParser() {
+    Parser read = SimpleObjectAccess.readFrom(PARSER_FILE_NAME);
+    if (read != null) {
+      return read;
+    } else {
+      return defaultParser();
+    }
   }
 
   public static Parser defaultParser() {
@@ -40,7 +56,7 @@ public final class Setup {
     caller.registerClass("logging", new LoggingController().setContext(context));
     caller.registerClass("parser", new ParserController().setContext(context));
     caller.registerClass("info", new InfoController().setContext(context));
-    caller.registerClass("options", new OptionsController().setContext(context));
+    caller.registerClass("option", new OptionsController().setContext(context));
 
     return caller;
   }
@@ -59,9 +75,9 @@ public final class Setup {
     callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :tasks :from projectNameOrId"), MapBuilder.<String, String>from("type", "tasks"), "List all tasks from projectNameOrId project"));
     callables.add(new Action(PMAKeyword.UPDATE, new Pattern(":update"), "Update the list of projects and tasks"));
 
-    callables.add(new Action(OptionsKeyword.LIST, new Pattern(":options"), "List all options with their values"));
-    callables.add(new Action(OptionsKeyword.GET, new Pattern(":options :get option"), "Return the current value of option"));
-    callables.add(new Action(OptionsKeyword.SET, new Pattern(":options :set option value"), "Set the value of option to value"));
+    callables.add(new Action(OptionKeyword.LIST, new Pattern(":options"), "List all options with their values"));
+    callables.add(new Action(OptionKeyword.GET, new Pattern(":options :get option"), "Return the current value of option"));
+    callables.add(new Action(OptionKeyword.SET, new Pattern(":options :set option value"), "Set the value of option to value"));
 
     callables.addAll(ConfigController.getDefaultActions());
     callables.addAll(HelpController.getDefaultActions());
