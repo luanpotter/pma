@@ -11,6 +11,8 @@ import java.util.function.Consumer;
 import date.*;
 import models.*;
 
+import parser.Output;
+
 public final class PMAWrapper {
 
   private PMAWrapper() { throw new RuntimeException("Should not be instanciated."); }
@@ -27,17 +29,18 @@ public final class PMAWrapper {
     return tasks;
   }
 
-  public static void createDay(Date date, Time start, Time end, int interval) {
+  public static Output createDay(Date date, Time start, Time end, Time interval) {
     String command = "pma_create_day -d " + date + " -s " + start + " -e " + end + " -i " + interval;
-    runCommand(command);
-
-    int totalTime = end.getDifference(start) - interval;
-    createTask(date, -1, "asdasd", totalTime);
+    final Output out = new Output();
+    consumeOutput(command, s -> out.add(s));
+    return out;
   }
 
-  public static void createTask(Date date, int taskId, String description, int duration) {
+  public static Output createTask(Date date, long taskId, String description, int duration) {
     String command = "pma_create_task -d " + date + " -e " + duration + " -s concluded " + taskId + " " + description;
-    runCommand(command);
+    final Output out = new Output();
+    consumeOutput(command, s -> out.add(s));
+    return out;
   }
 
   private static void consumeOutput(String command, Consumer<String> consumer) {
@@ -51,20 +54,19 @@ public final class PMAWrapper {
         }
       }
     } catch (IOException ex) {
-      PMAHelper.halt("Unexpected error! Unable to parse results: " + ex.getMessage());
+      throw new RuntimeException("Unable to consume command output.", ex);
     }
   }
 
   private static InputStream runCommand(String command) {
     try {
       String fullCommand = "./pma-scripts/bin/" + command;
-      System.out.println(fullCommand);
+      //TODO log command somehow
       Process process = Runtime.getRuntime().exec(fullCommand);
       process.waitFor();
       return process.getInputStream();
-    } catch (InterruptedException | IOException e) {
-      PMAHelper.halt("Unexpected error! Unable to run command: " + e.getMessage());
-      return null;
+    } catch (InterruptedException | IOException ex) {
+      throw new RuntimeException("Unable to run command: " + command, ex);
     }
   }
 

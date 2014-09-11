@@ -17,7 +17,7 @@ public class Output {
   }
 
   public Output(String... lines) {
-    this.lines = Arrays.asList(lines);
+    this.lines = new ArrayList<>(Arrays.asList(lines));
     this.tabLevel = 0;
   }
 

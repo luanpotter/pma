@@ -7,27 +7,43 @@ import main.*;
 import models.*;
 import parser.Controller;
 import parser.Output;
+import main.Options.Option;
+import main.PMAParser.InvalidFormatException;
 
 public class ParserController extends Controller<PMAContext> {
 
-  public Output save(Map<String, String> params) {
-    Controller.optional(params, "backup");
-    boolean bkp = "true".equals(params.get("backup"));
+  public Output save(Map<String, String> params) throws InvalidFormatException {
+    Controller.empty(params);
 
-    if (bkp) {
-
-    } else {
-
+    Output res = new Output();
+    String fileName = context.o().get(Option.LOG_FILE);
+    List<Day> days = PMAParser.parseLogs(fileName, false);
+    for (Day day : days) {
+      res.append(day.save());
     }
-
-    return new Output("TODO WIP");
+    return res;
   }
 
   public Output log(Map<String, String> params) {
-    return new Output("TODO WIP");
+    Controller.optional(params, "backup");
+    boolean bkp = "true".equals(params.get("backup"));
+
+    String fileName = context.o().get(bkp ? Option.BACKUP_FILE : Option.LOG_FILE);
+    try {
+      List<Day> days = PMAParser.parseLogs(fileName, true);
+
+      Output out = new Output(days.size() + " days parsed;");
+      for (Day day : days) {
+        out.add(day.toString());
+      }
+      return out;
+    } catch (InvalidFormatException ex) {
+      throw new RuntimeException(ex); //TODO output
+    }
   }
 
   public Output today(Map<String, String> params) {
+    Controller.empty(params);
     return new Output("TODO WIP");
   }
 }
