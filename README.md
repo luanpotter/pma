@@ -1,6 +1,8 @@
 pma
 ===
 
+Outdated! # TODO
+
 PMA Helper program. This is a java program that runs on top of https://github.com/raonifn/pma-scripts  
 You must download and put pma-scripts files in the same folder of this project in order for it to work.
 
