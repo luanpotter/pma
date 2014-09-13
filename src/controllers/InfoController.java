@@ -10,6 +10,12 @@ import parser.Output;
 
 public class InfoController extends Controller<PMAContext> {
 
+  public Output login(Map<String, String> params) {
+    Controller.optional(params, "user");
+    boolean result = PMAWrapper.login(params.get("user"));
+    return new Output(String.valueOf(result));
+  }
+
   public Output list(Map<String, String> params) {
     Controller.optional(Controller.required(params, "type"), "projectNameOrId");
     if ("projects".equals(params.get("type"))) {

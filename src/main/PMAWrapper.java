@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import date.*;
 import models.*;
@@ -16,6 +17,17 @@ import parser.Output;
 public final class PMAWrapper {
 
   private PMAWrapper() { throw new RuntimeException("Should not be instanciated."); }
+
+  public static boolean login(String user) {
+    if (user == null) {
+      user = System.getProperty("user.name");
+    }
+    final AtomicBoolean result = new AtomicBoolean(false);
+    consumeOutput("pma_token" + (user != null ? " " + user : ""), line -> {
+      result.set(!line.equals("Login invalido"));
+    });
+    return result.get();
+  }
 
   public static List<Project> getProjects() {
     final List<Project> projects = new ArrayList<>();

@@ -75,6 +75,8 @@ public final class Setup {
     callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :projects"), MapBuilder.<String, String>from("type", "projects"), "List all projects"));
     callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :tasks"), MapBuilder.<String, String>from("type", "tasks"), "List all tasks"));
     callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :tasks :from projectNameOrId"), MapBuilder.<String, String>from("type", "tasks"), "List all tasks from projectNameOrId project"));
+    callables.add(new Action(PMAKeyword.LOGIN, new Pattern(":login"), "Login with system user"));
+    callables.add(new Action(PMAKeyword.LOGIN, new Pattern(":login username"), "Login with specified user"));
     callables.add(new Action(PMAKeyword.UPDATE, new Pattern(":update"), "Update the list of projects and tasks"));
 
     callables.add(new Action(OptionKeyword.LIST, new Pattern(":options"), "List all options with their values"));

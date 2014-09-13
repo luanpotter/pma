@@ -9,6 +9,7 @@ public enum PMAKeyword implements Keyword {
   LOG("parser:log"),
   TODAY("parser:today"),
   LIST("info:list"),
+  LOGIN("info:login"),
   UPDATE("info:update"),
   OPTIONS_SET("options:set"),
   OPTIONS_GET("options:get");
