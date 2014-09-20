@@ -17,6 +17,19 @@ public final class PMAWrapper {
 
   private PMAWrapper() { throw new RuntimeException("Should not be instanciated."); }
 
+  public static boolean login(String user) {
+    // TODO !!
+    if (true) { throw new RuntimeException("Not implemented yet! Login outside the project via ./pma-scripts/bin/pma_token"); }
+    if (user == null) {
+      user = System.getProperty("user.name");
+    }
+    final AtomicBoolean result = new AtomicBoolean(false);
+    consumeOutput("pma_token" + (user != null ? " " + user : ""), line -> {
+      result.set(!line.equals("Login invalido"));
+    });
+    return result.get();
+  }
+
   public static List<Project> getProjects() {
     final List<Project> projects = new ArrayList<>();
     consumeOutput("pma_projects", project -> projects.add(new Project(project)));

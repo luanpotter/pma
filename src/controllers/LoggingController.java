@@ -20,7 +20,7 @@ public class LoggingController extends Controller<PMAContext> {
       nameOrId = String.valueOf(context.o().get(Option.DEFAULT_TASK));
     }
 
-    Task task = context.p().getTask(nameOrId);
+    Task task = context.p().getTask(context.a(), nameOrId);
     if (task == null) {
       if (params.get("taskNameOrId") == null) {
         return new Output("No name or id is specified, and default task is invalid: '" + nameOrId + "'. To change the default task, run options set default-task taskNameOrId");
