@@ -58,7 +58,6 @@ public class Projects implements Serializable {
       if (aliasedId != null) {
         return getTaskById(aliasedId);
       }
-      System.out.println("[" + nameOrId + "]");
       return getTaskByName(nameOrId);
     }
   }

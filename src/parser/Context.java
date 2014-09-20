@@ -27,6 +27,7 @@ public abstract class Context implements Serializable {
 
   public void main() {
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+      print("Ohayou!");
       while(true) {
         String line = reader.readLine();
         if (line.isEmpty()) {
