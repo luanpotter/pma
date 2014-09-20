@@ -1,4 +1,5 @@
-*.class
 **/*.dat
-dist/
-build/
+target/
+.project
+.classpath
+.settings/
