@@ -79,7 +79,7 @@ public final class PMAWrapper {
 
     private static InputStream runCommand(String command) {
         try {
-            String fullCommand = "./pma-scripts/bin/" + command;
+            String fullCommand = "../pma-scripts/bin/" + command;
             // TODO log command somehow
             Process process = Runtime.getRuntime().exec(fullCommand);
             process.waitFor();
