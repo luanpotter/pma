@@ -1,3 +1,6 @@
 [submodule "pma-scripts"]
 	path = pma-scripts
 	url = git@github.com:luan-nico-dextra/pma-scripts.git
+[submodule "console-parser"]
+	path = console-parser
+	url = git@github.com:luanpotter/console-parser.git
