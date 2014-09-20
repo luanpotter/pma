@@ -59,6 +59,7 @@ public final class Setup {
     caller.registerClass("parser", new ParserController().setContext(context));
     caller.registerClass("info", new InfoController().setContext(context));
     caller.registerClass("option", new OptionsController().setContext(context));
+    caller.registerClass("aliases", new AliasesController().setContext(context));
 
     return caller;
   }
@@ -66,7 +67,7 @@ public final class Setup {
   private static ArrayList<Callable> defaultCallables() {
     ArrayList<Callable> callables = new ArrayList<>();
     callables.add(new Action(PMAKeyword.HERE, new Pattern(":here"), "Start counting on default task"));
-    callables.add(new Action(PMAKeyword.HERE, new Pattern(":here taskNameOrId"), "Start counting on taskNameOrId task"));
+    callables.add(new Action(PMAKeyword.HERE, new Pattern(":here taskNameOrId", true), "Start counting on taskNameOrId task"));
     callables.add(new Action(PMAKeyword.EXIT, new Pattern(":exit"), "Exit to break"));
     callables.add(new Action(PMAKeyword.SAVE, new Pattern(":save"), "Save current day on web service"));
     callables.add(new Action(PMAKeyword.LOG, new Pattern(":log"), "Show current log"));
@@ -75,13 +76,18 @@ public final class Setup {
     callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :projects"), MapBuilder.<String, String>from("type", "projects"), "List all projects"));
     callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :tasks"), MapBuilder.<String, String>from("type", "tasks"), "List all tasks"));
     callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :tasks :from projectNameOrId"), MapBuilder.<String, String>from("type", "tasks"), "List all tasks from projectNameOrId project"));
-    callables.add(new Action(PMAKeyword.LOGIN, new Pattern(":login"), "Login with system user"));
-    callables.add(new Action(PMAKeyword.LOGIN, new Pattern(":login username"), "Login with specified user"));
     callables.add(new Action(PMAKeyword.UPDATE, new Pattern(":update"), "Update the list of projects and tasks"));
+    // TODO \/ \/ \/
+    //callables.add(new Action(PMAKeyword.LOGIN, new Pattern(":login"), "Login with system user"));
+    //callables.add(new Action(PMAKeyword.LOGIN, new Pattern(":login username"), "Login with specified user"));
 
     callables.add(new Action(OptionKeyword.LIST, new Pattern(":options"), "List all options with their values"));
     callables.add(new Action(OptionKeyword.GET, new Pattern(":options :get option"), "Return the current value of option"));
-    callables.add(new Action(OptionKeyword.SET, new Pattern(":options :set option value"), "Set the value of option to value"));
+    callables.add(new Action(OptionKeyword.SET, new Pattern(":options :set option value", true), "Set the value of option to value"));
+
+    callables.add(new Action(AliasesKeyword.LIST, new Pattern(":aliases"), "List all aliases with their values"));
+    callables.add(new Action(AliasesKeyword.GET, new Pattern(":aliases :get alias"), "Return the current value of alias"));
+    callables.add(new Action(AliasesKeyword.SET, new Pattern(":aliases :set alias taskNameOrId", true), "Set the value of alias to taskNameOrId"));
 
     callables.addAll(ConfigController.getDefaultActions());
     callables.addAll(HelpController.getDefaultActions());
@@ -112,12 +118,6 @@ public final class Setup {
 
     aliases.put("list", ":list");
     aliases.put("listar", ":list");
-
-    aliases.put("for", ":for");
-    aliases.put("em", ":for");
-
-    aliases.put("from", ":from");
-    aliases.put("de", ":from");
 
     aliases.put("to", ":to");
     aliases.put("para", ":to");

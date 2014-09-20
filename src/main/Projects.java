@@ -45,20 +45,28 @@ public class Projects implements Serializable {
     return tasks;
   }
 
-  public Task getTask(String nameOrId) {
+  public Task getTaskWithoutAlias(String nameOrId) {
+    return getTask(null, nameOrId);
+  }
+
+  public Task getTask(Aliases aliases, String nameOrId) {
     try {
-      long id = Long.parseLong(nameOrId);
+      Long id = Long.parseLong(nameOrId);
       return getTaskById(id);
     } catch (NumberFormatException ex) {
+      Long aliasedId = aliases == null ? null : aliases.getTaskByAlias(nameOrId);
+      if (aliasedId != null) {
+        return getTaskById(aliasedId);
+      }
       return getTaskByName(nameOrId);
     }
   }
 
-  public Task getTaskById(final long id) {
+  private Task getTaskById(final long id) {
     return getTaskThat(t -> t.getId() == id);
   }
 
-  public Task getTaskByName(final String name) {
+  private Task getTaskByName(final String name) {
     return getTaskThat(t -> t.getName().equals(name));
   }
 

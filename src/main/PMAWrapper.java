@@ -19,6 +19,8 @@ public final class PMAWrapper {
   private PMAWrapper() { throw new RuntimeException("Should not be instanciated."); }
 
   public static boolean login(String user) {
+    // TODO !!
+    if (true) { throw new RuntimeException("Not implemented yet! Login outside the project via ./pma-scripts/bin/pma_token"); }
     if (user == null) {
       user = System.getProperty("user.name");
     }
