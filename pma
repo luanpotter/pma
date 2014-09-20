@@ -1,6 +1,1 @@
-#!/bin/bash
-export PATH=/usr/lib/jvm/java-8-oracle/bin:$PATH
-export JAVA_HOME=/usr/lib/jvm/java-8-oracle/
-javac -version
-ant dist
-java -jar dist/pma.jar $#
+java -jar target/PmaHelper.jar
