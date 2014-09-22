@@ -1,5 +1,7 @@
 **/*.dat
 target/
+build/
+dist/
 .project
 .classpath
 .settings/
