@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import xyz.luan.console.parser.Output;
@@ -22,18 +21,7 @@ public final class PMAWrapper {
     }
 
     public static boolean login(String user) {
-        // TODO !!
-        if (true) {
-            throw new RuntimeException("Not implemented yet! Login outside the project via ./pma-scripts/bin/pma_token");
-        }
-        if (user == null) {
-            user = System.getProperty("user.name");
-        }
-        final AtomicBoolean result = new AtomicBoolean(false);
-        consumeOutput("pma_token" + (user != null ? " " + user : ""), line -> {
-            result.set(!line.equals("Login invalido"));
-        });
-        return result.get();
+        throw new RuntimeException("Not implemented yet! Login outside the project via ./pma-scripts/bin/pma_token");
     }
 
     public static List<Project> getProjects() {
