@@ -7,6 +7,7 @@ import xyz.luan.console.parser.Callable;
 import xyz.luan.console.parser.Controller;
 import xyz.luan.console.parser.Output;
 import xyz.luan.console.parser.actions.Action;
+import xyz.luan.console.parser.actions.Optional;
 import br.com.dextra.pma.main.Options.Option;
 import br.com.dextra.pma.main.PMAContext;
 import br.com.dextra.pma.main.PMAParser;
@@ -29,7 +30,7 @@ public class ParserController extends Controller<PMAContext> {
     }
 
     @Action("log")
-    public Output log(String backup) throws InvalidFormatException {
+    public Output log(@Optional String backup) throws InvalidFormatException {
         boolean bkp = "true".equals(backup);
 
         String fileName = context.o().get(bkp ? Option.BACKUP_FILE : Option.LOG_FILE);

@@ -9,7 +9,6 @@ import xyz.luan.console.parser.Controller;
 import xyz.luan.console.parser.Output;
 import xyz.luan.console.parser.Pattern;
 import xyz.luan.console.parser.actions.Action;
-import xyz.luan.console.parser.actions.Required;
 import br.com.dextra.pma.main.PMAContext;
 import br.com.dextra.pma.models.Task;
 
@@ -25,7 +24,7 @@ public class AliasesController extends Controller<PMAContext> {
     }
 
     @Action("get")
-    public Output get(@Required String alias) {
+    public Output get(String alias) {
         Long task = context.a().getTaskByAlias(alias);
         if (task == null) {
             return new Output("Alias " + alias + " not associated with any task.");
@@ -34,7 +33,7 @@ public class AliasesController extends Controller<PMAContext> {
     }
 
     @Action("set")
-    public Output set(@Required String alias, @Required String taskNameOrId) {
+    public Output set(String alias, String taskNameOrId) {
         Task task = context.p().getTaskWithoutAlias(taskNameOrId);
         if (task == null) {
             return new Output("Specified taskName " + taskNameOrId + " is not valid.");

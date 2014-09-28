@@ -7,7 +7,7 @@ import xyz.luan.console.parser.Callable;
 import xyz.luan.console.parser.Controller;
 import xyz.luan.console.parser.Output;
 import xyz.luan.console.parser.actions.Action;
-import xyz.luan.console.parser.actions.Required;
+import xyz.luan.console.parser.actions.Optional;
 import br.com.dextra.pma.main.PMAContext;
 import br.com.dextra.pma.models.Project;
 import br.com.dextra.pma.models.Task;
@@ -16,7 +16,7 @@ import br.com.dextra.pma.utils.MapBuilder;
 public class InfoController extends Controller<PMAContext> {
 
     @Action("list")
-    public Output list(@Required String type, String projectNameOrId) {
+    public Output list(String type, @Optional String projectNameOrId) {
         if ("projects".equals(type)) {
             assert projectNameOrId == null;
             return listProjects();

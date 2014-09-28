@@ -9,7 +9,6 @@ import xyz.luan.console.parser.Controller;
 import xyz.luan.console.parser.Output;
 import xyz.luan.console.parser.Pattern;
 import xyz.luan.console.parser.actions.Action;
-import xyz.luan.console.parser.actions.Required;
 import br.com.dextra.pma.main.Options;
 import br.com.dextra.pma.main.PMAContext;
 
@@ -25,7 +24,7 @@ public class OptionsController extends Controller<PMAContext> {
     }
 
     @Action("get")
-    public Output get(@Required String option) {
+    public Output get(String option) {
         try {
             return new Output(context.o().get(option));
         } catch (Options.InvalidOptionExcpetion e) {
@@ -34,7 +33,7 @@ public class OptionsController extends Controller<PMAContext> {
     }
 
     @Action("set")
-    public Output set(@Required String option, @Required String value) {
+    public Output set(String option, String value) {
         try {
             context.o().set(option, value);
             context.o().save();

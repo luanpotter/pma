@@ -13,6 +13,7 @@ import xyz.luan.console.parser.Controller;
 import xyz.luan.console.parser.Output;
 import xyz.luan.console.parser.Pattern;
 import xyz.luan.console.parser.actions.Action;
+import xyz.luan.console.parser.actions.Optional;
 import br.com.dextra.pma.date.Moment;
 import br.com.dextra.pma.main.Options.Option;
 import br.com.dextra.pma.main.PMAContext;
@@ -23,7 +24,7 @@ public class LoggingController extends Controller<PMAContext> {
     private static final String ERROR_MESSAGE = "No name or id is specified, and default task is invalid: '%s'. To change the default task, run options set default-task taskNameOrId";
 
     @Action("here")
-    public Output here(String taskNameOrId) {
+    public Output here(@Optional String taskNameOrId) {
         if (taskNameOrId == null) {
             taskNameOrId = context.o().get(Option.DEFAULT_TASK);
         }
