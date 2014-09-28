@@ -9,7 +9,7 @@ import java.util.Map;
 import xyz.luan.console.parser.Output;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.date.Time;
-import br.com.dextra.pma.main.PMAWrapper;
+import br.com.dextra.pma.main.Wrapper;
 
 public class Day implements Serializable {
 
@@ -34,7 +34,7 @@ public class Day implements Serializable {
     }
 
     public Output save() {
-        Output out = PMAWrapper.createDay(date, startTime, endTime, interval);
+        Output out = Wrapper.createDay(date, startTime, endTime, interval);
         for (Appointment a : appointments) {
             out.append(a.save(date));
         }

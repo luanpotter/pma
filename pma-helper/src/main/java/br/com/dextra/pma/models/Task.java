@@ -2,6 +2,8 @@ package br.com.dextra.pma.models;
 
 import java.io.Serializable;
 
+import org.jdom2.Element;
+
 public class Task implements Serializable {
 
     private static final long serialVersionUID = 6384820773785566908L;
@@ -9,16 +11,9 @@ public class Task implements Serializable {
     private long id;
     private String name;
 
-    public Task(String projectInfo) {
-        String[] parts = projectInfo.split("\\|");
-        assert parts.length >= 2;
-
-        this.name = parts[0].trim();
-        for (int i = 1; i < parts.length - 1; i++) {
-            this.name += "|" + parts[i];
-        }
-        this.name = this.name.trim().replace("_", " ");
-        this.id = Long.parseLong(parts[parts.length - 1].trim());
+    public Task(Element task) {
+        this.id = Long.parseLong(task.getChild("id").getText());
+        this.name = task.getChild("nome").getText();
     }
 
     public long getId() {

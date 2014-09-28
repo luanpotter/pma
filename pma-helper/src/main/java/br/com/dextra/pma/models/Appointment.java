@@ -2,7 +2,7 @@ package br.com.dextra.pma.models;
 
 import xyz.luan.console.parser.Output;
 import br.com.dextra.pma.date.Date;
-import br.com.dextra.pma.main.PMAWrapper;
+import br.com.dextra.pma.main.Wrapper;
 
 public class Appointment {
     private long taskId;
@@ -24,7 +24,7 @@ public class Appointment {
     }
 
     public Output save(Date date) {
-        return PMAWrapper.createTask(date, taskId, comment, minutes);
+        return Wrapper.createTask(date, taskId, comment, minutes);
     }
 
     @Override

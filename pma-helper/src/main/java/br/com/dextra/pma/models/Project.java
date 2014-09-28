@@ -3,7 +3,9 @@ package br.com.dextra.pma.models;
 import java.io.Serializable;
 import java.util.List;
 
-import br.com.dextra.pma.main.PMAWrapper;
+import org.jdom2.Element;
+
+import br.com.dextra.pma.main.Wrapper;
 
 public class Project implements Serializable {
 
@@ -15,19 +17,12 @@ public class Project implements Serializable {
 
     private List<Task> tasks;
 
-    public Project(String projectInfo) {
-        String[] parts = projectInfo.split("\\|");
-        assert parts.length >= 3;
+    public Project(Element project) {
+        this.id = Long.parseLong(project.getChild("id").getText());
+        this.client = project.getChild("cliente").getText();
+        this.name = project.getChild("nome").getText();
 
-        this.client = parts[0].trim();
-        this.name = parts[1];
-        for (int i = 2; i < parts.length - 1; i++) {
-            this.name += "|" + parts[i];
-        }
-        this.name = this.name.trim().replace("_", " ");
-        this.id = Long.parseLong(parts[parts.length - 1].trim());
-
-        this.tasks = PMAWrapper.getTasksFromProject(this.id);
+        this.tasks = Wrapper.getTasksFromProject(this.id);
     }
 
     public Task getTaskByName(String name) {

@@ -31,7 +31,7 @@ public class Projects implements Serializable {
     }
 
     public Projects update() {
-        projectsCache = PMAWrapper.getProjects();
+        projectsCache = Wrapper.getProjects();
         this.save();
         return this;
     }
