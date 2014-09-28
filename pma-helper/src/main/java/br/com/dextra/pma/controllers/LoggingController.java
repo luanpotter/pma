@@ -4,10 +4,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
+import java.util.List;
 
+import xyz.luan.console.parser.ActionCall;
+import xyz.luan.console.parser.ActionRef;
+import xyz.luan.console.parser.Callable;
 import xyz.luan.console.parser.Controller;
 import xyz.luan.console.parser.Output;
+import xyz.luan.console.parser.Pattern;
+import xyz.luan.console.parser.actions.Action;
 import br.com.dextra.pma.date.Moment;
 import br.com.dextra.pma.main.Options.Option;
 import br.com.dextra.pma.main.PMAContext;
@@ -15,19 +20,18 @@ import br.com.dextra.pma.models.Task;
 
 public class LoggingController extends Controller<PMAContext> {
 
-    public Output here(Map<String, String> params) {
-        Controller.optional(params, "taskNameOrId");
+    private static final String ERROR_MESSAGE = "No name or id is specified, and default task is invalid: '%s'. To change the default task, run options set default-task taskNameOrId";
 
-        String nameOrId = params.get("taskNameOrId");
-        if (nameOrId == null) {
-            nameOrId = String.valueOf(context.o().get(Option.DEFAULT_TASK));
+    @Action("here")
+    public Output here(String taskNameOrId) {
+        if (taskNameOrId == null) {
+            taskNameOrId = context.o().get(Option.DEFAULT_TASK);
         }
 
-        Task task = context.p().getTask(context.a(), nameOrId);
+        Task task = context.p().getTask(context.a(), taskNameOrId);
         if (task == null) {
-            if (params.get("taskNameOrId") == null) {
-                return new Output("No name or id is specified, and default task is invalid: '" + nameOrId
-                        + "'. To change the default task, run options set default-task taskNameOrId");
+            if (taskNameOrId == null) {
+                return new Output(String.format(ERROR_MESSAGE, taskNameOrId));
             }
             return new Output("Specified name or id is invalid.");
         }
@@ -36,8 +40,8 @@ public class LoggingController extends Controller<PMAContext> {
         return new Output("Logged successfully.");
     }
 
-    public Output exit(Map<String, String> params) {
-        Controller.empty(params);
+    @Action("exit")
+    public Output exit() {
         log(new Moment(), -1);
         return new Output("Logged successfully.");
     }
@@ -58,5 +62,12 @@ public class LoggingController extends Controller<PMAContext> {
         } catch (IOException ex) {
             throw new RuntimeException("Could not log to file!", ex);
         }
+    }
+
+    public static void defaultCallables(String name, List<Callable> callables) {
+        callables.add(new ActionCall(name + ":here", ":here", "Start counting on default task"));
+        callables.add(new ActionCall(new ActionRef(name + ":here"), new Pattern(":here taskNameOrId", true),
+                "Start counting on taskNameOrId task"));
+        callables.add(new ActionCall(name + ":exit", ":exit", "Exit to break"));
     }
 }

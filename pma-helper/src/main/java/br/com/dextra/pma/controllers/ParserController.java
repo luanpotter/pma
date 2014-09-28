@@ -1,21 +1,23 @@
 package br.com.dextra.pma.controllers;
 
 import java.util.List;
-import java.util.Map;
 
+import xyz.luan.console.parser.ActionCall;
+import xyz.luan.console.parser.Callable;
 import xyz.luan.console.parser.Controller;
 import xyz.luan.console.parser.Output;
+import xyz.luan.console.parser.actions.Action;
 import br.com.dextra.pma.main.Options.Option;
 import br.com.dextra.pma.main.PMAContext;
 import br.com.dextra.pma.main.PMAParser;
 import br.com.dextra.pma.main.PMAParser.InvalidFormatException;
 import br.com.dextra.pma.models.Day;
+import br.com.dextra.pma.utils.MapBuilder;
 
 public class ParserController extends Controller<PMAContext> {
 
-    public Output save(Map<String, String> params) throws InvalidFormatException {
-        Controller.empty(params);
-
+    @Action("save")
+    public Output save() throws InvalidFormatException {
         Output res = new Output();
         String fileName = context.o().get(Option.LOG_FILE);
         List<Day> days = PMAParser.parseLogs(fileName, false);
@@ -26,9 +28,9 @@ public class ParserController extends Controller<PMAContext> {
         return res;
     }
 
-    public Output log(Map<String, String> params) throws InvalidFormatException {
-        Controller.optional(params, "backup");
-        boolean bkp = "true".equals(params.get("backup"));
+    @Action("log")
+    public Output log(String backup) throws InvalidFormatException {
+        boolean bkp = "true".equals(backup);
 
         String fileName = context.o().get(bkp ? Option.BACKUP_FILE : Option.LOG_FILE);
         List<Day> days = PMAParser.parseLogs(fileName, true);
@@ -40,8 +42,16 @@ public class ParserController extends Controller<PMAContext> {
         return out;
     }
 
-    public Output today(Map<String, String> params) {
-        Controller.empty(params);
+    @Action("today")
+    public Output today() {
         return new Output("TODO WIP");
+    }
+
+    public static void defaultCallables(String name, List<Callable> callables) {
+        callables.add(new ActionCall(name + ":save", ":save", "Save current day on web service"));
+        callables.add(new ActionCall(name + ":log", ":log", "Show current log"));
+        callables.add(new ActionCall(name + ":log", ":log :backup", MapBuilder.<String, String> from("backup", "true"),
+                "Show current log backup"));
+        callables.add(new ActionCall(name + ":today", ":today", "Show what has been done today already"));
     }
 }

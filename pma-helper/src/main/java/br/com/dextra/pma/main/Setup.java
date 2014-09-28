@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import xyz.luan.console.parser.Action;
 import xyz.luan.console.parser.Callable;
 import xyz.luan.console.parser.Caller;
 import xyz.luan.console.parser.ExceptionHandler;
 import xyz.luan.console.parser.Output;
 import xyz.luan.console.parser.Parser;
-import xyz.luan.console.parser.Pattern;
+import xyz.luan.console.parser.actions.InvalidAction;
 import xyz.luan.console.parser.config.ConfigController;
 import xyz.luan.console.parser.config.HelpController;
 import br.com.dextra.pma.controllers.AliasesController;
@@ -19,13 +18,11 @@ import br.com.dextra.pma.controllers.LoggingController;
 import br.com.dextra.pma.controllers.OptionsController;
 import br.com.dextra.pma.controllers.ParserController;
 import br.com.dextra.pma.main.PMAParser.InvalidFormatException;
-import br.com.dextra.pma.utils.MapBuilder;
 import br.com.dextra.pma.utils.SimpleObjectAccess;
 
 public final class Setup {
 
     static {
-        Parser.KEYWORD_LIST.add(PMAKeyword.class);
         ExceptionHandler.HANDLERS.put(NotLoggedIn.class, e -> new Output(e.getMessage()));
         ExceptionHandler.HANDLERS.put(InvalidFormatException.class, e -> new Output(e.getMessage()));
     }
@@ -34,7 +31,7 @@ public final class Setup {
         throw new RuntimeException("Should not be instanciated.");
     }
 
-    public static PMAContext setupContext() {
+    public static PMAContext setupContext() throws InvalidAction {
         PMAContext context = new PMAContext();
         Caller caller = defaultCaller(context);
         Parser parser = getParser();
@@ -61,7 +58,7 @@ public final class Setup {
         return new Parser(defaultAliases(), defaultCallables());
     }
 
-    public static Caller defaultCaller(PMAContext context) {
+    public static Caller defaultCaller(PMAContext context) throws InvalidAction {
         Caller caller = new Caller();
         caller.registerClass("config", new ConfigController().setContext(context));
         caller.registerClass("help", new HelpController().setContext(context));
@@ -76,38 +73,15 @@ public final class Setup {
 
     private static ArrayList<Callable> defaultCallables() {
         ArrayList<Callable> callables = new ArrayList<>();
-        callables.add(new Action(PMAKeyword.HERE, new Pattern(":here"), "Start counting on default task"));
-        callables.add(new Action(PMAKeyword.HERE, new Pattern(":here taskNameOrId", true), "Start counting on taskNameOrId task"));
-        callables.add(new Action(PMAKeyword.EXIT, new Pattern(":exit"), "Exit to break"));
-        callables.add(new Action(PMAKeyword.SAVE, new Pattern(":save"), "Save current day on web service"));
-        callables.add(new Action(PMAKeyword.LOG, new Pattern(":log"), "Show current log"));
-        callables.add(new Action(PMAKeyword.LOG, new Pattern(":log :backup"), MapBuilder.<String, String> from("backup", "true"),
-                "Show current log backup"));
-        callables.add(new Action(PMAKeyword.TODAY, new Pattern(":today"), "Show what has been done today already"));
-        callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :projects"), MapBuilder.<String, String> from("type", "projects"),
-                "List all projects"));
-        callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :tasks"), MapBuilder.<String, String> from("type", "tasks"),
-                "List all tasks"));
-        callables.add(new Action(PMAKeyword.LIST, new Pattern(":list :tasks :from projectNameOrId"), MapBuilder.<String, String> from(
-                "type", "tasks"), "List all tasks from projectNameOrId project"));
-        callables.add(new Action(PMAKeyword.UPDATE, new Pattern(":update"), "Update the list of projects and tasks"));
-        // TODO \/ \/ \/
-        // callables.add(new Action(PMAKeyword.LOGIN, new Pattern(":login"),
-        // "Login with system user"));
-        // callables.add(new Action(PMAKeyword.LOGIN, new
-        // Pattern(":login username"), "Login with specified user"));
 
-        callables.add(new Action(OptionKeyword.LIST, new Pattern(":options"), "List all options with their values"));
-        callables.add(new Action(OptionKeyword.GET, new Pattern(":options :get option"), "Return the current value of option"));
-        callables.add(new Action(OptionKeyword.SET, new Pattern(":options :set option value", true), "Set the value of option to value"));
+        ParserController.defaultCallables("parser", callables);
+        LoggingController.defaultCallables("logging", callables);
+        InfoController.defaultCallables("info", callables);
+        OptionsController.defaultCallables("option", callables);
+        AliasesController.defaultCallables("aliases", callables);
 
-        callables.add(new Action(AliasesKeyword.LIST, new Pattern(":aliases"), "List all aliases with their values"));
-        callables.add(new Action(AliasesKeyword.GET, new Pattern(":aliases :get alias"), "Return the current value of alias"));
-        callables.add(new Action(AliasesKeyword.SET, new Pattern(":aliases :set alias taskNameOrId", true),
-                "Set the value of alias to taskNameOrId"));
-
-        callables.addAll(ConfigController.getDefaultActions());
-        callables.addAll(HelpController.getDefaultActions());
+        ConfigController.defaultActions("config", callables);
+        HelpController.defaultActions("help", callables);
 
         return callables;
     }
