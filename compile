@@ -1,0 +1,4 @@
+mvn clean install
+[ -d dist ] || mkdir dist
+cp ./pma-helper/target/PmaHelper-0.2-jar-with-dependencies.jar dist/pma-helper.jar
+
