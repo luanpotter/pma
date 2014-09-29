@@ -18,7 +18,7 @@ public class PMAContext extends Context {
     }
 
     public static void main(String[] args) throws InvalidAction {
-        Setup.setupContext().main();
+        Setup.setupContext().run(args);
     }
 
     public Aliases a() {
