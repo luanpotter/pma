@@ -33,7 +33,7 @@ public class Day implements Serializable {
         }
     }
 
-    public Output save() {
+    public save(Console c) {
         Output out = Wrapper.createDay(date, startTime, endTime, interval);
         for (Appointment a : appointments) {
             out.append(a.save(date));

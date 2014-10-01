@@ -60,7 +60,7 @@ public final class Wrapper {
         return tasks;
     }
 
-    public static Output createDay(Date date, Time start, Time end, Time interval) {
+    public static String[] createDay(Date date, Time start, Time end, Time interval) {
         return new Output(post("criar_apontamento_diario", new NameValuePair[] {
                 new BasicNameValuePair("data", date.toString()),
                 new BasicNameValuePair("inicio", start.toString()),

@@ -3,9 +3,9 @@ package br.com.dextra.pma.controllers;
 import java.util.List;
 
 import xyz.luan.console.parser.ActionCall;
+import xyz.luan.console.parser.CallResult;
 import xyz.luan.console.parser.Callable;
 import xyz.luan.console.parser.Controller;
-import xyz.luan.console.parser.Output;
 import xyz.luan.console.parser.actions.Action;
 import xyz.luan.console.parser.actions.Optional;
 import br.com.dextra.pma.main.PMAContext;
@@ -16,7 +16,7 @@ import br.com.dextra.pma.utils.MapBuilder;
 public class InfoController extends Controller<PMAContext> {
 
     @Action("list")
-    public Output list(String type, @Optional String projectNameOrId) {
+    public CallResult list(String type, @Optional String projectNameOrId) {
         if ("projects".equals(type)) {
             assert projectNameOrId == null;
             return listProjects();
@@ -28,37 +28,36 @@ public class InfoController extends Controller<PMAContext> {
     }
 
     @Action("update")
-    public Output update() {
+    public CallResult update() {
         context.p().update();
-        return new Output("Projects and tasks successfully updated.");
+        console.result("Projects and tasks successfully updated.");
+        return CallResult.SUCCESS;
     }
 
-    private Output listProjects() {
-        Output output = new Output();
+    private CallResult listProjects() {
         for (Project p : context.p().getProjects()) {
-            output.add(p.toString());
+            console.result(p.toString());
         }
-        return output;
+        return CallResult.SUCCESS;
     }
 
-    private Output listTasks(String projectNameOrId) {
-        Output output = new Output();
-
+    private CallResult listTasks(String projectNameOrId) {
         List<Task> tasks;
         if (projectNameOrId == null) {
             tasks = context.p().getTasks();
         } else {
             Project project = context.p().getProject(projectNameOrId);
             if (project == null) {
-                return new Output("Invalid project name or id.");
+                console.error("Invalid project name or id.");
+                return CallResult.ERROR;
             }
             tasks = project.getTasks();
         }
 
         for (Task t : tasks) {
-            output.add(t.toString());
+            console.result(t.toString());
         }
-        return output;
+        return CallResult.SUCCESS;
     }
 
     public static void defaultCallables(String name, List<Callable> callables) {

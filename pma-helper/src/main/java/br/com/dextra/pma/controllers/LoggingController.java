@@ -8,9 +8,9 @@ import java.util.List;
 
 import xyz.luan.console.parser.ActionCall;
 import xyz.luan.console.parser.ActionRef;
+import xyz.luan.console.parser.CallResult;
 import xyz.luan.console.parser.Callable;
 import xyz.luan.console.parser.Controller;
-import xyz.luan.console.parser.Output;
 import xyz.luan.console.parser.Pattern;
 import xyz.luan.console.parser.actions.Action;
 import xyz.luan.console.parser.actions.Optional;
@@ -24,7 +24,7 @@ public class LoggingController extends Controller<PMAContext> {
     private static final String ERROR_MESSAGE = "No name or id is specified, and default task is invalid: '%s'. To change the default task, run options set default-task taskNameOrId";
 
     @Action("here")
-    public Output here(@Optional String taskNameOrId) {
+    public CallResult here(@Optional String taskNameOrId) {
         if (taskNameOrId == null) {
             taskNameOrId = context.o().get(Option.DEFAULT_TASK);
         }
@@ -32,19 +32,23 @@ public class LoggingController extends Controller<PMAContext> {
         Task task = context.p().getTask(context.a(), taskNameOrId);
         if (task == null) {
             if (taskNameOrId == null) {
-                return new Output(String.format(ERROR_MESSAGE, taskNameOrId));
+                console.error(String.format(ERROR_MESSAGE, taskNameOrId));
+                return CallResult.ERROR;
             }
-            return new Output("Specified name or id is invalid.");
+            console.error("Specified name or id is invalid.");
+            return CallResult.ERROR;
         }
 
         log(new Moment(), task.getId());
-        return new Output("Logged successfully.");
+        console.result("Logged successfully.");
+        return CallResult.SUCCESS;
     }
 
     @Action("exit")
-    public Output exit() {
+    public CallResult exit() {
         log(new Moment(), -1);
-        return new Output("Logged successfully.");
+        console.result("Logged successfully.");
+        return CallResult.SUCCESS;
     }
 
     private void log(Moment m, long taskId) {

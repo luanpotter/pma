@@ -3,6 +3,7 @@ package br.com.dextra.pma.controllers;
 import java.util.List;
 
 import xyz.luan.console.parser.ActionCall;
+import xyz.luan.console.parser.CallResult;
 import xyz.luan.console.parser.Callable;
 import xyz.luan.console.parser.Controller;
 import xyz.luan.console.parser.Output;
@@ -18,15 +19,14 @@ import br.com.dextra.pma.utils.MapBuilder;
 public class ParserController extends Controller<PMAContext> {
 
     @Action("save")
-    public Output save() throws InvalidFormatException {
-        Output res = new Output();
+    public CallResult save() throws InvalidFormatException {
         String fileName = context.o().get(Option.LOG_FILE);
         List<Day> days = PMAParser.parseLogs(fileName, false);
         for (Day day : days) {
-            res.append(day.save());
+            console.result(day.save());
         }
 
-        return res;
+        return CallResult.SUCCESS;
     }
 
     @Action("log")

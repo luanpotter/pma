@@ -4,9 +4,9 @@ import java.util.List;
 
 import xyz.luan.console.parser.ActionCall;
 import xyz.luan.console.parser.ActionRef;
+import xyz.luan.console.parser.CallResult;
 import xyz.luan.console.parser.Callable;
 import xyz.luan.console.parser.Controller;
-import xyz.luan.console.parser.Output;
 import xyz.luan.console.parser.Pattern;
 import xyz.luan.console.parser.actions.Action;
 import br.com.dextra.pma.main.PMAContext;
@@ -15,32 +15,36 @@ import br.com.dextra.pma.models.Task;
 public class AliasesController extends Controller<PMAContext> {
 
     @Action("list")
-    public Output list() {
-        final Output output = new Output("-- Alias : taskId --");
+    public CallResult list() {
+        console.result("-- Alias : taskId --");
         context.a().forEach((String alias, Long taskId) -> {
-            output.add("- " + alias + " : " + taskId);
+            console.result("- " + alias + " : " + taskId);
         });
-        return output;
+        return CallResult.SUCCESS;
     }
 
     @Action("get")
-    public Output get(String alias) {
+    public CallResult get(String alias) {
         Long task = context.a().getTaskByAlias(alias);
         if (task == null) {
-            return new Output("Alias " + alias + " not associated with any task.");
+            console.error("Alias " + alias + " not associated with any task.");
+            return CallResult.ERROR;
         }
-        return new Output("Alias " + alias + " maps to task id " + task + ".");
+        console.message("Alias " + alias + " maps to task id " + task + ".");
+        return CallResult.SUCCESS;
     }
 
     @Action("set")
-    public Output set(String alias, String taskNameOrId) {
+    public CallResult set(String alias, String taskNameOrId) {
         Task task = context.p().getTaskWithoutAlias(taskNameOrId);
         if (task == null) {
-            return new Output("Specified taskName " + taskNameOrId + " is not valid.");
+            console.error("Specified taskName " + taskNameOrId + " is not valid.");
+            return CallResult.ERROR;
         }
 
         context.a().addAlias(alias, task.getId());
-        return new Output("Alias " + alias + " was successfully added to task id " + task.getId());
+        console.message("Alias " + alias + " was successfully added to task id " + task.getId());
+        return CallResult.SUCCESS;
     }
     
     public static void defaultCallables(String name, List<Callable> callables) {

@@ -4,9 +4,9 @@ import java.util.List;
 
 import xyz.luan.console.parser.ActionCall;
 import xyz.luan.console.parser.ActionRef;
+import xyz.luan.console.parser.CallResult;
 import xyz.luan.console.parser.Callable;
 import xyz.luan.console.parser.Controller;
-import xyz.luan.console.parser.Output;
 import xyz.luan.console.parser.Pattern;
 import xyz.luan.console.parser.actions.Action;
 import br.com.dextra.pma.main.Options;
@@ -15,31 +15,34 @@ import br.com.dextra.pma.main.PMAContext;
 public class OptionsController extends Controller<PMAContext> {
 
     @Action("list")
-    public Output list() {
-        final Output out = new Output();
+    public CallResult list() {
         context.o().list((o, v) -> {
-            out.add(o + " : " + v);
+            console.result(o + " : " + v);
         });
-        return out;
+        return CallResult.SUCCESS;
     }
 
     @Action("get")
-    public Output get(String option) {
+    public CallResult get(String option) {
         try {
-            return new Output(context.o().get(option));
+            console.result(context.o().get(option));
+            return CallResult.SUCCESS;
         } catch (Options.InvalidOptionExcpetion e) {
-            return new Output("Invalid option " + option);
+            console.error("Invalid option " + option);
+            return CallResult.ERROR;
         }
     }
 
     @Action("set")
-    public Output set(String option, String value) {
+    public CallResult set(String option, String value) {
         try {
             context.o().set(option, value);
             context.o().save();
-            return new Output("Option updated with success.");
+            console.result("Option updated with success.");
+            return CallResult.SUCCESS;
         } catch (Options.InvalidOptionExcpetion e) {
-            return new Output("Invalid option " + option);
+            console.error("Invalid option " + option);
+            return CallResult.ERROR;
         }
     }
     
