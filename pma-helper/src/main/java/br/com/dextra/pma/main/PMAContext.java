@@ -18,7 +18,7 @@ public class PMAContext extends Context {
     }
 
     public static void main(String[] args) throws InvalidAction {
-        Setup.setupContext().run(args);
+        Setup.setupApplication().run(args);
     }
 
     public Aliases a() {
@@ -35,17 +35,5 @@ public class PMAContext extends Context {
 
     public void saveParser() {
         Setup.saveParser(this.parser);
-    }
-
-    @Override
-    public void quit(int status) {
-        print("Bye, bye!");
-        saveParser();
-        super.quit(status);
-    }
-
-    @Override
-    public void emptyLineHandler() {
-        quit(0);
     }
 }

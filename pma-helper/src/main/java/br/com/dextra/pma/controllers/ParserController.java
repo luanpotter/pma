@@ -6,7 +6,6 @@ import xyz.luan.console.parser.ActionCall;
 import xyz.luan.console.parser.CallResult;
 import xyz.luan.console.parser.Callable;
 import xyz.luan.console.parser.Controller;
-import xyz.luan.console.parser.Output;
 import xyz.luan.console.parser.actions.Action;
 import xyz.luan.console.parser.actions.Optional;
 import br.com.dextra.pma.main.Options.Option;
@@ -23,29 +22,30 @@ public class ParserController extends Controller<PMAContext> {
         String fileName = context.o().get(Option.LOG_FILE);
         List<Day> days = PMAParser.parseLogs(fileName, false);
         for (Day day : days) {
-            console.result(day.save());
+            day.save(console);
         }
 
         return CallResult.SUCCESS;
     }
 
     @Action("log")
-    public Output log(@Optional String backup) throws InvalidFormatException {
+    public CallResult log(@Optional String backup) throws InvalidFormatException {
         boolean bkp = "true".equals(backup);
 
         String fileName = context.o().get(bkp ? Option.BACKUP_FILE : Option.LOG_FILE);
         List<Day> days = PMAParser.parseLogs(fileName, true);
 
-        Output out = new Output(days.size() + " days parsed;");
+        console.result(days.size() + " days parsed;");
         for (Day day : days) {
-            out.add(day.toString()); // TODO output properly
+            console.result(day.toString()); // TODO output properly
         }
-        return out;
+        return CallResult.SUCCESS;
     }
 
     @Action("today")
-    public Output today() {
-        return new Output("TODO WIP");
+    public CallResult today() {
+        console.error("TODO WIP");
+        return CallResult.ERROR;
     }
 
     public static void defaultCallables(String name, List<Callable> callables) {

@@ -24,7 +24,6 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.xpath.XPathExpression;
 import org.jdom2.xpath.XPathFactory;
 
-import xyz.luan.console.parser.Output;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.date.Time;
 import br.com.dextra.pma.models.Project;
@@ -60,23 +59,23 @@ public final class Wrapper {
         return tasks;
     }
 
-    public static String[] createDay(Date date, Time start, Time end, Time interval) {
-        return new Output(post("criar_apontamento_diario", new NameValuePair[] {
+    public static String createDay(Date date, Time start, Time end, Time interval) {
+        return post("criar_apontamento_diario", new NameValuePair[] {
                 new BasicNameValuePair("data", date.toString()),
                 new BasicNameValuePair("inicio", start.toString()),
                 new BasicNameValuePair("fim", end.toString()),
                 new BasicNameValuePair("intervalo", interval.toString()),
-        }));
+        });
     }
 
-    public static Output createTask(Date date, long taskId, String description, int duration) {
-        return new Output(post("criar_apontamento", new NameValuePair[] {
+    public static String createTask(Date date, long taskId, String description, int duration) {
+        return post("criar_apontamento", new NameValuePair[] {
                 new BasicNameValuePair("data", date.toString()),
                 new BasicNameValuePair("atividadeId", String.valueOf(taskId)),
                 new BasicNameValuePair("atividadeStatus", "working"),
                 new BasicNameValuePair("esforco", String.valueOf(duration)),
                 new BasicNameValuePair("descricao", description),
-        }));
+        });
     }
 
     private static String tokenCache = null;

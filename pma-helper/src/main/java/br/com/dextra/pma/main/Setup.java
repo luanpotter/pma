@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import xyz.luan.console.parser.Application;
 import xyz.luan.console.parser.Callable;
 import xyz.luan.console.parser.Caller;
-import xyz.luan.console.parser.ExceptionHandler;
-import xyz.luan.console.parser.Output;
+import xyz.luan.console.parser.Console;
+import xyz.luan.console.parser.DefaultConsole;
 import xyz.luan.console.parser.Parser;
 import xyz.luan.console.parser.actions.InvalidAction;
 import xyz.luan.console.parser.config.ConfigController;
@@ -17,26 +18,33 @@ import br.com.dextra.pma.controllers.InfoController;
 import br.com.dextra.pma.controllers.LoggingController;
 import br.com.dextra.pma.controllers.OptionsController;
 import br.com.dextra.pma.controllers.ParserController;
-import br.com.dextra.pma.main.PMAParser.InvalidFormatException;
 import br.com.dextra.pma.utils.SimpleObjectAccess;
 
 public final class Setup {
 
-    static {
+    /*static {
         ExceptionHandler.HANDLERS.put(NotLoggedIn.class, e -> new Output(e.getMessage()));
         ExceptionHandler.HANDLERS.put(InvalidFormatException.class, e -> new Output(e.getMessage()));
-    }
+    }*/ // TODO << reado ExceptionHandler
 
     private Setup() {
         throw new RuntimeException("Should not be instanciated.");
     }
 
-    public static PMAContext setupContext() throws InvalidAction {
-        PMAContext context = new PMAContext();
-        Caller caller = defaultCaller(context);
+    public static Application setupApplication() {
+        final PMAContext context = new PMAContext();
+        final Console console = new DefaultConsole();
+
+        Caller caller;
+        try {
+            caller = defaultCaller(context, console);
+        } catch (InvalidAction e) {
+            throw new RuntimeException(e);
+        }
         Parser parser = getParser();
         context.setup(parser, caller);
-        return context;
+
+        return new PMAApplication(console, context);
     }
 
     private static final String PARSER_FILE_NAME = "parser.dat";
@@ -58,15 +66,15 @@ public final class Setup {
         return new Parser(defaultAliases(), defaultCallables());
     }
 
-    public static Caller defaultCaller(PMAContext context) throws InvalidAction {
+    public static Caller defaultCaller(PMAContext context, Console console) throws InvalidAction {
         Caller caller = new Caller();
-        caller.registerClass("config", new ConfigController().setContext(context));
-        caller.registerClass("help", new HelpController().setContext(context));
-        caller.registerClass("logging", new LoggingController().setContext(context));
-        caller.registerClass("parser", new ParserController().setContext(context));
-        caller.registerClass("info", new InfoController().setContext(context));
-        caller.registerClass("option", new OptionsController().setContext(context));
-        caller.registerClass("aliases", new AliasesController().setContext(context));
+        caller.registerClass("config", new ConfigController().setup(context, console));
+        caller.registerClass("help", new HelpController().setup(context, console));
+        caller.registerClass("logging", new LoggingController().setup(context, console));
+        caller.registerClass("parser", new ParserController().setup(context, console));
+        caller.registerClass("info", new InfoController().setup(context, console));
+        caller.registerClass("option", new OptionsController().setup(context, console));
+        caller.registerClass("aliases", new AliasesController().setup(context, console));
 
         return caller;
     }

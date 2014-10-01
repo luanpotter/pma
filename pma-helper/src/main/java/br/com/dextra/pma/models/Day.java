@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import xyz.luan.console.parser.Output;
+import xyz.luan.console.parser.Console;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.date.Time;
 import br.com.dextra.pma.main.Wrapper;
@@ -33,12 +33,11 @@ public class Day implements Serializable {
         }
     }
 
-    public save(Console c) {
-        Output out = Wrapper.createDay(date, startTime, endTime, interval);
+    public void save(Console c) {
+        c.result(Wrapper.createDay(date, startTime, endTime, interval));
         for (Appointment a : appointments) {
-            out.append(a.save(date));
+            c.result(a.save(date));
         }
-        return out;
     }
 
     @Override

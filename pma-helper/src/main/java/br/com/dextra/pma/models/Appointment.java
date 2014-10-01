@@ -1,6 +1,5 @@
 package br.com.dextra.pma.models;
 
-import xyz.luan.console.parser.Output;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.main.Wrapper;
 
@@ -23,7 +22,7 @@ public class Appointment {
         this.minutes = minutes;
     }
 
-    public Output save(Date date) {
+    public String save(Date date) {
         return Wrapper.createTask(date, taskId, comment, minutes);
     }
 
