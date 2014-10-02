@@ -61,7 +61,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>br.com.dextra.pma.main.PMAApplication</mainClass>
+							<mainClass>br.com.dextra.pma.main.PmaApplication</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

@@ -9,6 +9,7 @@ import xyz.luan.console.parser.Console;
 import xyz.luan.console.parser.DefaultConsole;
 import xyz.luan.console.parser.Parser;
 import xyz.luan.console.parser.actions.InvalidAction;
+import xyz.luan.console.parser.actions.InvalidHandler;
 import xyz.luan.console.parser.call.Caller;
 import xyz.luan.console.parser.callable.Callable;
 import xyz.luan.console.parser.config.ConfigController;
@@ -22,11 +23,6 @@ import br.com.dextra.pma.utils.SimpleObjectAccess;
 
 public final class Setup {
 
-    /*static {
-        ExceptionHandler.HANDLERS.put(NotLoggedIn.class, e -> new Output(e.getMessage()));
-        ExceptionHandler.HANDLERS.put(InvalidFormatException.class, e -> new Output(e.getMessage()));
-    }*/ // TODO << reado ExceptionHandler
-
     private Setup() {
         throw new RuntimeException("Should not be instanciated.");
     }
@@ -38,7 +34,7 @@ public final class Setup {
         Caller caller;
         try {
             caller = defaultCaller(context, console);
-        } catch (InvalidAction e) {
+        } catch (InvalidAction | InvalidHandler e) {
             throw new RuntimeException(e);
         }
         Parser parser = getParser();
@@ -66,7 +62,7 @@ public final class Setup {
         return new Parser(defaultAliases(), defaultCallables());
     }
 
-    public static Caller defaultCaller(PmaContext context, Console console) throws InvalidAction {
+    public static Caller defaultCaller(PmaContext context, Console console) throws InvalidAction, InvalidHandler {
         Caller caller = new Caller();
         caller.registerClass("config", new ConfigController().setup(context, console));
         caller.registerClass("help", new HelpController().setup(context, console));

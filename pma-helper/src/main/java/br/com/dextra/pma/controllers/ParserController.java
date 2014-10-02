@@ -2,20 +2,18 @@ package br.com.dextra.pma.controllers;
 
 import java.util.List;
 
-import xyz.luan.console.parser.Controller;
 import xyz.luan.console.parser.actions.Action;
 import xyz.luan.console.parser.actions.Optional;
 import xyz.luan.console.parser.call.CallResult;
 import xyz.luan.console.parser.callable.ActionCall;
 import xyz.luan.console.parser.callable.Callable;
-import br.com.dextra.pma.main.Options.Option;
-import br.com.dextra.pma.main.PmaContext;
 import br.com.dextra.pma.main.FileParser;
 import br.com.dextra.pma.main.FileParser.InvalidFormatException;
+import br.com.dextra.pma.main.Options.Option;
 import br.com.dextra.pma.models.Day;
 import br.com.dextra.pma.utils.MapBuilder;
 
-public class ParserController extends Controller<PmaContext> {
+public class ParserController extends BaseController {
 
     @Action("save")
     public CallResult save() throws InvalidFormatException {
