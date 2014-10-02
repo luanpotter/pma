@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import xyz.luan.console.parser.Application;
-import xyz.luan.console.parser.Callable;
-import xyz.luan.console.parser.Caller;
 import xyz.luan.console.parser.Console;
 import xyz.luan.console.parser.DefaultConsole;
 import xyz.luan.console.parser.Parser;
 import xyz.luan.console.parser.actions.InvalidAction;
+import xyz.luan.console.parser.call.Caller;
+import xyz.luan.console.parser.callable.Callable;
 import xyz.luan.console.parser.config.ConfigController;
 import xyz.luan.console.parser.config.HelpController;
 import br.com.dextra.pma.controllers.AliasesController;
@@ -32,7 +32,7 @@ public final class Setup {
     }
 
     public static Application setupApplication() {
-        final PMAContext context = new PMAContext();
+        final PmaContext context = new PmaContext();
         final Console console = new DefaultConsole();
 
         Caller caller;
@@ -44,7 +44,7 @@ public final class Setup {
         Parser parser = getParser();
         context.setup(parser, caller);
 
-        return new PMAApplication(console, context);
+        return new PmaApplication(console, context);
     }
 
     private static final String PARSER_FILE_NAME = "parser.dat";
@@ -66,7 +66,7 @@ public final class Setup {
         return new Parser(defaultAliases(), defaultCallables());
     }
 
-    public static Caller defaultCaller(PMAContext context, Console console) throws InvalidAction {
+    public static Caller defaultCaller(PmaContext context, Console console) throws InvalidAction {
         Caller caller = new Caller();
         caller.registerClass("config", new ConfigController().setup(context, console));
         caller.registerClass("help", new HelpController().setup(context, console));

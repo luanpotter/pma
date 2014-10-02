@@ -16,7 +16,7 @@ import br.com.dextra.pma.date.Time;
 import br.com.dextra.pma.models.Appointment;
 import br.com.dextra.pma.models.Day;
 
-public class PMAParser {
+public class FileParser {
 
     public static final class InvalidFormatException extends Exception {
         private static final long serialVersionUID = 376344169681487559L;

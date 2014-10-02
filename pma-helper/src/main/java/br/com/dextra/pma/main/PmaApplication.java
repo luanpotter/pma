@@ -3,12 +3,13 @@ package br.com.dextra.pma.main;
 import xyz.luan.console.parser.Application;
 import xyz.luan.console.parser.Console;
 import xyz.luan.console.parser.Context;
+import xyz.luan.console.parser.call.CallResult;
 
-final class PMAApplication extends Application {
+final class PmaApplication extends Application {
     private final Console console;
-    private final PMAContext context;
+    private final PmaContext context;
 
-    public PMAApplication(Console console, PMAContext context) {
+    public PmaApplication(Console console, PmaContext context) {
         this.console = console;
         this.context = context;
     }
@@ -38,7 +39,7 @@ final class PMAApplication extends Application {
     }
 
     @Override
-    public boolean emptyLineHandler() {
-        return true; //i.e., quit
+    public CallResult emptyLineHandler() {
+        return CallResult.QUIT;
     }
 }

@@ -2,17 +2,17 @@ package br.com.dextra.pma.controllers;
 
 import java.util.List;
 
-import xyz.luan.console.parser.ActionCall;
-import xyz.luan.console.parser.ActionRef;
-import xyz.luan.console.parser.CallResult;
-import xyz.luan.console.parser.Callable;
 import xyz.luan.console.parser.Controller;
-import xyz.luan.console.parser.Pattern;
 import xyz.luan.console.parser.actions.Action;
+import xyz.luan.console.parser.actions.ActionRef;
+import xyz.luan.console.parser.call.CallResult;
+import xyz.luan.console.parser.callable.ActionCall;
+import xyz.luan.console.parser.callable.Callable;
+import xyz.luan.console.parser.callable.Pattern;
 import br.com.dextra.pma.main.Options;
-import br.com.dextra.pma.main.PMAContext;
+import br.com.dextra.pma.main.PmaContext;
 
-public class OptionsController extends Controller<PMAContext> {
+public class OptionsController extends Controller<PmaContext> {
 
     @Action("list")
     public CallResult list() {

@@ -3,7 +3,7 @@ package br.com.dextra.pma.main;
 import xyz.luan.console.parser.Context;
 import xyz.luan.console.parser.actions.InvalidAction;
 
-public class PMAContext extends Context {
+public class PmaContext extends Context {
 
     private static final long serialVersionUID = -4203815905025892292L;
 
@@ -11,7 +11,7 @@ public class PMAContext extends Context {
     private Options options;
     private Aliases aliases;
 
-    public PMAContext() {
+    public PmaContext() {
         this.projects = Projects.readOrCreate();
         this.options = Options.readOrCreate();
         this.aliases = Aliases.readOrCreate();
