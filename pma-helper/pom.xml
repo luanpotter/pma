@@ -17,8 +17,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>xyz.luan.console.parser</groupId>
-			<artifactId>console-parser</artifactId>
+			<groupId>xyz.luan.console.fn</groupId>
+			<artifactId>console-fn</artifactId>
 			<version>0.1</version>
 		</dependency>
 		<dependency>
@@ -61,7 +61,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>br.com.dextra.pma.main.PmaApplication</mainClass>
+							<mainClass>br.com.dextra.pma.main.PmaSetup</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

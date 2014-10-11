@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+import xyz.luan.console.fn.FnController;
 import xyz.luan.console.parser.actions.Action;
 import xyz.luan.console.parser.actions.ActionRef;
 import xyz.luan.console.parser.actions.Optional;
@@ -17,6 +18,7 @@ import br.com.dextra.pma.date.Moment;
 import br.com.dextra.pma.main.Options.Option;
 import br.com.dextra.pma.models.Task;
 
+@FnController
 public class LoggingController extends BaseController {
 
     private static final String ERROR_MESSAGE = "No name or id is specified, and default task is invalid: '%s'. To change the default task, run options set default-task taskNameOrId";

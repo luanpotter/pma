@@ -1,3 +1,6 @@
 [submodule "console-parser"]
 	path = console-parser
 	url = git@github.com:luanpotter/console-parser.git
+[submodule "console-fn"]
+	path = console-fn
+	url = git@github.com:luanpotter/console-fn.git

@@ -2,6 +2,7 @@ package br.com.dextra.pma.controllers;
 
 import java.util.List;
 
+import xyz.luan.console.fn.FnController;
 import xyz.luan.console.parser.actions.Action;
 import xyz.luan.console.parser.actions.Optional;
 import xyz.luan.console.parser.call.CallResult;
@@ -13,6 +14,7 @@ import br.com.dextra.pma.main.Options.Option;
 import br.com.dextra.pma.models.Day;
 import br.com.dextra.pma.utils.MapBuilder;
 
+@FnController
 public class ParserController extends BaseController {
 
     @Action("save")

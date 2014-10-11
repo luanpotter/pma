@@ -2,6 +2,7 @@ package br.com.dextra.pma.controllers;
 
 import java.util.List;
 
+import xyz.luan.console.fn.FnController;
 import xyz.luan.console.parser.actions.Action;
 import xyz.luan.console.parser.actions.Optional;
 import xyz.luan.console.parser.call.CallResult;
@@ -11,6 +12,7 @@ import br.com.dextra.pma.models.Project;
 import br.com.dextra.pma.models.Task;
 import br.com.dextra.pma.utils.MapBuilder;
 
+@FnController
 public class InfoController extends BaseController {
 
     @Action("list")

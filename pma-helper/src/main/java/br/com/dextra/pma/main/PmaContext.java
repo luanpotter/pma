@@ -1,7 +1,6 @@
 package br.com.dextra.pma.main;
 
 import xyz.luan.console.parser.Context;
-import xyz.luan.console.parser.actions.InvalidAction;
 
 public class PmaContext extends Context {
 
@@ -17,10 +16,6 @@ public class PmaContext extends Context {
         this.aliases = Aliases.readOrCreate();
     }
 
-    public static void main(String[] args) throws InvalidAction {
-        Setup.setupApplication().run(args);
-    }
-
     public Aliases a() {
         return this.aliases;
     }
@@ -34,6 +29,6 @@ public class PmaContext extends Context {
     }
 
     public void saveParser() {
-        Setup.saveParser(this.parser);
+        PmaSetup.saveParser(this.parser);
     }
 }

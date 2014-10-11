@@ -11,7 +11,7 @@
 
   <modules>
       <module>pma-helper</module>
-      <module>console-parser</module>
+      <module>console-fn</module>
   </modules>
 	
 </project>
