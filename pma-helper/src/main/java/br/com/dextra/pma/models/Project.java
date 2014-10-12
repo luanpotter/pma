@@ -22,7 +22,7 @@ public class Project implements Serializable {
         this.client = project.getChild("cliente").getText();
         this.name = project.getChild("nome").getText();
 
-        this.tasks = Wrapper.getTasksFromProject(this.id);
+        this.tasks = Wrapper.getTasksFromProject(this);
     }
 
     public Task getTaskByName(String name) {

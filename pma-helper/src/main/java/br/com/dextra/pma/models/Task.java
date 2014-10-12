@@ -10,10 +10,12 @@ public class Task implements Serializable {
 
     private long id;
     private String name;
+    private Project project;
 
-    public Task(Element task) {
+    public Task(Project project, Element task) {
         this.id = Long.parseLong(task.getChild("id").getText());
         this.name = task.getChild("nome").getText();
+        this.project = project;
     }
 
     public long getId() {
@@ -26,6 +28,6 @@ public class Task implements Serializable {
 
     @Override
     public String toString() {
-        return this.id + " | " + this.name;
+        return this.id + " | " + this.project.getName() + " | " + this.name;
     }
 }

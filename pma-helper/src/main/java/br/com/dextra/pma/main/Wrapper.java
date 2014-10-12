@@ -52,12 +52,12 @@ public final class Wrapper {
         return projects;
     }
 
-    public static List<Task> getTasksFromProject(long projectId) {
+    public static List<Task> getTasksFromProject(Project project) {
         final List<Task> tasks = new ArrayList<>();
 
-        final Document document = get("listar_atividades", new BasicNameValuePair("projeto", String.valueOf(projectId)));
+        final Document document = get("listar_atividades", new BasicNameValuePair("projeto", String.valueOf(project.getId())));
         for (Element node : listElements(document, "//atividades/atividade")) {
-            tasks.add(new Task(node));
+            tasks.add(new Task(project, node));
         }
 
         return tasks;

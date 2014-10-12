@@ -32,7 +32,9 @@ public class PmaSetup extends FnSetup<PmaContext> {
             protected void loop(Console console, Context c) {
                 boolean needUpdating = tryLogginInIfNeeded(console);
                 if (needUpdating) {
+                    console.result("Sucessfully logged in. Now wait until your projects and tasks are retrived...");
                     context.p().update();
+                    console.result("All done! Type help if you need any help.");
                 }
                 super.loop(console, context);
             }
