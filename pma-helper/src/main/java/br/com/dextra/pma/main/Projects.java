@@ -22,7 +22,7 @@ public class Projects implements Serializable {
         if (projs != null) {
             return projs;
         } else {
-            return new Projects().update();
+            return new Projects();
         }
     }
 

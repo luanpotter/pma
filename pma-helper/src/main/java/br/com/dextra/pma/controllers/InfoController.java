@@ -29,6 +29,7 @@ public class InfoController extends BaseController {
 
     @Action("update")
     public CallResult update() {
+        console.result("Starting update...");
         context.p().update();
         console.result("Projects and tasks successfully updated.");
         return CallResult.SUCCESS;
