@@ -13,6 +13,7 @@ import br.com.dextra.pma.main.FileParser.InvalidFormatException;
 import br.com.dextra.pma.main.Options.Option;
 import br.com.dextra.pma.models.Day;
 import br.com.dextra.pma.utils.MapBuilder;
+import br.com.dextra.pma.utils.SimpleObjectAccess;
 
 @FnController
 public class ParserController extends BaseController {
@@ -20,9 +21,16 @@ public class ParserController extends BaseController {
     @Action("save")
     public CallResult save() throws InvalidFormatException {
         String fileName = context.o().get(Option.LOG_FILE);
+
         List<Day> days = FileParser.parseLogs(fileName, false);
-        for (Day day : days) {
-            day.save(console);
+        try {
+            for (Day day : days) {
+                day.save(console);
+            }
+        } catch (RuntimeException e) {
+            console.error("Some error occured while sending data to server. Your data is safe at your backup and at tmp.dayslist.dat");
+            SimpleObjectAccess.saveTo("tmp.dayslist.dat", days);
+            throw e;
         }
 
         return CallResult.SUCCESS;

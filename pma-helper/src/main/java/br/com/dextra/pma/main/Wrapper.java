@@ -36,6 +36,8 @@ public final class Wrapper {
 
     private static final String TOKEN_FILE_NAME = "token.dat";
     private static final String DOMAIN = "https://dextranet.dextra.com.br/pma/services/";
+    
+    private static final String INVALID_TOKEN_MESSAGE = "token inválido";
 
     private Wrapper() {
         throw new RuntimeException("Should not be instanciated.");
@@ -85,7 +87,9 @@ public final class Wrapper {
     private static String tokenCache = null;
 
     private static String evaluateElement(Document doc, String xpath) {
-        return listElements(doc, xpath).get(0).getText();        
+        List<Element> elementList = listElements(doc, xpath);
+        assert elementList.size() == 1;
+        return elementList.get(0).getText();
     }
 
     private static List<Element> listElements(Document doc, String xpath) {
@@ -97,13 +101,25 @@ public final class Wrapper {
     
     public static boolean requestLoginIfNeeded(Console console) throws InvalidLoginException {
         File file = new File(TOKEN_FILE_NAME);
-        if (!file.exists()) {
-            requestLogin(console);
-            return true;
+
+        if (file.exists() && isValidToken()) {
+            return false;
         }
-        return false;
+
+        requestLogin(console);
+        return true;
     }
     
+    private static boolean isValidToken() {
+        Document doc = get("listar_atividades");
+        for (Element e : listElements(doc, "//erro")) {
+            if (e.getText().equals(INVALID_TOKEN_MESSAGE)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static class InvalidLoginException extends Exception {
         private static final long serialVersionUID = 2440114403933514632L;
         
@@ -160,8 +176,23 @@ public final class Wrapper {
         if (code == 0) {
             return evaluateElement(doc, "//mensagem");
         } else {
-            return evaluateElement(doc, "//erro");
+            throw parseErrors(listElements(doc, "//erro"));
         }
+    }
+
+    private static RuntimeException parseErrors(List<Element> elements) {
+        if (elements.isEmpty()) {
+            return new RuntimeException("Unknown error thrown: request failed, but no message received.");
+        }
+        StringBuilder messages = new StringBuilder("Some unexpected errors were thrown: ");
+        for (Element e : elements) {
+            String message = e.getText();
+            if (message.equals(INVALID_TOKEN_MESSAGE)) {
+                throw new NotLoggedIn();
+            }
+            messages.append(message);
+        }
+        return new RuntimeException(messages.toString());
     }
 
     private static int getDocumentErrorCode(Document doc) {
@@ -171,7 +202,7 @@ public final class Wrapper {
     private static Document get(String url, NameValuePair... customParams) {
         return get(url, true, customParams);
     }
-    
+
     private static Document get(String url, boolean useToken, NameValuePair... customParams) {
         try {
             HttpClient httpclient = HttpClients.createDefault();

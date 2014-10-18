@@ -4,10 +4,12 @@ import java.util.List;
 
 import xyz.luan.console.fn.FnController;
 import xyz.luan.console.parser.actions.Action;
+import xyz.luan.console.parser.actions.ActionRef;
 import xyz.luan.console.parser.actions.Optional;
 import xyz.luan.console.parser.call.CallResult;
 import xyz.luan.console.parser.callable.ActionCall;
 import xyz.luan.console.parser.callable.Callable;
+import xyz.luan.console.parser.callable.Pattern;
 import br.com.dextra.pma.models.Project;
 import br.com.dextra.pma.models.Task;
 import br.com.dextra.pma.utils.MapBuilder;
@@ -64,7 +66,7 @@ public class InfoController extends BaseController {
     public static void defaultCallables(String name, List<Callable> callables) {
         callables.add(new ActionCall(name + ":list", ":list :projects", MapBuilder.<String, String> from("type", "projects"), "List all projects"));
         callables.add(new ActionCall(name + ":list", ":list :tasks", MapBuilder.<String, String> from("type", "tasks"), "List all tasks"));
-        callables.add(new ActionCall(name + ":list", ":list :tasks :from projectNameOrId", MapBuilder.<String, String> from("type", "tasks"), "List all tasks from projectNameOrId project"));
+        callables.add(new ActionCall(new ActionRef(name, "list"), new Pattern(":list :tasks :from projectNameOrId", true), MapBuilder.<String, String> from("type", "tasks"), "List all tasks from projectNameOrId project"));
         callables.add(new ActionCall(name + ":update", ":update", "Update the list of projects and tasks"));
     }
 }
