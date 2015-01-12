@@ -43,6 +43,7 @@ public class AliasesController extends BaseController {
         }
 
         context.a().addAlias(alias, task.getId());
+        context.a().save();
         console.message("Alias " + alias + " was successfully added to task id " + task.getId());
         return CallResult.SUCCESS;
     }

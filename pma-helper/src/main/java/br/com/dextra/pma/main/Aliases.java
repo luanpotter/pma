@@ -24,6 +24,10 @@ public class Aliases implements Serializable {
         }
     }
 
+    public void save() {
+    	SimpleObjectAccess.saveTo(FILE_NAME, this);
+    }
+
     public Aliases() {
         this.aliases = new HashMap<>();
     }
