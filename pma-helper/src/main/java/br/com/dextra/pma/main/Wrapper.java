@@ -74,12 +74,12 @@ public final class Wrapper {
         });
     }
 
-    public static String createTask(Date date, long taskId, String description, int duration) {
+    public static String createTask(Date date, long taskId, String description, Time duration) {
         return post("criar_apontamento", new NameValuePair[] {
                 new BasicNameValuePair("data", date.toString()),
                 new BasicNameValuePair("atividadeId", String.valueOf(taskId)),
                 new BasicNameValuePair("atividadeStatus", "working"),
-                new BasicNameValuePair("esforco", String.valueOf(duration)),
+                new BasicNameValuePair("esforco", String.valueOf(duration.getRoundedMinutes())),
                 new BasicNameValuePair("descricao", description),
         });
     }

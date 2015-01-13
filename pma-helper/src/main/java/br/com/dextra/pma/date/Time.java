@@ -1,69 +1,62 @@
 package br.com.dextra.pma.date;
 
+import java.io.Serializable;
+
 import br.com.dextra.pma.utils.NumberUtils;
 
-public class Time {
-    private int hours, minutes;
+public class Time implements Serializable {
 
-    public Time() {
-    }
+	private int minutes;
 
-    public Time(Time t) {
-        this.hours = t.hours;
-        this.minutes = t.minutes;
-    }
+	public Time() {
+	}
 
-    public Time(String t) {
-        String[] p = t.split(":");
-        if (p.length != 2)
-            throw new IllegalArgumentException("String must be in format hh:mm");
-        this.hours = Integer.parseInt(p[0]);
-        if (this.hours < 0 || this.hours >= 24)
-            throw new IllegalArgumentException("Hours must be between 0 and 24, " + this.hours + " found.");
-        this.minutes = Integer.parseInt(p[1]);
-        if (this.minutes < 0 || this.minutes >= 60)
-            throw new IllegalArgumentException("Minutes must be between 0 and 60, " + this.minutes + " found.");
-    }
+	public Time(String t) {
+		this(parseString(t));
+	}
 
-    public Time(int minutes) {
-        this.hours = minutes / 60;
-        if (this.hours < 0 || this.hours >= 24)
-            throw new IllegalArgumentException("Hours must be between 0 and 24");
-        this.minutes = minutes % 60;
-    }
+	private static int parseString(String t) {
+		String[] p = t.split(":");
+		if (p.length != 2)
+			throw new IllegalArgumentException("String must be in format hh:mm");
+		int hours = Integer.parseInt(p[0]);
+		if (hours < 0 || hours >= 24)
+			throw new IllegalArgumentException("Hours must be between 0 and 24, " + hours + " found.");
+		int minutes = Integer.parseInt(p[1]);
+		if (minutes < 0 || minutes >= 60)
+			throw new IllegalArgumentException("Minutes must be between 0 and 60, " + minutes + " found.");
+		return hours * 60 + minutes;
+	}
 
-    public Time(int hours, int minutes) {
-        this.hours = hours;
-        this.minutes = minutes;
-    }
+	public Time(int minutes) {
+		this.minutes = minutes;
+	}
 
-    public int getRoundedMinutes() {
-        return Math.round((float) minutes / 5) * 5;
-    }
+	public Time(int hours, int minutes) {
+		this.minutes = hours * 60 + minutes;
+	}
 
-    public int getTotalMinutes() {
-        return hours * 60 + getRoundedMinutes();
-    }
+	public int getRoundedMinutes() {
+		return Math.round((float) minutes / 5) * 5;
+	}
 
-    public int getActualTotalMinutes() {
-        return hours * 60 + minutes;
-    }
+	public int getMinutes() {
+		return minutes;
+	}
 
-    public int getDifference(Time h) {
-        return this.getActualTotalMinutes() - h.getActualTotalMinutes();
-    }
+	public int getDifference(Time h) {
+		return this.getMinutes() - h.getMinutes();
+	}
 
-    public void addMinutes(int minutes) {
-        this.minutes += minutes;
-        this.hours += this.minutes / 60;
-        this.minutes %= 60;
-    }
+	@Override
+	public String toString() {
+		int totalMinutes = getRoundedMinutes();
+		int hours = totalMinutes / 60;
+		int minutes = totalMinutes % 60;
+		return NumberUtils.toString(hours) + ':' + NumberUtils.toString(minutes);
+	}
 
-    @Override
-    public String toString() {
-        int minutes = getRoundedMinutes();
-        int hours = this.hours + minutes / 60;
-        minutes %= 60;
-        return NumberUtils.toString(hours) + ':' + NumberUtils.toString(minutes);
-    }
+	public void addMinutes(int minutes) {
+		this.minutes += minutes;
+	}
 }
