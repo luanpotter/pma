@@ -103,7 +103,7 @@ public class FileParser {
 				} else if (currentDay.equals(date)) {
 					lastAppointment.addTime(time.getDifference(lastTime));
 				} else {
-					if (lastAppointment != null) {
+					if (lastAppointment.getTask() != -1) {
 						throw new InvalidFormatException("Started a new day without ending previous one", lineNumber);
 					}
 					results.add(new Day(currentDay, start, lastTime, taskTimes));
