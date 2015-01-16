@@ -6,6 +6,8 @@ import br.com.dextra.pma.utils.NumberUtils;
 
 public class Date implements Serializable {
 
+	private static final long serialVersionUID = -446196417235991965L;
+
 	private int year, month, day;
 
 	public Date(String date) {

@@ -1,29 +1,40 @@
 package br.com.dextra.pma.date;
 
-public class Moment {
-    private Date date;
-    private Time time;
+import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
 
-    public Moment() {
-        this(java.util.Calendar.getInstance());
-    }
+import java.io.Serializable;
+import java.util.Calendar;
 
-    public Moment(java.util.Calendar currentTime) {
-        this.date = new Date(currentTime.get(java.util.Calendar.YEAR), currentTime.get(java.util.Calendar.MONTH) + 1,
-                currentTime.get(java.util.Calendar.DAY_OF_MONTH));
-        this.time = new Time(currentTime.get(java.util.Calendar.HOUR_OF_DAY), currentTime.get(java.util.Calendar.MINUTE));
-    }
+public class Moment implements Serializable {
 
-    public Date getDate() {
-        return this.date;
-    }
+	private static final long serialVersionUID = 989609738139366139L;
 
-    public Time getTime() {
-        return this.time;
-    }
+	private Date date;
+	private Time time;
 
-    @Override
-    public String toString() {
-        return date.toString() + '+' + time.toString();
-    }
+	public Moment() {
+		this(Calendar.getInstance());
+	}
+
+	public Moment(Calendar currentTime) {
+		this.date = new Date(currentTime.get(YEAR), currentTime.get(MONTH) + 1, currentTime.get(DAY_OF_MONTH));
+		this.time = new Time(currentTime.get(HOUR_OF_DAY), currentTime.get(MINUTE));
+	}
+
+	public Date getDate() {
+		return this.date;
+	}
+
+	public Time getTime() {
+		return this.time;
+	}
+
+	@Override
+	public String toString() {
+		return date.toString() + '+' + time.toString();
+	}
 }

@@ -6,6 +6,8 @@ import br.com.dextra.pma.utils.NumberUtils;
 
 public class Time implements Serializable {
 
+	private static final long serialVersionUID = 9180454594812684317L;
+
 	private int minutes;
 
 	public Time() {
