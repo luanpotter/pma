@@ -11,51 +11,52 @@ import br.com.dextra.pma.main.Wrapper;
 
 public class Appointment implements Serializable {
 
-	private static final String DEFAULT_DESC = ".";
+    private static final long serialVersionUID = 6206472230468718564L;
 
-	public static long INTERVAL_TASK = -1l;
-	
-	private long taskId;
-	private Time duration;
-	private List<String> comments;
+    private static final String DEFAULT_DESC = ".";
+    public static long INTERVAL_TASK = -1l;
 
-	public Appointment(long taskId) {
-		this.taskId = taskId;
-		this.duration = new Time();
-		this.comments = Collections.emptyList();
-	}
+    private long taskId;
+    private Time duration;
+    private List<String> comments;
 
-	public long getTask() {
-		return this.taskId;
-	}
+    public Appointment(long taskId) {
+        this.taskId = taskId;
+        this.duration = new Time();
+        this.comments = Collections.emptyList();
+    }
 
-	public void addTime(int minutes) {
-		this.duration.addMinutes(minutes);
-	}
+    public long getTask() {
+        return this.taskId;
+    }
 
-	public void addDescription(String description) {
-		if (!DEFAULT_DESC.equals(description)) {
-			this.comments.add(description);
-		}
-	}
+    public void addTime(int minutes) {
+        this.duration.addMinutes(minutes);
+    }
 
-	public String getComment() {
-		if (this.comments.isEmpty()) {
-			return DEFAULT_DESC;
-		}
-		return this.comments.stream().collect(Collectors.joining("\n"));
-	}
+    public void addDescription(String description) {
+        if (!DEFAULT_DESC.equals(description)) {
+            this.comments.add(description);
+        }
+    }
 
-	public Time getDuration() {
-		return duration;
-	}
+    public String getComment() {
+        if (this.comments.isEmpty()) {
+            return DEFAULT_DESC;
+        }
+        return this.comments.stream().collect(Collectors.joining("\n"));
+    }
 
-	public String save(Date date) {
-		return Wrapper.createTask(date, taskId, getComment(), duration);
-	}
+    public Time getDuration() {
+        return duration;
+    }
 
-	@Override
-	public String toString() {
-		return taskId + " -> " + duration + "[" + getComment() + "]";
-	}
+    public String save(Date date) {
+        return Wrapper.createTask(date, taskId, getComment(), duration);
+    }
+
+    @Override
+    public String toString() {
+        return taskId + " -> " + duration + "[" + getComment() + "]";
+    }
 }
