@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import xyz.luan.console.parser.Console;
 import br.com.dextra.pma.exceptions.ProjectsMissingException;
 import br.com.dextra.pma.models.Project;
 import br.com.dextra.pma.models.Task;
@@ -35,8 +36,8 @@ public class Projects implements Serializable {
         SimpleObjectAccess.saveTo(FILE_NAME, this);
     }
 
-    public Projects update() {
-        projectsCache = Wrapper.getProjects();
+    public Projects update(Console console) {
+        projectsCache = Wrapper.getProjects(console);
         this.save();
         return this;
     }

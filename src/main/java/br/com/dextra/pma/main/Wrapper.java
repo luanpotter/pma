@@ -44,13 +44,17 @@ public final class Wrapper {
         throw new RuntimeException("Should not be instanciated.");
     }
 
-    public static List<Project> getProjects() {
+    public static List<Project> getProjects(Console console) {
         final List<Project> projects = new ArrayList<>();
 
+        console.tabIn();
+        console.result("Fetching projects...");
         final Document document = get("listar_projetos");
         for (Element project : listElements(document, "//projetos/projeto")) {
+            console.result("Fetching tasks for project...");
             projects.add(new Project(project));
         }
+        console.tabOut();
 
         return projects;
     }

@@ -38,7 +38,7 @@ public class AuthenticationController extends BaseController {
     @Action("update")
     public CallResult update() {
         console.result("Starting update...");
-        context.p().update();
+        context.p().update(console);
         console.result("Projects and tasks successfully updated.");
         return CallResult.SUCCESS;
     }
