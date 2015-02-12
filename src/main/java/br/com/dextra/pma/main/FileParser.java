@@ -125,8 +125,7 @@ public class FileParser {
         }
 
         if (!keepFile) {
-            file.delete();
-            try (PrintWriter p = new PrintWriter(fileName)) {
+            try (PrintWriter p = new PrintWriter(fileName + ".new")) {
                 for (int i = lastSavedLineNumber; i < linesCache.size(); i++) {
                     p.println(linesCache.get(i));
                 }
@@ -136,6 +135,14 @@ public class FileParser {
         }
 
         return results;
+    }
+
+    public static void replaceFiles(String fileName) {
+        File original = new File(fileName);
+        File current = new File(fileName + ".new");
+
+        original.delete();
+        current.renameTo(original);
     }
 
     private static Map<Long, Appointment> emptyMap() {

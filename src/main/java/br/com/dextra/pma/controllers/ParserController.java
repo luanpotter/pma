@@ -36,6 +36,8 @@ public class ParserController extends BaseController {
             throw e;
         }
 
+        FileParser.replaceFiles(fileName);
+
         return CallResult.SUCCESS;
     }
 
