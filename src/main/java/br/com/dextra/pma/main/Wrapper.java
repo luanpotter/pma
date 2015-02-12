@@ -29,6 +29,7 @@ import org.jdom2.xpath.XPathFactory;
 import xyz.luan.console.parser.Console;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.date.Time;
+import br.com.dextra.pma.exceptions.NotLoggedIn;
 import br.com.dextra.pma.models.Project;
 import br.com.dextra.pma.models.Task;
 
@@ -36,7 +37,7 @@ public final class Wrapper {
 
     private static final String TOKEN_FILE_NAME = "token.dat";
     private static final String DOMAIN = "https://dextranet.dextra.com.br/pma/services/";
-    
+
     private static final String INVALID_TOKEN_MESSAGE = "token inválido";
 
     private Wrapper() {
@@ -66,22 +67,22 @@ public final class Wrapper {
     }
 
     public static String createDay(Date date, Time start, Time end, Time interval) {
-        return post("criar_apontamento_diario", new NameValuePair[] {
-                new BasicNameValuePair("data", date.toString()),
-                new BasicNameValuePair("inicio", start.toString()),
-                new BasicNameValuePair("fim", end.toString()),
-                new BasicNameValuePair("intervalo", interval.toString()),
-        });
+        return post("criar_apontamento_diario",
+                new NameValuePair[] {
+                    new BasicNameValuePair("data", date.toString()),
+                    new BasicNameValuePair("inicio", start.toString()),
+                    new BasicNameValuePair("fim", end.toString()),
+                    new BasicNameValuePair("intervalo", interval.toString()), });
     }
 
     public static String createTask(Date date, long taskId, String description, Time duration) {
-        return post("criar_apontamento", new NameValuePair[] {
-                new BasicNameValuePair("data", date.toString()),
-                new BasicNameValuePair("atividadeId", String.valueOf(taskId)),
-                new BasicNameValuePair("atividadeStatus", "working"),
-                new BasicNameValuePair("esforco", String.valueOf(duration.getRoundedMinutes())),
-                new BasicNameValuePair("descricao", description),
-        });
+        return post("criar_apontamento",
+                new NameValuePair[] {
+                    new BasicNameValuePair("data", date.toString()),
+                    new BasicNameValuePair("atividadeId", String.valueOf(taskId)),
+                    new BasicNameValuePair("atividadeStatus", "working"),
+                    new BasicNameValuePair("esforco", String.valueOf(duration.getRoundedMinutes())),
+                    new BasicNameValuePair("descricao", description), });
     }
 
     private static String tokenCache = null;
@@ -94,24 +95,23 @@ public final class Wrapper {
 
     private static List<Element> listElements(Document doc, String xpath) {
         final XPathFactory xFactory = XPathFactory.instance();
-        
+
         final XPathExpression<Element> expr = xFactory.compile(xpath, Filters.element());
         return expr.evaluate(doc);
     }
-    
-    public static boolean requestLoginIfNeeded(Console console) throws InvalidLoginException {
+
+    public static boolean isLoggedIn() {
         File file = new File(TOKEN_FILE_NAME);
 
         if (file.exists() && isValidToken()) {
-            return false;
+            return true;
         }
 
-        requestLogin(console);
-        return true;
+        return false;
     }
-    
+
     private static boolean isValidToken() {
-        Document doc = get("listar_atividades");
+        Document doc = getRaw("listar_atividades", true);
         for (Element e : listElements(doc, "//erro")) {
             if (e.getText().equals(INVALID_TOKEN_MESSAGE)) {
                 return false;
@@ -122,14 +122,18 @@ public final class Wrapper {
 
     public static class InvalidLoginException extends Exception {
         private static final long serialVersionUID = 2440114403933514632L;
-        
+
         public InvalidLoginException(String message) {
             super(message);
         }
     }
-    
-    private static void requestLogin(Console console) throws InvalidLoginException {
-        console.result("You need to login in order to proceed. Type your username:");
+
+    public static void logout() {
+        new File(TOKEN_FILE_NAME).delete();
+    }
+
+    public static void requestLogin(Console console) throws InvalidLoginException {
+        console.result("Logging in. Type your username:");
         String username = console.read();
         console.result("Now type your password:");
         char[] pass = console.readPassword();
@@ -137,7 +141,8 @@ public final class Wrapper {
     }
 
     private static void requestAndSaveToken(String username, char[] pass) throws InvalidLoginException {
-        final Document doc = get("obter_token", false, new BasicNameValuePair("username", username), new BasicNameValuePair("password", String.valueOf(pass)));
+        final Document doc = getRaw("obter_token", false, new BasicNameValuePair("username", username),
+                new BasicNameValuePair("password", String.valueOf(pass)));
         int code = getDocumentErrorCode(doc);
         if (code == 0) {
             String token = listElements(doc, "//token").get(0).getText();
@@ -154,7 +159,7 @@ public final class Wrapper {
             throw new RuntimeException(e);
         }
     }
-    
+
     public static String getToken() {
         if (tokenCache == null) {
             File file = new File(TOKEN_FILE_NAME);
@@ -172,12 +177,7 @@ public final class Wrapper {
 
     private static String post(String url, NameValuePair... customParams) {
         Document doc = get(url, customParams);
-        int code = getDocumentErrorCode(doc);
-        if (code == 0) {
-            return evaluateElement(doc, "//mensagem");
-        } else {
-            throw parseErrors(listElements(doc, "//erro"));
-        }
+        return evaluateElement(doc, "//mensagem");
     }
 
     private static RuntimeException parseErrors(List<Element> elements) {
@@ -198,12 +198,18 @@ public final class Wrapper {
     private static int getDocumentErrorCode(Document doc) {
         return Integer.parseInt(evaluateElement(doc, "//responseType"));
     }
-    
+
     private static Document get(String url, NameValuePair... customParams) {
-        return get(url, true, customParams);
+        Document response = getRaw(url, true, customParams);
+        int code = getDocumentErrorCode(response);
+        if (code == 0) {
+            return response;
+        } else {
+            throw parseErrors(listElements(response, "//erro"));
+        }
     }
 
-    private static Document get(String url, boolean useToken, NameValuePair... customParams) {
+    private static Document getRaw(String url, boolean useToken, NameValuePair... customParams) {
         try {
             HttpClient httpclient = HttpClients.createDefault();
             HttpPost httppost = new HttpPost(DOMAIN + url);

@@ -30,7 +30,7 @@ public class AliasesController extends BaseController {
             console.error("Alias " + alias + " not associated with any task.");
             return CallResult.ERROR;
         }
-        console.message("Alias " + alias + " maps to task id " + task + ".");
+        console.result("Alias " + alias + " maps to task id " + task + ".");
         return CallResult.SUCCESS;
     }
 
@@ -44,7 +44,7 @@ public class AliasesController extends BaseController {
 
         context.a().addAlias(alias, task.getId());
         context.a().save();
-        console.message("Alias " + alias + " was successfully added to task id " + task.getId());
+        console.result("Alias " + alias + " was successfully added to task id " + task.getId());
         return CallResult.SUCCESS;
     }
     

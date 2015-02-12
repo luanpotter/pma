@@ -1,6 +1,7 @@
 package br.com.dextra.pma.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import xyz.luan.console.fn.FnController;
 import xyz.luan.console.parser.actions.Action;
@@ -27,14 +28,6 @@ public class InfoController extends BaseController {
         } else {
             throw new RuntimeException("Invalid parameters. type parameter is required and must be either 'projects' or 'tasks'.");
         }
-    }
-
-    @Action("update")
-    public CallResult update() {
-        console.result("Starting update...");
-        context.p().update();
-        console.result("Projects and tasks successfully updated.");
-        return CallResult.SUCCESS;
     }
 
     private CallResult listProjects() {
@@ -66,7 +59,12 @@ public class InfoController extends BaseController {
     public static void defaultCallables(String name, List<Callable> callables) {
         callables.add(new ActionCall(name + ":list", ":list :projects", MapBuilder.<String, String> from("type", "projects"), "List all projects"));
         callables.add(new ActionCall(name + ":list", ":list :tasks", MapBuilder.<String, String> from("type", "tasks"), "List all tasks"));
-        callables.add(new ActionCall(new ActionRef(name, "list"), new Pattern(":list :tasks :from projectNameOrId", true), MapBuilder.<String, String> from("type", "tasks"), "List all tasks from projectNameOrId project"));
-        callables.add(new ActionCall(name + ":update", ":update", "Update the list of projects and tasks"));
+
+        {
+            Map<String, String> defaultArgs = MapBuilder.<String, String> from("type", "tasks");
+            Pattern pattern = new Pattern(":list :tasks :from projectNameOrId", true);
+            String description = "List all tasks from projectNameOrId project";
+            callables.add(new ActionCall(new ActionRef(name, "list"), pattern, defaultArgs, description));
+        }
     }
 }

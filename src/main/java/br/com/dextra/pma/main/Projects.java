@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import br.com.dextra.pma.exceptions.ProjectsMissingException;
 import br.com.dextra.pma.models.Project;
 import br.com.dextra.pma.models.Task;
 import br.com.dextra.pma.utils.SimpleObjectAccess;
@@ -16,6 +17,10 @@ public class Projects implements Serializable {
     private static final String FILE_NAME = "projs.dat";
 
     private List<Project> projectsCache;
+
+    private Projects() {
+        this.projectsCache = null;
+    }
 
     public static Projects readOrCreate() {
         Projects projs = SimpleObjectAccess.<Projects> readFrom(FILE_NAME);
@@ -37,10 +42,12 @@ public class Projects implements Serializable {
     }
 
     public List<Project> getProjects() {
+        assertInitialized();
         return this.projectsCache;
     }
 
     public List<Task> getTasks() {
+        assertInitialized();
         List<Task> tasks = new ArrayList<>();
         for (Project p : projectsCache) {
             tasks.addAll(p.getTasks());
@@ -74,6 +81,7 @@ public class Projects implements Serializable {
     }
 
     private Task getTaskThat(Predicate<Task> pred) {
+        assertInitialized();
         for (Project p : projectsCache) {
             for (Task t : p.getTasks()) {
                 if (pred.test(t)) {
@@ -102,11 +110,22 @@ public class Projects implements Serializable {
     }
 
     private Project getProjectThat(Predicate<Project> pred) {
+        assertInitialized();
         for (Project p : projectsCache) {
             if (pred.test(p)) {
                 return p;
             }
         }
         return null;
+    }
+
+    private void assertInitialized() {
+        if (!isInitialized()) {
+            throw new ProjectsMissingException();
+        }
+    }
+
+    public boolean isInitialized() {
+        return this.projectsCache != null;
     }
 }
