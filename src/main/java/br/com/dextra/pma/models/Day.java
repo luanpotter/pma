@@ -65,6 +65,18 @@ public class Day implements Serializable {
         return appointments;
     }
 
+    public Time getStartTime() {
+        return startTime;
+    }
+
+    public Time getEndTime() {
+        return endTime;
+    }
+
+    public Time getInterval() {
+        return interval;
+    }
+
     @Override
     public String toString() {
         return "[" + date + "] from: " + startTime + " to " + endTime + " except for " + interval + "; tasks: " + Arrays.toString(appointments.toArray());

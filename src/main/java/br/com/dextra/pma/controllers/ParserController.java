@@ -11,6 +11,7 @@ import xyz.luan.console.parser.callable.Callable;
 import br.com.dextra.pma.exceptions.NotLoggedIn;
 import br.com.dextra.pma.main.Wrapper;
 import br.com.dextra.pma.main.Options.Option;
+import br.com.dextra.pma.models.Appointment;
 import br.com.dextra.pma.models.Day;
 import br.com.dextra.pma.parser.FileParser;
 import br.com.dextra.pma.parser.InvalidFormatException;
@@ -25,7 +26,7 @@ public class ParserController extends BaseController {
         assertLoggedIn();
         String fileName = context.o().get(Option.LOG_FILE);
 
-        List<Day> days = FileParser.parseLogs(fileName, false);
+        List<Day> days = FileParser.parseLogs(fileName, true);
         try {
             for (Day day : days) {
                 day.save(console);
@@ -52,11 +53,17 @@ public class ParserController extends BaseController {
         boolean bkp = "true".equals(backup);
 
         String fileName = context.o().get(bkp ? Option.BACKUP_FILE : Option.LOG_FILE);
-        List<Day> days = FileParser.parseLogs(fileName, true);
+        List<Day> days = FileParser.parseLogs(fileName, false);
 
         console.result(days.size() + " days parsed;");
         for (Day day : days) {
-            console.result(day.toString()); // TODO output properly
+            console.result(day.getDate());
+            console.tabIn();
+            console.result(String.format("Start: %s | Interval: %s | End: %s", day.getStartTime(), day.getInterval(), day.getEndTime()));
+            for (Appointment a : day.getAppointments()) {
+                console.result(a);
+            }
+            console.tabOut();
         }
         return CallResult.SUCCESS;
     }

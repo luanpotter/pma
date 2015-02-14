@@ -57,6 +57,6 @@ public class Appointment implements Serializable {
 
     @Override
     public String toString() {
-        return taskId + " -> " + duration + "[" + getComment() + "]";
+        return taskId + " -> " + duration + (getComment().equals(DEFAULT_DESC) ? "" : "[" + getComment() + "]");
     }
 }

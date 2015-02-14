@@ -32,7 +32,7 @@ public class FileParser {
         return taskTimes;
     }
 
-    public static List<Day> parseLogs(String fileName, boolean keepFile) throws InvalidFormatException {
+    public static List<Day> parseLogs(String fileName, boolean createResultFile) throws InvalidFormatException {
         File file = new File(fileName);
         if (!file.exists()) {
             return Collections.emptyList();
@@ -41,7 +41,7 @@ public class FileParser {
         FileCache fileCache = new FileCache();
         List<Day> results = parseFile(getScanner(file), fileCache);
 
-        if (!keepFile) {
+        if (createResultFile) {
             fileCache.printRemainingFile(fileName + ".new");
         }
 
