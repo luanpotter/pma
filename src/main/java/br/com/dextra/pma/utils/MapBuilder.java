@@ -3,13 +3,12 @@ package br.com.dextra.pma.utils;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class MapBuilder {
+import lombok.experimental.UtilityClass;
 
-    private MapBuilder() {
-        throw new RuntimeException("Cannot be instanciated");
-    }
+@UtilityClass
+public class MapBuilder {
 
-    public static class Builder<K, V> {
+    public class Builder<K, V> {
         private Map<K, V> map;
 
         public Builder() {
@@ -26,11 +25,11 @@ public final class MapBuilder {
         }
     }
 
-    public static <K, V> Map<K, V> from(K key, V value) {
+    public <K, V> Map<K, V> from(K key, V value) {
         return with(key, value).build();
     }
 
-    public static <K, V> Builder<K, V> with(K key, V value) {
+    public <K, V> Builder<K, V> with(K key, V value) {
         return new Builder<K, V>().with(key, value);
     }
 }

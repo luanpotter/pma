@@ -1,19 +1,18 @@
 package br.com.dextra.pma.utils;
 
-public final class NumberUtils {
+import lombok.experimental.UtilityClass;
 
-    private NumberUtils() {
-        throw new RuntimeException("Should not be instanciated.");
-    }
+@UtilityClass
+public class NumberUtils {
 
-    public static String toString(int num, int digits) {
+    public String toString(int num, int digits) {
         String ns = String.valueOf(num);
         while (ns.length() < digits)
             ns = '0' + ns;
         return ns;
     }
 
-    public static String toString(int num) {
+    public String toString(int num) {
         return toString(num, 2);
     }
 }

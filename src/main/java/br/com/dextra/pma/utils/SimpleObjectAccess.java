@@ -7,13 +7,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public final class SimpleObjectAccess {
+import lombok.experimental.UtilityClass;
 
-    private SimpleObjectAccess() {
-        throw new RuntimeException("Should not be instanciated");
-    }
+@UtilityClass
+public class SimpleObjectAccess {
 
-    public static <T> T saveTo(String fileName, T object) {
+    public <T> T saveTo(String fileName, T object) {
         try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(fileName))) {
             stream.writeObject(object);
             return object;
@@ -22,7 +21,7 @@ public final class SimpleObjectAccess {
         }
     }
 
-    public static <T> T readFrom(String fileName) {
+    public <T> T readFrom(String fileName) {
         if (new File(fileName).exists()) {
             try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(fileName))) {
 

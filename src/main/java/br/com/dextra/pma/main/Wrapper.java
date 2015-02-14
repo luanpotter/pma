@@ -41,7 +41,7 @@ public final class Wrapper {
     private static final String INVALID_TOKEN_MESSAGE = "token inválido";
 
     private Wrapper() {
-        throw new RuntimeException("Should not be instanciated.");
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     public static List<Project> getProjects(Console console) {
