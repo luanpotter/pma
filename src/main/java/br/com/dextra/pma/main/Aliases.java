@@ -15,6 +15,10 @@ public class Aliases implements Serializable {
 
     private Map<String, Long> aliases;
 
+    public Aliases() {
+        this.aliases = new HashMap<>();
+    }
+
     public static Aliases readOrCreate() {
         Aliases aliases = SimpleObjectAccess.<Aliases> readFrom(FILE_NAME);
         if (aliases != null) {
@@ -25,11 +29,7 @@ public class Aliases implements Serializable {
     }
 
     public void save() {
-    	SimpleObjectAccess.saveTo(FILE_NAME, this);
-    }
-
-    public Aliases() {
-        this.aliases = new HashMap<>();
+        SimpleObjectAccess.saveTo(FILE_NAME, this);
     }
 
     public void addAlias(String alias, Long task) {

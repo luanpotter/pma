@@ -15,7 +15,7 @@ public class Appointment implements Serializable {
     private static final long serialVersionUID = 6206472230468718564L;
 
     public static final String DEFAULT_DESC = ".";
-    public static final long INTERVAL_TASK = -1l;
+    public static final long INTERVAL_TASK = -1L;
 
     @Getter
     private long taskId;

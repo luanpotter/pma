@@ -17,6 +17,14 @@ public class Time implements Serializable {
     public Time() {
     }
 
+    public Time(int minutes) {
+        this.minutes = minutes;
+    }
+
+    public Time(int hours, int minutes) {
+        this.minutes = hours * 60 + minutes;
+    }
+
     public Time(String t) {
         this(parseString(t));
     }
@@ -32,14 +40,6 @@ public class Time implements Serializable {
         if (minutes < 0 || minutes >= 60)
             throw new IllegalArgumentException("Minutes must be between 0 and 60, " + minutes + " found.");
         return hours * 60 + minutes;
-    }
-
-    public Time(int minutes) {
-        this.minutes = minutes;
-    }
-
-    public Time(int hours, int minutes) {
-        this.minutes = hours * 60 + minutes;
     }
 
     public int getRoundedMinutes() {

@@ -40,6 +40,8 @@ public final class Wrapper {
     private static final String TOKEN_FILE_NAME = "token.dat";
     private static final String INVALID_TOKEN_MESSAGE = "token inválido";
 
+    private static String tokenCache = null;
+
     private Wrapper() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
@@ -88,8 +90,6 @@ public final class Wrapper {
                     new BasicNameValuePair("esforco", String.valueOf(duration.getRoundedMinutes())),
                     new BasicNameValuePair("descricao", description), });
     }
-
-    private static String tokenCache = null;
 
     private static String evaluateElement(Document doc, String xpath) {
         List<Element> elementList = listElements(doc, xpath);
