@@ -1,7 +1,7 @@
 package br.com.dextra.pma.models;
 
 import java.io.Serializable;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,7 +13,7 @@ public class Appointment implements Serializable {
 
     private static final long serialVersionUID = 6206472230468718564L;
 
-    private static final String DEFAULT_DESC = ".";
+    public static final String DEFAULT_DESC = ".";
     public static long INTERVAL_TASK = -1l;
 
     private long taskId;
@@ -23,7 +23,7 @@ public class Appointment implements Serializable {
     public Appointment(long taskId) {
         this.taskId = taskId;
         this.duration = new Time();
-        this.comments = Collections.emptyList();
+        this.comments = new ArrayList<>();
     }
 
     public long getTask() {

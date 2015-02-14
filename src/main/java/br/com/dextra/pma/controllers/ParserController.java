@@ -9,11 +9,11 @@ import xyz.luan.console.parser.call.CallResult;
 import xyz.luan.console.parser.callable.ActionCall;
 import xyz.luan.console.parser.callable.Callable;
 import br.com.dextra.pma.exceptions.NotLoggedIn;
-import br.com.dextra.pma.main.FileParser;
 import br.com.dextra.pma.main.Wrapper;
-import br.com.dextra.pma.main.FileParser.InvalidFormatException;
 import br.com.dextra.pma.main.Options.Option;
 import br.com.dextra.pma.models.Day;
+import br.com.dextra.pma.parser.FileParser;
+import br.com.dextra.pma.parser.InvalidFormatException;
 import br.com.dextra.pma.utils.MapBuilder;
 import br.com.dextra.pma.utils.SimpleObjectAccess;
 
