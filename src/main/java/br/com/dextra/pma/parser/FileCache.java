@@ -25,7 +25,7 @@ class FileCache {
 
     public void printRemainingFile(String fileName) {
         try (PrintWriter p = new PrintWriter(fileName + ".new")) {
-            consumeRemainingFile((s) -> p.println(s));
+            consumeRemainingFile(s -> p.println(s));
         } catch (IOException ex) {
             throw new RuntimeException("Unable to re-write file: " + fileName, ex);
         }
