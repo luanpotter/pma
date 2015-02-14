@@ -1,23 +1,16 @@
 pma
 ===
 
-Outdated! # TODO
+[![Build Status](https://travis-ci.org/luanpotter/pma.svg?branch=master)](https://travis-ci.org/luanpotter/pma)
 
-PMA Helper program. This is a java program that runs on top of https://github.com/raonifn/pma-scripts  
-You must download and put pma-scripts files in the same folder of this project in order for it to work.
+This is a simple and powerful pma helper program. It can help you use the Dextra's pma system with few, consistent commands and elegance.  
+It uses the powerful console-parser lib for the console commands binding, console-fn flavored.  
+It is lightweifht and [will be] is currently being distributed via bintray. [TODO]
 
 Usage
 ---
-Just run it like this:
-* java PMA_Helper here
-* java PMA_Helper exit
-* java PMA_Helper save
-
-There are tons of aliases for each action, just check the code.
-
-Behavior
----
-here/exit log new events in the current day.  
-save saves the day, calculating the start time, end time and the interval based on the log.  
-You must add a config.dat file, with a couple options.  
-The program will fail if the file doesn't exist or is incorrect, and the reason will be specified.
+The program basically logs the times in which you start each activity, including leaving, and then creates the correct records using pma's api.
+Running `pma here :projectNameOrIdOrAlias` will log that you started that activity.  
+Running `pma exit` will log that you exited to lunch or something.  
+Running `pma save` will save all completed days (a day is complete if it ends in a `exit` command).  
+There are tons of other features, they can be listed with `pma help` command.
