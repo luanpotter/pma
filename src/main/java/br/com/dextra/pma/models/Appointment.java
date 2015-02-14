@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.date.Time;
 import br.com.dextra.pma.main.Wrapper;
@@ -16,8 +17,12 @@ public class Appointment implements Serializable {
     public static final String DEFAULT_DESC = ".";
     public static long INTERVAL_TASK = -1l;
 
+    @Getter
     private long taskId;
+
+    @Getter
     private Time duration;
+
     private List<String> comments;
 
     public Appointment(long taskId) {
@@ -45,10 +50,6 @@ public class Appointment implements Serializable {
             return DEFAULT_DESC;
         }
         return this.comments.stream().collect(Collectors.joining("\n"));
-    }
-
-    public Time getDuration() {
-        return duration;
     }
 
     public String save(Date date) {

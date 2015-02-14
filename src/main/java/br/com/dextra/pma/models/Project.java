@@ -3,6 +3,8 @@ package br.com.dextra.pma.models;
 import java.io.Serializable;
 import java.util.List;
 
+import lombok.Getter;
+
 import org.jdom2.Element;
 
 import br.com.dextra.pma.main.Wrapper;
@@ -11,10 +13,16 @@ public class Project implements Serializable {
 
     private static final long serialVersionUID = -464630186990092875L;
 
+    @Getter
     private long id;
+
+    @Getter
     private String client;
+
+    @Getter
     private String name;
 
+    @Getter
     private List<Task> tasks;
 
     public Project(Element project) {
@@ -32,18 +40,6 @@ public class Project implements Serializable {
             }
         }
         return null;
-    }
-
-    public long getId() {
-        return this.id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public List<Task> getTasks() {
-        return this.tasks;
     }
 
     @Override

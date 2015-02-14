@@ -2,12 +2,14 @@ package br.com.dextra.pma.date;
 
 import java.io.Serializable;
 
+import lombok.Getter;
 import br.com.dextra.pma.utils.NumberUtils;
 
 public class Time implements Serializable {
 
     private static final long serialVersionUID = 9180454594812684317L;
 
+    @Getter
     private int minutes;
 
     public Time() {
@@ -40,10 +42,6 @@ public class Time implements Serializable {
 
     public int getRoundedMinutes() {
         return Math.round((float) minutes / 5) * 5;
-    }
-
-    public int getMinutes() {
-        return minutes;
     }
 
     public int getDifference(Time h) {
