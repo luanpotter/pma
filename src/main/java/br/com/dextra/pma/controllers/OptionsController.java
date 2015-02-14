@@ -16,9 +16,7 @@ public class OptionsController extends BaseController {
 
     @Action("list")
     public CallResult list() {
-        context.o().list((o, v) -> {
-            console.result(o + " : " + v);
-        });
+        context.o().list((o, v) -> console.result(o + " : " + v));
         return CallResult.SUCCESS;
     }
 
@@ -45,7 +43,7 @@ public class OptionsController extends BaseController {
             return CallResult.ERROR;
         }
     }
-    
+
     public static void defaultCallables(String name, List<Callable> callables) {
         callables.add(new ActionCall(name + ":list", ":options", "List all options with their values"));
         callables.add(new ActionCall(name + ":get", ":options :get option", "Return the current value of option"));

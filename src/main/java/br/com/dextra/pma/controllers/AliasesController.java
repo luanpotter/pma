@@ -17,9 +17,7 @@ public class AliasesController extends BaseController {
     @Action("list")
     public CallResult list() {
         console.result("-- Alias : taskId --");
-        context.a().forEach((String alias, Long taskId) -> {
-            console.result("- " + alias + " : " + taskId);
-        });
+        context.a().forEach((alias, taskId) -> console.result("- " + alias + " : " + taskId));
         return CallResult.SUCCESS;
     }
 
@@ -47,14 +45,11 @@ public class AliasesController extends BaseController {
         console.result("Alias " + alias + " was successfully added to task id " + task.getId());
         return CallResult.SUCCESS;
     }
-    
+
     public static void defaultCallables(String name, List<Callable> callables) {
         callables.add(new ActionCall(name + ":list", ":aliases", "List all aliases with their values"));
         callables.add(new ActionCall(name + ":get", ":aliases :get alias", "Return the current value of alias"));
-        callables.add(new ActionCall(
-            new ActionRef(name, "set"),
-            new Pattern(":aliases :set alias taskNameOrId", true),
-            "Set the value of alias to taskNameOrId")
-        );
+        callables.add(new ActionCall(new ActionRef(name, "set"), new Pattern(":aliases :set alias taskNameOrId", true),
+                "Set the value of alias to taskNameOrId"));
     }
 }
