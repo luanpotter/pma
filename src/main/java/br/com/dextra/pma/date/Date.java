@@ -2,9 +2,11 @@ package br.com.dextra.pma.date;
 
 import java.io.Serializable;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import br.com.dextra.pma.utils.NumberUtils;
 
+@EqualsAndHashCode
 public class Date implements Serializable {
 
     private static final long serialVersionUID = -446196417235991965L;
@@ -25,15 +27,6 @@ public class Date implements Serializable {
         this.year = year;
         this.month = month;
         this.day = day;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof Date)) {
-            return false;
-        }
-        Date d = (Date) o;
-        return this.year == d.year && this.month == d.month && this.day == d.day;
     }
 
     @Override

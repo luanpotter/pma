@@ -60,7 +60,7 @@ public class Day implements Serializable {
             c.result(a.save(date));
         }
     }
-
+    
     @Override
     public String toString() {
         return "[" + date + "] from: " + startTime + " to " + endTime + " except for " + interval + "; tasks: " + Arrays.toString(appointments.toArray());

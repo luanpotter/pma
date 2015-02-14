@@ -2,9 +2,11 @@ package br.com.dextra.pma.date;
 
 import java.io.Serializable;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import br.com.dextra.pma.utils.NumberUtils;
 
+@EqualsAndHashCode
 public class Time implements Serializable {
 
     private static final long serialVersionUID = 9180454594812684317L;
@@ -54,15 +56,6 @@ public class Time implements Serializable {
         int hours = totalMinutes / 60;
         int minutes = totalMinutes % 60;
         return NumberUtils.toString(hours) + ':' + NumberUtils.toString(minutes);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Time)) {
-            return false;
-        }
-        Time other = (Time) obj;
-        return this.minutes == other.minutes;
     }
 
     public void addMinutes(int minutes) {
