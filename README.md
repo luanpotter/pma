@@ -9,7 +9,7 @@ It is lightweifht and [will be] is currently being distributed via bintray. [TOD
 
 Usage
 ---
-The program basically logs the times in which you start each activity, including leaving, and then creates the correct records using pma's api.
+The program basically logs the times in which you start each activity, including leaving, and then creates the correct records using pma's api.  
 Running `pma here :projectNameOrIdOrAlias` will log that you started that activity.  
 Running `pma exit` will log that you exited to lunch or something.  
 Running `pma save` will save all completed days (a day is complete if it ends in a `exit` command).  
