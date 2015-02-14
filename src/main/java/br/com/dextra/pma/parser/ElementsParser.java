@@ -8,7 +8,7 @@ import br.com.dextra.pma.models.Appointment;
 @UtilityClass
 class ElementsParser {
 
-    static Date parseDate(String[] parts, int lineNumber) throws InvalidFormatException {
+    Date parseDate(String[] parts, int lineNumber) throws InvalidFormatException {
         try {
             return new Date(parts[0]);
         } catch (NumberFormatException ex) {
@@ -16,7 +16,7 @@ class ElementsParser {
         }
     }
 
-    static Time parseTime(String[] parts, int lineNumber) throws InvalidFormatException {
+    Time parseTime(String[] parts, int lineNumber) throws InvalidFormatException {
         try {
             return new Time(parts[1]);
         } catch (NumberFormatException ex) {
@@ -24,7 +24,7 @@ class ElementsParser {
         }
     }
 
-    static long parseTask(String[] parts, int lineNumber) throws InvalidFormatException {
+    long parseTask(String[] parts, int lineNumber) throws InvalidFormatException {
         try {
             return parts.length >= 3 ? Long.parseLong(parts[2]) : Appointment.INTERVAL_TASK;
         } catch (NumberFormatException ex) {
@@ -32,7 +32,7 @@ class ElementsParser {
         }
     }
 
-    static String parseDesc(String[] parts, int lineNumber) {
+    String parseDesc(String[] parts, int lineNumber) {
         String desc = parts.length >= 4 ? parts[3] : ".";
         for (int i = 4; i < parts.length; i++) {
             desc += "+" + parts[i];

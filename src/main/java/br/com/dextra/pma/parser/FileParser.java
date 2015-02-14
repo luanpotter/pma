@@ -19,20 +19,20 @@ import br.com.dextra.pma.models.Day;
 @UtilityClass
 public class FileParser {
 
-    private static void assertValidLength(int lineNumber, String[] parts) throws InvalidFormatException {
+    private void assertValidLength(int lineNumber, String[] parts) throws InvalidFormatException {
         if (parts.length <= 1) {
             throw new InvalidFormatException("Each line must have at least 1 '+' signs: date+time[+task[+desc]]; found " + (parts.length - 1), lineNumber);
         }
     }
 
-    private static Map<Long, Appointment> emptyAppointmentsMap() {
+    private Map<Long, Appointment> emptyAppointmentsMap() {
         Map<Long, Appointment> taskTimes;
         taskTimes = new HashMap<>();
         taskTimes.put(Appointment.INTERVAL_TASK, new Appointment(Appointment.INTERVAL_TASK));
         return taskTimes;
     }
 
-    public static List<Day> parseLogs(String fileName, boolean createResultFile) throws InvalidFormatException {
+    public List<Day> parseLogs(String fileName, boolean createResultFile) throws InvalidFormatException {
         File file = new File(fileName);
         if (!file.exists()) {
             return Collections.emptyList();
@@ -48,7 +48,7 @@ public class FileParser {
         return results;
     }
 
-    private static Scanner getScanner(File file) {
+    private Scanner getScanner(File file) {
         try {
             return new Scanner(file);
         } catch (IOException ex) {
@@ -56,7 +56,7 @@ public class FileParser {
         }
     }
 
-    static List<Day> parseFile(Iterator<String> lines, FileCache fileCache) throws InvalidFormatException {
+    List<Day> parseFile(Iterator<String> lines, FileCache fileCache) throws InvalidFormatException {
         List<Day> results = new ArrayList<>();
         Date currentDay = null;
         Map<Long, Appointment> taskTimes = emptyAppointmentsMap();
@@ -115,7 +115,7 @@ public class FileParser {
         return results;
     }
 
-    public static void replaceFiles(String fileName) {
+    public void replaceFiles(String fileName) {
         File original = new File(fileName);
         File current = new File(fileName + ".new");
 
