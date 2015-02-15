@@ -19,19 +19,6 @@ import br.com.dextra.pma.models.Day;
 @UtilityClass
 public class FileParser {
 
-    private void assertValidLength(int lineNumber, String[] parts) throws InvalidFormatException {
-        if (parts.length <= 1) {
-            throw new InvalidFormatException("Each line must have at least 1 '+' signs: date+time[+task[+desc]]; found " + (parts.length - 1), lineNumber);
-        }
-    }
-
-    private Map<Long, Appointment> emptyAppointmentsMap() {
-        Map<Long, Appointment> taskTimes;
-        taskTimes = new HashMap<>();
-        taskTimes.put(Appointment.INTERVAL_TASK, new Appointment(Appointment.INTERVAL_TASK));
-        return taskTimes;
-    }
-
     public List<Day> parseLogs(String fileName, boolean createResultFile) throws InvalidFormatException {
         File file = new File(fileName);
         if (!file.exists()) {
@@ -72,37 +59,31 @@ public class FileParser {
             if (line.isEmpty()) {
                 continue;
             }
-            String[] parts = line.split("\\+");
-            assertValidLength(lineNumber, parts);
+            Record record = new Record(line, lineNumber);
 
-            Date date = ElementsParser.parseDate(parts, lineNumber);
-            Time time = ElementsParser.parseTime(parts, lineNumber);
-            long task = ElementsParser.parseTask(parts, lineNumber);
-            String desc = ElementsParser.parseDesc(parts, lineNumber);
-
-            if (taskTimes.get(task) == null) {
-                taskTimes.put(task, new Appointment(task));
+            if (taskTimes.get(record.getTask()) == null) {
+                taskTimes.put(record.getTask(), new Appointment(record.getTask()));
             }
-            Appointment currentAppointment = taskTimes.get(task);
-            currentAppointment.addDescription(desc);
+            Appointment currentAppointment = taskTimes.get(record.getTask());
+            currentAppointment.addDescription(record.getDesc());
 
             if (currentDay == null) {
-                currentDay = date;
-                start = time;
-            } else if (currentDay.equals(date)) {
-                lastAppointment.addTime(time.getDifference(lastTime));
+                currentDay = record.getDate();
+                start = record.getTime();
+            } else if (currentDay.equals(record.getDate())) {
+                lastAppointment.addTime(record.getTime().getDifference(lastTime));
             } else {
                 if (lastAppointment.getTask() != -1) {
                     throw new InvalidFormatException("Started a new day without ending previous one", lineNumber);
                 }
                 results.add(new Day(currentDay, start, lastTime, taskTimes));
-                currentDay = date;
-                start = time;
+                currentDay = record.getDate();
+                start = record.getTime();
                 taskTimes = emptyAppointmentsMap();
                 fileCache.savedLine(lineNumber);
             }
             lastAppointment = currentAppointment;
-            lastTime = time;
+            lastTime = record.getTime();
 
             lineNumber++;
         }
@@ -121,5 +102,12 @@ public class FileParser {
 
         original.delete();
         current.renameTo(original);
+    }
+
+    private Map<Long, Appointment> emptyAppointmentsMap() {
+        Map<Long, Appointment> taskTimes;
+        taskTimes = new HashMap<>();
+        taskTimes.put(Appointment.INTERVAL_TASK, new Appointment(Appointment.INTERVAL_TASK));
+        return taskTimes;
     }
 }
