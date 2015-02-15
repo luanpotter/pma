@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -59,6 +60,55 @@ public class FileParserTest {
         Appointment thirdApp = apps.get(2);
         Assert.assertEquals(3, thirdApp.getTask());
         Assert.assertEquals(new Time(60 + 30), thirdApp.getDuration());
+    }
+
+    @Test
+    public void testMultipleDays() throws InvalidFormatException {
+        List<String> lines = Arrays.asList(new String[] {
+            "2014-02-02+08:00+20",
+            "2014-02-02+11:00",
+            "2014-02-02+12:00+20",
+            "2014-02-02+17:00",
+            "2014-02-03+07:00+10",
+            "2014-02-03+11:00",
+            "2014-02-03+12:00+10",
+            "2014-02-03+17:00" });
+        FileCache cache = new FileCache();
+        List<Day> days = FileParser.parseFile(lines.iterator(), cache);
+
+        assertCacheIsEmpty(cache);
+        Assert.assertEquals(2, days.size());
+        Day day1 = days.get(0);
+
+        Appointment onlyApp1 = getNAppointmentsSortedByTask(day1, 1).get(0);
+        Assert.assertEquals(20, onlyApp1.getTask());
+        Assert.assertEquals(new Time(8 * 60), onlyApp1.getDuration());
+
+        Day day2 = days.get(1);
+        Appointment onlyApp2 = getNAppointmentsSortedByTask(day2, 1).get(0);
+        Assert.assertEquals(10, onlyApp2.getTask());
+        Assert.assertEquals(new Time(9 * 60), onlyApp2.getDuration());
+    }
+
+    @Test
+    public void testMultipleDaysNotEnded() throws InvalidFormatException {
+        List<String> lines = Arrays.asList(new String[] {
+            "2014-02-02+08:00+20",
+            "2014-02-02+11:00",
+            "2014-02-02+12:00+20",
+            "2014-02-02+17:00",
+            "2014-02-03+07:00+10",
+            "2014-02-03+11:00",
+            "2014-02-03+12:00+10" });
+        FileCache cache = new FileCache();
+        List<Day> days = FileParser.parseFile(lines.iterator(), cache);
+
+        assertCacheHas(cache, 3);
+        Day day = fetchOnlyDay(days, new Date(2014, 2, 2));
+
+        Appointment onlyApp1 = getNAppointmentsSortedByTask(day, 1).get(0);
+        Assert.assertEquals(20, onlyApp1.getTask());
+        Assert.assertEquals(new Time(8 * 60), onlyApp1.getDuration());
     }
 
     @Test
@@ -126,7 +176,15 @@ public class FileParserTest {
 
     private void assertCacheIsEmpty(FileCache cache) {
         cache.consumeRemainingFile((s) -> {
-            throw new RuntimeException("Should be empty!");
+            Assert.assertTrue(false);
         });
+    }
+
+    private void assertCacheHas(FileCache cache, int rows) {
+        final AtomicInteger count = new AtomicInteger();
+        cache.consumeRemainingFile((s) -> {
+            count.incrementAndGet();
+        });
+        Assert.assertEquals(rows, count.intValue());
     }
 }
