@@ -4,15 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import lombok.experimental.UtilityClass;
-import br.com.dextra.pma.date.Date;
-import br.com.dextra.pma.date.Time;
 import br.com.dextra.pma.models.Appointment;
 import br.com.dextra.pma.models.Day;
 
@@ -45,13 +41,11 @@ public class FileParser {
 
     List<Day> parseFile(Iterator<String> lines, FileCache fileCache) throws InvalidFormatException {
         List<Day> results = new ArrayList<>();
-        Date currentDay = null;
-        Map<Long, Appointment> taskTimes = emptyAppointmentsMap();
-        Appointment lastAppointment = null;
-        Time start = null, lastTime = null;
+
+        Record lastRecord = null;
+        Day currentDay = null;
 
         int lineNumber = 0;
-
         while (lines.hasNext()) {
             String line = lines.next();
             fileCache.add(line);
@@ -61,35 +55,30 @@ public class FileParser {
             }
             Record record = new Record(line, lineNumber);
 
-            if (taskTimes.get(record.getTask()) == null) {
-                taskTimes.put(record.getTask(), new Appointment(record.getTask()));
-            }
-            Appointment currentAppointment = taskTimes.get(record.getTask());
-            currentAppointment.addDescription(record.getDesc());
-
-            if (currentDay == null) {
-                currentDay = record.getDate();
-                start = record.getTime();
-            } else if (currentDay.equals(record.getDate())) {
-                lastAppointment.addTime(record.getTime().getDifference(lastTime));
+            if (lastRecord == null) {
+                currentDay = new Day(record.getDate(), record.getTime());
             } else {
-                if (lastAppointment.getTask() != -1) {
-                    throw new InvalidFormatException("Started a new day without ending previous one", lineNumber);
-                }
-                results.add(new Day(currentDay, start, lastTime, taskTimes));
-                currentDay = record.getDate();
-                start = record.getTime();
-                taskTimes = emptyAppointmentsMap();
-                fileCache.savedLine(lineNumber);
-            }
-            lastAppointment = currentAppointment;
-            lastTime = record.getTime();
+                if (record.getDate().equals(currentDay.getDate())) {
+                    int minutes = record.getTime().getDifference(lastRecord.getTime());
+                    currentDay.addTask(lastRecord.getTask(), lastRecord.getDesc(), minutes);
+                } else {
+                    if (lastRecord.getTask() != Appointment.INTERVAL_TASK) {
+                        throw new InvalidFormatException("Last record of every day must not have a task.", lineNumber);
+                    }
+                    currentDay.end(lastRecord.getTime());
+                    results.add(currentDay);
+                    fileCache.savedLine(lineNumber);
 
+                    currentDay = new Day(record.getDate(), record.getTime());
+                }
+            }
+            lastRecord = record;
             lineNumber++;
         }
 
-        if (lastAppointment.getTask() == -1 && currentDay != null) {
-            results.add(new Day(currentDay, start, lastTime, taskTimes));
+        if (lastRecord.getTask() == Appointment.INTERVAL_TASK && currentDay != null) {
+            currentDay.end(lastRecord.getTime());
+            results.add(currentDay);
             fileCache.savedLine(lineNumber);
         }
 
@@ -102,12 +91,5 @@ public class FileParser {
 
         original.delete();
         current.renameTo(original);
-    }
-
-    private Map<Long, Appointment> emptyAppointmentsMap() {
-        Map<Long, Appointment> taskTimes;
-        taskTimes = new HashMap<>();
-        taskTimes.put(Appointment.INTERVAL_TASK, new Appointment(Appointment.INTERVAL_TASK));
-        return taskTimes;
     }
 }

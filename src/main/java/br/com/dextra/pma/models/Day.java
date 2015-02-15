@@ -2,7 +2,7 @@ package br.com.dextra.pma.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,25 +25,45 @@ public class Day implements Serializable {
     @Getter
     private Time startTime, interval, endTime;
 
-    @Getter
-    private List<Appointment> appointments;
+    private Map<Long, Appointment> appointments;
 
-    public Day(Date date, Time start, Time end, Map<Long, Appointment> appointments) {
+    public Day(Date date, Time start) {
         this.date = date;
         this.startTime = start;
-        this.endTime = end;
-        this.interval = appointments.get(Appointment.INTERVAL_TASK).getDuration();
-        parseAppointments(appointments);
+        this.interval = new Time();
+        this.appointments = new HashMap<>();
     }
 
-    private void parseAppointments(Map<Long, Appointment> appointments) {
-        this.appointments = new ArrayList<>();
-        appointments.keySet().stream().filter((t) -> t != -1).forEach((task) -> this.appointments.add(appointments.get(task)));
-        fixPossibleImprecisionMistake(appointments);
+    public List<Appointment> getAppointments() {
+        return new ArrayList<>(appointments.values());
     }
 
-    private void fixPossibleImprecisionMistake(Map<Long, Appointment> appointments) {
-        int actualTotalMinutes = this.appointments.stream().mapToInt((a) -> a.getDuration().getRoundedMinutes()).sum();
+    public void save(Console c) {
+        c.result(Wrapper.createDay(date, startTime, endTime, interval));
+        for (Appointment a : appointments.values()) {
+            c.result(a.save(date));
+        }
+    }
+
+    public void addTask(long task, String desc, int minutes) {
+        if (task == Appointment.INTERVAL_TASK) {
+            interval.addMinutes(minutes);
+        } else {
+            if (!appointments.containsKey(task)) {
+                appointments.put(task, new Appointment(task));
+            }
+            appointments.get(task).addTime(minutes);
+            appointments.get(task).addDescription(desc);
+        }
+    }
+
+    public void end(Time time) {
+        endTime = time;
+        fixPossibleImprecisionMistake();
+    }
+
+    private void fixPossibleImprecisionMistake() {
+        int actualTotalMinutes = appointments.values().stream().mapToInt(a -> a.getDuration().getRoundedMinutes()).sum();
         int realTotalMinutes = endTime.getRoundedMinutes() - startTime.getRoundedMinutes() - interval.getRoundedMinutes();
         int delta = Math.abs(actualTotalMinutes - realTotalMinutes);
         if (delta > MAX_DELTA) {
@@ -52,17 +72,5 @@ public class Day implements Serializable {
         if (delta > 0) {
             appointments.get(0).addTime(realTotalMinutes - actualTotalMinutes);
         }
-    }
-
-    public void save(Console c) {
-        c.result(Wrapper.createDay(date, startTime, endTime, interval));
-        for (Appointment a : appointments) {
-            c.result(a.save(date));
-        }
-    }
-    
-    @Override
-    public String toString() {
-        return "[" + date + "] from: " + startTime + " to " + endTime + " except for " + interval + "; tasks: " + Arrays.toString(appointments.toArray());
     }
 }
