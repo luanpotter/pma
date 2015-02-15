@@ -155,9 +155,6 @@ public class FileParserTest {
 
     private List<Appointment> getNAppointmentsSortedByTask(Day day, int n) {
         List<Appointment> apps = day.getAppointments();
-        System.out.println("--------------");
-        System.out.println(apps);
-        System.out.println("--------------");
         Assert.assertEquals(n, apps.size());
         Collections.sort(apps, new Comparator<Appointment>() {
             @Override
