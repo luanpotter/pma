@@ -1,6 +1,11 @@
 package br.com.dextra.pma.date;
 
+import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
+
 import java.io.Serializable;
+import java.util.Calendar;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -27,6 +32,10 @@ public class Date implements Serializable {
         this.year = year;
         this.month = month;
         this.day = day;
+    }
+
+    public Date(Calendar currentTime) {
+        this(currentTime.get(YEAR), currentTime.get(MONTH) + 1, currentTime.get(DAY_OF_MONTH));
     }
 
     @Override
