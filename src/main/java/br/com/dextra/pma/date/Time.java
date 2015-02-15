@@ -15,6 +15,7 @@ public class Time implements Serializable {
     private int minutes;
 
     public Time() {
+        this.minutes = 0;
     }
 
     public Time(int minutes) {
