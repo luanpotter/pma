@@ -1,6 +1,10 @@
 package br.com.dextra.pma.date;
 
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MINUTE;
+
 import java.io.Serializable;
+import java.util.Calendar;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -24,6 +28,10 @@ public class Time implements Serializable {
 
     public Time(int hours, int minutes) {
         this.minutes = hours * 60 + minutes;
+    }
+
+    public Time(Calendar calendar) {
+        this(calendar.get(HOUR_OF_DAY), calendar.get(MINUTE));
     }
 
     public Time(String t) {
@@ -61,5 +69,9 @@ public class Time implements Serializable {
 
     public void addMinutes(int minutes) {
         this.minutes += minutes;
+    }
+
+    public static Time now() {
+        return new Time(Calendar.getInstance());
     }
 }

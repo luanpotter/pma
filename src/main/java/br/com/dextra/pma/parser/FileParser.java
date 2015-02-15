@@ -9,11 +9,54 @@ import java.util.List;
 import java.util.Scanner;
 
 import lombok.experimental.UtilityClass;
+import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.models.Appointment;
+import br.com.dextra.pma.models.CurrentDay;
 import br.com.dextra.pma.models.Day;
+import br.com.dextra.pma.models.Record;
 
 @UtilityClass
 public class FileParser {
+
+    public Day parseDay(String fileName, Date target) throws InvalidFormatException {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            return null;
+        }
+
+        Record lastRecord = null;
+        CurrentDay day = null;
+
+        int lineNumber = 0;
+        Iterator<String> lines = getScanner(file);
+        while (lines.hasNext()) {
+            String line = lines.next();
+
+            if (line.isEmpty()) {
+                continue;
+            }
+            Record record = new Record(line, lineNumber);
+            if (!record.getDate().equals(target)) {
+                if (day != null) {
+                    break;
+                } else {
+                    continue;
+                }
+            }
+
+            if (lastRecord == null) {
+                day = new CurrentDay(record.getDate(), record.getTime());
+            } else {
+                int minutes = record.getTime().getDifference(lastRecord.getTime());
+                day.addTask(lastRecord.getTask(), lastRecord.getDesc(), minutes);
+            }
+            lastRecord = record;
+            lineNumber++;
+        }
+
+        day.setLastRecord(lastRecord);
+        return day;
+    }
 
     public List<Day> parseLogs(String fileName, boolean createResultFile) throws InvalidFormatException {
         File file = new File(fileName);

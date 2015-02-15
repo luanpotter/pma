@@ -1,5 +1,6 @@
 package br.com.dextra.pma.controllers;
 
+import java.util.Calendar;
 import java.util.List;
 
 import xyz.luan.console.fn.FnController;
@@ -8,10 +9,10 @@ import xyz.luan.console.parser.actions.Optional;
 import xyz.luan.console.parser.call.CallResult;
 import xyz.luan.console.parser.callable.ActionCall;
 import xyz.luan.console.parser.callable.Callable;
+import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.exceptions.NotLoggedIn;
-import br.com.dextra.pma.main.Wrapper;
 import br.com.dextra.pma.main.Options.Option;
-import br.com.dextra.pma.models.Appointment;
+import br.com.dextra.pma.main.Wrapper;
 import br.com.dextra.pma.models.Day;
 import br.com.dextra.pma.parser.FileParser;
 import br.com.dextra.pma.parser.InvalidFormatException;
@@ -57,21 +58,16 @@ public class ParserController extends BaseController {
 
         console.result(days.size() + " days parsed;");
         for (Day day : days) {
-            console.result(day.getDate());
-            console.tabIn();
-            console.result(String.format("Start: %s | Interval: %s | End: %s", day.getStartTime(), day.getInterval(), day.getEndTime()));
-            for (Appointment a : day.getAppointments()) {
-                console.result(a);
-            }
-            console.tabOut();
+            day.print(console);
         }
         return CallResult.SUCCESS;
     }
 
     @Action("today")
-    public CallResult today() {
-        console.error("TODO WIP");
-        return CallResult.ERROR;
+    public CallResult today() throws InvalidFormatException {
+        Day day = FileParser.parseDay(context.o().get(Option.LOG_FILE), new Date(Calendar.getInstance()));
+        day.print(console);
+        return CallResult.SUCCESS;
     }
 
     public static void defaultCallables(String name, List<Callable> callables) {

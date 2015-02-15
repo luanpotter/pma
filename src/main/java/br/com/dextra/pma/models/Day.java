@@ -63,7 +63,7 @@ public class Day implements Serializable {
     }
 
     private void fixPossibleImprecisionMistake() {
-        int actualTotalMinutes = appointments.values().stream().mapToInt(a -> a.getDuration().getRoundedMinutes()).sum();
+        int actualTotalMinutes = getTotalTimeInTasks();
         int realTotalMinutes = endTime.getRoundedMinutes() - startTime.getRoundedMinutes() - interval.getRoundedMinutes();
         int delta = Math.abs(actualTotalMinutes - realTotalMinutes);
         if (delta > MAX_DELTA) {
@@ -72,5 +72,26 @@ public class Day implements Serializable {
         if (delta > 0) {
             appointments.get(0).addTime(realTotalMinutes - actualTotalMinutes);
         }
+    }
+
+    public final void print(Console console) {
+        console.result(date);
+        console.tabIn();
+        printInternal(console);
+        console.result("Total time in tasks: " + new Time(getTotalTimeInTasks()));
+        console.tabOut();
+    }
+
+    protected int getTotalTimeInTasks() {
+        return appointments.values().stream().mapToInt(a -> a.getDuration().getRoundedMinutes()).sum();
+    }
+
+    protected void printInternal(Console console) {
+        if (endTime == null) {
+            console.result(String.format("Start: %s | Interval: %s", startTime, interval));
+        } else {
+            console.result(String.format("Start: %s | Interval: %s | End: %s", startTime, interval, endTime));
+        }
+        getAppointments().forEach(a -> console.result(a));
     }
 }

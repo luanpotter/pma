@@ -1,11 +1,17 @@
-package br.com.dextra.pma.parser;
+package br.com.dextra.pma.models;
 
 import lombok.Getter;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.date.Time;
-import br.com.dextra.pma.models.Appointment;
+import br.com.dextra.pma.parser.InvalidFormatException;
 
-class Record {
+/**
+ * One record in the file that is being parsed.
+ * Several of these will become a day.
+ * This is not an appointment, because record times are shifted.
+ * @author luan
+ */
+public class Record {
 
     @Getter
     private Date date;
