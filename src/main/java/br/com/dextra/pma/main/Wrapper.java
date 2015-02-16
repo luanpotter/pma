@@ -149,8 +149,8 @@ public final class Wrapper {
                 new BasicNameValuePair("password", String.valueOf(pass)));
         int code = getDocumentErrorCode(doc);
         if (code == 0) {
-            String token = listElements(doc, "//token").get(0).getText();
-            saveToken(token);
+            tokenCache = listElements(doc, "//token").get(0).getText();
+            saveToken(tokenCache);
         } else {
             throw new InvalidLoginException(evaluateElement(doc, "//erro"));
         }
