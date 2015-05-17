@@ -2,12 +2,16 @@ package br.com.dextra.pma.parser;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
+import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.models.Appointment;
@@ -128,11 +132,12 @@ public class FileParser {
         return results;
     }
 
+    @SneakyThrows
     public void replaceFiles(String fileName) {
-        File original = new File(fileName);
-        File current = new File(fileName + ".new");
+        Files.move(toPath(fileName + ".new"), toPath(fileName), StandardCopyOption.REPLACE_EXISTING);
+    }
 
-        original.delete();
-        current.renameTo(original);
+    private Path toPath(String fileName) {
+        return new File(fileName).toPath();
     }
 }
