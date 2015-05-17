@@ -1,5 +1,6 @@
 package br.com.dextra.pma.parser;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +16,15 @@ import br.com.dextra.pma.models.Appointment;
 import br.com.dextra.pma.models.Day;
 
 public class FileParserTest {
+
+    @Test
+    public void testEmptyFile() throws InvalidFormatException {
+        FileCache cache = new FileCache();
+        List<Day> days = FileParser.parseFile(new ArrayList<String>().iterator(), cache);
+
+        Assert.assertEquals(0, days.size());
+        assertCacheIsEmpty(cache);
+    }
 
     @Test
     public void testSimpleFile() throws InvalidFormatException {

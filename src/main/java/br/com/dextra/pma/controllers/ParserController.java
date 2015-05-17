@@ -28,6 +28,11 @@ public class ParserController extends BaseController {
         String fileName = context.o().get(Option.LOG_FILE);
 
         List<Day> days = FileParser.parseLogs(fileName, true);
+        if (days.isEmpty()) {
+            console.message("Nothing to be saved.");
+            return CallResult.SUCCESS;
+        }
+
         try {
             for (Day day : days) {
                 day.save(console);
@@ -66,6 +71,10 @@ public class ParserController extends BaseController {
     @Action("today")
     public CallResult today() throws InvalidFormatException {
         Day day = FileParser.parseDay(context.o().get(Option.LOG_FILE), new Date(Calendar.getInstance()));
+        if (day == null) {
+            console.error("Today was not logged in the file yet.");
+            return CallResult.ERROR;
+        }
         day.print(console);
         return CallResult.SUCCESS;
     }

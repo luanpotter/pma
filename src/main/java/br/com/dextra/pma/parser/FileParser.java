@@ -33,6 +33,7 @@ public class FileParser {
 
         int lineNumber = 0;
         Iterator<String> lines = getScanner(file);
+
         while (lines.hasNext()) {
             String line = lines.next();
 
@@ -56,6 +57,11 @@ public class FileParser {
             }
             lastRecord = record;
             lineNumber++;
+        }
+
+        boolean dayNotFound = day == null;
+        if (dayNotFound) {
+            return null;
         }
 
         day.setLastRecord(lastRecord);
@@ -123,7 +129,7 @@ public class FileParser {
             lineNumber++;
         }
 
-        if (lastRecord.getTask() == Appointment.INTERVAL_TASK && currentDay != null) {
+        if (currentDay != null && lastRecord.getTask() == Appointment.INTERVAL_TASK) {
             currentDay.end(lastRecord.getTime());
             results.add(currentDay);
             fileCache.savedLine(lineNumber);
