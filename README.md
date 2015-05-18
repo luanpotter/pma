@@ -13,4 +13,5 @@ The program basically logs the times in which you start each activity, including
 Running `pma here :projectNameOrIdOrAlias` will log that you started that activity.  
 Running `pma exit` will log that you exited to lunch or something.  
 Running `pma save` will save all completed days (a day is complete if it ends in a `exit` command).  
+Running `pma show :date` will show the appointments currently on the server on that day.  
 There are tons of other features, they can be listed with `pma help` command.
