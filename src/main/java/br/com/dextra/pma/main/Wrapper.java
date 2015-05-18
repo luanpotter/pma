@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -30,7 +32,10 @@ import xyz.luan.console.parser.Console;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.date.Time;
 import br.com.dextra.pma.exceptions.NotLoggedIn;
+import br.com.dextra.pma.models.Appointment;
+import br.com.dextra.pma.models.Day;
 import br.com.dextra.pma.models.Project;
+import br.com.dextra.pma.models.RetrievedDay;
 import br.com.dextra.pma.models.Task;
 
 public final class Wrapper {
@@ -89,6 +94,33 @@ public final class Wrapper {
                     new BasicNameValuePair("atividadeStatus", "working"),
                     new BasicNameValuePair("esforco", String.valueOf(duration.getRoundedMinutes())),
                     new BasicNameValuePair("descricao", description), });
+    }
+
+    public static Day fetchDay(PmaContext c, Date date) {
+        Document doc = get("listar_apontamentos", new BasicNameValuePair("data", date.toString()));
+        Map<Long, Appointment> appointments = new HashMap<>();
+        for (Element node : listElements(doc, "//apontamentos/apontamento")) {
+            Appointment appointament = parseAppointment(c, node);
+            appointments.put(appointament.getTask(), appointament);
+        }
+        return RetrievedDay.parseFromAPIResponse(date, appointments);
+    }
+
+    private static Appointment parseAppointment(PmaContext c, Element node) {
+        Appointment appointment = new Appointment(fetchTask(c, node).getId());
+        appointment.addTime(fetchDuration(node));
+        return appointment;
+    }
+
+    private static int fetchDuration(Element node) {
+        int duration = Integer.parseInt(node.getChild("esforco").getText());
+        return duration;
+    }
+
+    private static Task fetchTask(PmaContext c, Element node) {
+        Project project = c.p().getProjectByName(node.getChild("projeto").getText());
+        Task task = project.getTasks().stream().filter(t -> t.getName().equals(node.getChild("atividade").getText())).findAny().orElse(null);
+        return task;
     }
 
     private static String evaluateElement(Document doc, String xpath) {

@@ -20,12 +20,12 @@ public class Day implements Serializable {
     private static final String MAX_DELTA_EXCEEDED_ERROR = "Something went wrong! The sum of the activities specified does not comply with the start/ending times. Did you edit the log.dat file by hand?";
 
     @Getter
-    private Date date;
+    protected Date date;
 
     @Getter
-    private Time startTime, interval, endTime;
+    protected Time startTime, interval, endTime;
 
-    private Map<Long, Appointment> appointments;
+    protected Map<Long, Appointment> appointments;
 
     public Day(Date date, Time start) {
         this.date = date;
