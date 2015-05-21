@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.Getter;
+
+import org.jdom2.Element;
+
 import xyz.luan.console.parser.Console;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.date.Time;
@@ -93,5 +96,22 @@ public class Day implements Serializable {
             console.result(String.format("Start: %s | Interval: %s | End: %s", startTime, interval, endTime));
         }
         getAppointments().forEach(a -> console.result(a));
+    }
+
+    public static Day fromApiRequest(Element node) {
+        Date date = new Date(node.getChild("data").getText());
+        Time startTime = new Time(node.getChild("inicio").getText());
+        Day day = new Day(date, startTime);
+        day.endTime = new Time(node.getChild("fim").getText());
+        day.interval = new Time(node.getChild("intervalo").getText());
+        return day;
+    }
+
+    public int getDuration() {
+        return endTime.getDifference(startTime) - interval.getRoundedMinutes();
+    }
+
+    public void setAppointments(Map<Long, Appointment> appointments) {
+        this.appointments = appointments;
     }
 }

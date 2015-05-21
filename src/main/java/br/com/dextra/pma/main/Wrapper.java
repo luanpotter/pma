@@ -35,7 +35,6 @@ import br.com.dextra.pma.exceptions.NotLoggedIn;
 import br.com.dextra.pma.models.Appointment;
 import br.com.dextra.pma.models.Day;
 import br.com.dextra.pma.models.Project;
-import br.com.dextra.pma.models.RetrievedDay;
 import br.com.dextra.pma.models.Task;
 
 public final class Wrapper {
@@ -69,7 +68,7 @@ public final class Wrapper {
     public static List<Task> getTasksFromProject(Project project) {
         final List<Task> tasks = new ArrayList<>();
 
-        final Document document = get("listar_atividades", new BasicNameValuePair("projeto", String.valueOf(project.getId())));
+        final Document document = get("listar_atividades", pair("projeto", project.getId()));
         for (Element node : listElements(document, "//atividades/atividade")) {
             tasks.add(new Task(project, node));
         }
@@ -78,32 +77,49 @@ public final class Wrapper {
     }
 
     public static String createDay(Date date, Time start, Time end, Time interval) {
-        return post("criar_apontamento_diario",
-                new NameValuePair[] {
-                    new BasicNameValuePair("data", date.toString()),
-                    new BasicNameValuePair("inicio", start.toString()),
-                    new BasicNameValuePair("fim", end.toString()),
-                    new BasicNameValuePair("intervalo", interval.toString()), });
+        return post("criar_apontamento_diario", pair("data", date), pair("inicio", start), pair("fim", end), pair("intervalo", interval));
     }
 
     public static String createTask(Date date, long taskId, String description, Time duration) {
-        return post("criar_apontamento",
-                new NameValuePair[] {
-                    new BasicNameValuePair("data", date.toString()),
-                    new BasicNameValuePair("atividadeId", String.valueOf(taskId)),
-                    new BasicNameValuePair("atividadeStatus", "working"),
-                    new BasicNameValuePair("esforco", String.valueOf(duration.getRoundedMinutes())),
-                    new BasicNameValuePair("descricao", description), });
+        NameValuePair pDate = pair("data", date);
+        NameValuePair pTask = pair("atividadeId", taskId);
+        NameValuePair pStatus = pair("atividadeStatus", "working");
+        NameValuePair pEffort = pair("esforco", duration.getRoundedMinutes());
+        NameValuePair pDesc = pair("descricao", description);
+        return post("criar_apontamento", pDate, pTask, pStatus, pEffort, pDesc);
     }
 
     public static Day fetchDay(PmaContext c, Date date) {
-        Document doc = get("listar_apontamentos", new BasicNameValuePair("data", date.toString()));
+        List<Element> returnedDates = fetchDaysInBetween(date, date);
+        if (returnedDates.size() != 1) {
+            return null;
+        }
+        Day day = Day.fromApiRequest(returnedDates.get(0));
+        day.setAppointments(fetchAppointments(c, date));
+        return day;
+    }
+
+    private static Map<Long, Appointment> fetchAppointments(PmaContext c, Date date) {
+        Document doc = get("listar_apontamentos", pair("data", date));
         Map<Long, Appointment> appointments = new HashMap<>();
         for (Element node : listElements(doc, "//apontamentos/apontamento")) {
             Appointment appointament = parseAppointment(c, node);
             appointments.put(appointament.getTask(), appointament);
         }
-        return RetrievedDay.parseFromAPIResponse(date, appointments);
+        return appointments;
+    }
+
+    public static int fetchMinutesWorked(Date start, Date end) {
+        int minutes = 0;
+        for (Element node : fetchDaysInBetween(start, end)) {
+            minutes += Day.fromApiRequest(node).getDuration();
+        }
+        return minutes;
+    }
+
+    private static List<Element> fetchDaysInBetween(Date start, Date end) {
+        Document doc = get("listar_apontamentos_diarios", pair("dataInicial", start), pair("dataFinal", end));
+        return listElements(doc, "//apontamentosDiarios/apontamentoDiario");
     }
 
     private static Appointment parseAppointment(PmaContext c, Element node) {
@@ -177,8 +193,7 @@ public final class Wrapper {
     }
 
     private static void requestAndSaveToken(String username, char[] pass) throws InvalidLoginException {
-        final Document doc = getRaw("obter_token", false, new BasicNameValuePair("username", username),
-                new BasicNameValuePair("password", String.valueOf(pass)));
+        final Document doc = getRaw("obter_token", false, pair("username", username), pair("password", String.valueOf(pass)));
         int code = getDocumentErrorCode(doc);
         if (code == 0) {
             tokenCache = listElements(doc, "//token").get(0).getText();
@@ -268,5 +283,13 @@ public final class Wrapper {
         } catch (IOException | IllegalStateException | JDOMException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    private static NameValuePair pair(String key, long val) {
+        return pair(key, String.valueOf(val));
+    }
+
+    private static NameValuePair pair(String key, Object val) {
+        return new BasicNameValuePair(key, val.toString());
     }
 }
