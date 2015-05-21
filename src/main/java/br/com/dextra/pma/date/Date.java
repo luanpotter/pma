@@ -19,13 +19,6 @@ public class Date implements Serializable {
     @Getter
     private int year, month, day;
 
-    public int daysInMonth() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, month - 1);
-        return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-    }
-
     public Date(String date) {
         String[] p = date.split("-");
         if (p.length != 3)
@@ -45,8 +38,20 @@ public class Date implements Serializable {
         this(currentTime.get(YEAR), currentTime.get(MONTH) + 1, currentTime.get(DAY_OF_MONTH));
     }
 
+    public int daysInMonth() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month - 1);
+        return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+
+    public Date lastDay() {
+        return new Date(year, month, daysInMonth());
+    }
+
     @Override
     public String toString() {
         return NumberUtils.toString(year) + '-' + NumberUtils.toString(month) + '-' + NumberUtils.toString(day);
     }
+
 }
