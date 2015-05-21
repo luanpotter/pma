@@ -19,6 +19,13 @@ public class Date implements Serializable {
     @Getter
     private int year, month, day;
 
+    public int daysInMonth() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month - 1);
+        return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+
     public Date(String date) {
         String[] p = date.split("-");
         if (p.length != 3)
