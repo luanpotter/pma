@@ -32,9 +32,17 @@ public class DaysController extends BaseController {
         return CallResult.SUCCESS;
     }
 
+    @Action("minutesForMonth")
+    public CallResult minutesForMonth(String month) {
+        Date firstDay = new Date(month + "-01");
+        return minutes(firstDay, firstDay.lastDay());
+    }
+
     public static void defaultCallables(String name, List<Callable> callables) {
         callables.add(new ActionCall(name + ":show", ":show date", "Show the past date (how it is in PMA)"));
         callables.add(new ActionCall(name + ":minutes", ":minutes start end",
                 "Sums all time worked in between the dates provided (inclusive)(in minutes)(fetches from PMA)"));
+        callables.add(new ActionCall(name + ":minutesForMonth", ":minutes month",
+                "Sums all time worked in given month (as yyyy-mm) (in minutes)(fetches from PMA)"));
     }
 }
