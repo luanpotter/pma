@@ -12,8 +12,8 @@ import org.junit.Test;
 
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.date.Time;
-import br.com.dextra.pma.models.Appointment;
-import br.com.dextra.pma.models.Day;
+import br.com.dextra.pma.model.Appointment;
+import br.com.dextra.pma.model.Day;
 
 public class FileParserTest {
 

@@ -14,10 +14,10 @@ import java.util.Scanner;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import br.com.dextra.pma.date.Date;
-import br.com.dextra.pma.models.Appointment;
-import br.com.dextra.pma.models.CurrentDay;
-import br.com.dextra.pma.models.Day;
-import br.com.dextra.pma.models.Record;
+import br.com.dextra.pma.model.Appointment;
+import br.com.dextra.pma.model.CurrentDay;
+import br.com.dextra.pma.model.Day;
+import br.com.dextra.pma.model.Record;
 
 @UtilityClass
 public class FileParser {

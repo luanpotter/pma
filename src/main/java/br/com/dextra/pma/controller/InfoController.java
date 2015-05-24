@@ -1,4 +1,4 @@
-package br.com.dextra.pma.controllers;
+package br.com.dextra.pma.controller;
 
 import java.util.List;
 import java.util.Map;
@@ -11,8 +11,8 @@ import xyz.luan.console.parser.call.CallResult;
 import xyz.luan.console.parser.callable.ActionCall;
 import xyz.luan.console.parser.callable.Callable;
 import xyz.luan.console.parser.callable.Pattern;
-import br.com.dextra.pma.models.Project;
-import br.com.dextra.pma.models.Task;
+import br.com.dextra.pma.model.Project;
+import br.com.dextra.pma.model.Task;
 import br.com.dextra.pma.utils.MapBuilder;
 
 @FnController

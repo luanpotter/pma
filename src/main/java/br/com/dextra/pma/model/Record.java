@@ -1,4 +1,4 @@
-package br.com.dextra.pma.models;
+package br.com.dextra.pma.model;
 
 import lombok.Getter;
 import br.com.dextra.pma.date.Date;

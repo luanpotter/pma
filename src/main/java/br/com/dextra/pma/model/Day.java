@@ -1,4 +1,4 @@
-package br.com.dextra.pma.models;
+package br.com.dextra.pma.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import org.jdom2.Element;
 import xyz.luan.console.parser.Console;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.date.Time;
-import br.com.dextra.pma.main.Wrapper;
+import br.com.dextra.pma.service.PmaService;
 
 public class Day implements Serializable {
 
@@ -42,7 +42,7 @@ public class Day implements Serializable {
     }
 
     public void save(Console c) {
-        c.result(Wrapper.createDay(date, startTime, endTime, interval));
+        c.result(PmaService.createDay(date, startTime, endTime, interval));
         for (Appointment a : appointments.values()) {
             c.result(a.save(date));
         }

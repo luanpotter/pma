@@ -1,4 +1,4 @@
-package br.com.dextra.pma.controllers;
+package br.com.dextra.pma.controller;
 
 import java.util.Calendar;
 import java.util.List;
@@ -10,12 +10,12 @@ import xyz.luan.console.parser.call.CallResult;
 import xyz.luan.console.parser.callable.ActionCall;
 import xyz.luan.console.parser.callable.Callable;
 import br.com.dextra.pma.date.Date;
-import br.com.dextra.pma.exceptions.NotLoggedIn;
+import br.com.dextra.pma.exception.NotLoggedIn;
 import br.com.dextra.pma.main.Options.Option;
-import br.com.dextra.pma.main.Wrapper;
-import br.com.dextra.pma.models.Day;
+import br.com.dextra.pma.model.Day;
 import br.com.dextra.pma.parser.FileParser;
 import br.com.dextra.pma.parser.InvalidFormatException;
+import br.com.dextra.pma.service.PmaService;
 import br.com.dextra.pma.utils.MapBuilder;
 import br.com.dextra.pma.utils.SimpleObjectAccess;
 
@@ -49,7 +49,7 @@ public class ParserController extends BaseController {
     }
 
     private void assertLoggedIn() {
-        if (!Wrapper.isLoggedIn()) {
+        if (!PmaService.isLoggedIn()) {
             throw new NotLoggedIn();
         }
     }

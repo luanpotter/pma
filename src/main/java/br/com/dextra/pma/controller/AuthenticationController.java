@@ -1,4 +1,4 @@
-package br.com.dextra.pma.controllers;
+package br.com.dextra.pma.controller;
 
 import java.util.List;
 
@@ -7,26 +7,26 @@ import xyz.luan.console.parser.actions.Action;
 import xyz.luan.console.parser.call.CallResult;
 import xyz.luan.console.parser.callable.ActionCall;
 import xyz.luan.console.parser.callable.Callable;
-import br.com.dextra.pma.main.Wrapper;
-import br.com.dextra.pma.main.Wrapper.InvalidLoginException;
+import br.com.dextra.pma.service.PmaService;
+import br.com.dextra.pma.service.PmaService.InvalidLoginException;
 
 @FnController
 public class AuthenticationController extends BaseController {
 
     @Action("logout")
     public CallResult logout() {
-        Wrapper.logout();
+        PmaService.logout();
         return CallResult.SUCCESS;
     }
 
     @Action("login")
     public CallResult login() {
         try {
-            if (Wrapper.isLoggedIn()) {
+            if (PmaService.isLoggedIn()) {
                 console.error("You are already logged in! Run logout to choose a different user.");
                 return CallResult.ERROR;
             }
-            Wrapper.requestLogin(console);
+            PmaService.requestLogin(console);
             console.result("Successfully logged in.");
             return CallResult.SUCCESS;
         } catch (InvalidLoginException e) {

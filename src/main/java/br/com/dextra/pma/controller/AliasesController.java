@@ -1,4 +1,4 @@
-package br.com.dextra.pma.controllers;
+package br.com.dextra.pma.controller;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import xyz.luan.console.parser.call.CallResult;
 import xyz.luan.console.parser.callable.ActionCall;
 import xyz.luan.console.parser.callable.Callable;
 import xyz.luan.console.parser.callable.Pattern;
-import br.com.dextra.pma.models.Task;
+import br.com.dextra.pma.model.Task;
 
 @FnController
 public class AliasesController extends BaseController {

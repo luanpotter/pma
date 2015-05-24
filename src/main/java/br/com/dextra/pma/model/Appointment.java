@@ -1,4 +1,4 @@
-package br.com.dextra.pma.models;
+package br.com.dextra.pma.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.date.Time;
-import br.com.dextra.pma.main.Wrapper;
+import br.com.dextra.pma.service.PmaService;
 
 public class Appointment implements Serializable {
 
@@ -53,7 +53,7 @@ public class Appointment implements Serializable {
     }
 
     public String save(Date date) {
-        return Wrapper.createTask(date, taskId, getComment(), duration);
+        return PmaService.createTask(date, taskId, getComment(), duration);
     }
 
     @Override

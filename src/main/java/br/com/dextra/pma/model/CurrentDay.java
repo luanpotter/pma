@@ -1,4 +1,4 @@
-package br.com.dextra.pma.models;
+package br.com.dextra.pma.model;
 
 import xyz.luan.console.parser.Console;
 import lombok.Setter;

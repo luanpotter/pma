@@ -1,4 +1,4 @@
-package br.com.dextra.pma.controllers;
+package br.com.dextra.pma.controller;
 
 import java.util.List;
 

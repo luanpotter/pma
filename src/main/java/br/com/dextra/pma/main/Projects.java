@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import xyz.luan.console.parser.Console;
-import br.com.dextra.pma.exceptions.ProjectsMissingException;
-import br.com.dextra.pma.models.Project;
-import br.com.dextra.pma.models.Task;
+import br.com.dextra.pma.exception.ProjectsMissingException;
+import br.com.dextra.pma.model.Project;
+import br.com.dextra.pma.model.Task;
+import br.com.dextra.pma.service.PmaService;
 import br.com.dextra.pma.utils.SimpleObjectAccess;
 
 public class Projects implements Serializable {
@@ -37,7 +38,7 @@ public class Projects implements Serializable {
     }
 
     public Projects update(Console console) {
-        projectsCache = Wrapper.getProjects(console);
+        projectsCache = PmaService.getProjects(console);
         this.save();
         return this;
     }

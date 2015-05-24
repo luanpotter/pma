@@ -1,4 +1,4 @@
-package br.com.dextra.pma.exceptions;
+package br.com.dextra.pma.exception;
 
 public class ProjectsMissingException extends BaseRequirementException {
 

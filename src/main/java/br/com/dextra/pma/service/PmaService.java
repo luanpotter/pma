@@ -1,4 +1,4 @@
-package br.com.dextra.pma.main;
+package br.com.dextra.pma.service;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,13 +31,14 @@ import org.jdom2.xpath.XPathFactory;
 import xyz.luan.console.parser.Console;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.date.Time;
-import br.com.dextra.pma.exceptions.NotLoggedIn;
-import br.com.dextra.pma.models.Appointment;
-import br.com.dextra.pma.models.Day;
-import br.com.dextra.pma.models.Project;
-import br.com.dextra.pma.models.Task;
+import br.com.dextra.pma.exception.NotLoggedIn;
+import br.com.dextra.pma.main.PmaContext;
+import br.com.dextra.pma.model.Appointment;
+import br.com.dextra.pma.model.Day;
+import br.com.dextra.pma.model.Project;
+import br.com.dextra.pma.model.Task;
 
-public final class Wrapper {
+public final class PmaService {
 
     private static final String DOMAIN = "https://dextranet.dextra.com.br/pma/services/";
 
@@ -46,7 +47,7 @@ public final class Wrapper {
 
     private static String tokenCache = null;
 
-    private Wrapper() {
+    private PmaService() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 

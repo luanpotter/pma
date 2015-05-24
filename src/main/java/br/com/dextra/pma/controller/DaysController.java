@@ -1,4 +1,4 @@
-package br.com.dextra.pma.controllers;
+package br.com.dextra.pma.controller;
 
 import java.util.List;
 
@@ -8,15 +8,15 @@ import xyz.luan.console.parser.call.CallResult;
 import xyz.luan.console.parser.callable.ActionCall;
 import xyz.luan.console.parser.callable.Callable;
 import br.com.dextra.pma.date.Date;
-import br.com.dextra.pma.main.Wrapper;
-import br.com.dextra.pma.models.Day;
+import br.com.dextra.pma.model.Day;
+import br.com.dextra.pma.service.PmaService;
 
 @FnController
 public class DaysController extends BaseController {
 
     @Action("show")
     public CallResult show(Date date) {
-        Day day = Wrapper.fetchDay(context, date);
+        Day day = PmaService.fetchDay(context, date);
         if (day == null) {
             console.error("Nothing found on the specified day.");
             return CallResult.ERROR;
@@ -27,7 +27,7 @@ public class DaysController extends BaseController {
 
     @Action("minutes")
     public CallResult minutes(Date start, Date end) {
-        int minutes = Wrapper.fetchMinutesWorked(start, end);
+        int minutes = PmaService.fetchMinutesWorked(start, end);
         console.result("Total time in period (inclusive): " + minutes + " min");
         return CallResult.SUCCESS;
     }

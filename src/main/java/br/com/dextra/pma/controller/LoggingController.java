@@ -1,4 +1,4 @@
-package br.com.dextra.pma.controllers;
+package br.com.dextra.pma.controller;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -16,7 +16,7 @@ import xyz.luan.console.parser.callable.Callable;
 import xyz.luan.console.parser.callable.Pattern;
 import br.com.dextra.pma.date.Moment;
 import br.com.dextra.pma.main.Options.Option;
-import br.com.dextra.pma.models.Task;
+import br.com.dextra.pma.model.Task;
 
 @FnController
 public class LoggingController extends BaseController {

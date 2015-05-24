@@ -10,7 +10,7 @@ public class PmaSetup extends FnSetup<PmaContext> {
     private static final String PARSER_FILE_NAME = "parser.dat";
 
     public PmaSetup() {
-        super("br.com.dextra.pma.controllers");
+        super("br.com.dextra.pma.controller");
     }
 
     public static void main(String[] args) {

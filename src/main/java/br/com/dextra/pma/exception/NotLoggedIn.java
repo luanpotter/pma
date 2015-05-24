@@ -1,4 +1,4 @@
-package br.com.dextra.pma.exceptions;
+package br.com.dextra.pma.exception;
 
 public class NotLoggedIn extends BaseRequirementException {
 

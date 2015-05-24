@@ -1,4 +1,4 @@
-package br.com.dextra.pma.models;
+package br.com.dextra.pma.model;
 
 import java.io.Serializable;
 import java.util.List;
@@ -7,7 +7,7 @@ import lombok.Getter;
 
 import org.jdom2.Element;
 
-import br.com.dextra.pma.main.Wrapper;
+import br.com.dextra.pma.service.PmaService;
 
 public class Project implements Serializable {
 
@@ -30,7 +30,7 @@ public class Project implements Serializable {
         this.client = project.getChild("cliente").getText();
         this.name = project.getChild("nome").getText();
 
-        this.tasks = Wrapper.getTasksFromProject(this);
+        this.tasks = PmaService.getTasksFromProject(this);
     }
 
     public Task getTaskByName(String name) {
