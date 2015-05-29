@@ -40,8 +40,9 @@ public class Date implements Serializable {
 
     public int daysInMonth() {
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.DAY_OF_MONTH, day);
         cal.set(Calendar.MONTH, month - 1);
+        cal.set(Calendar.YEAR, year);
         return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
@@ -53,5 +54,4 @@ public class Date implements Serializable {
     public String toString() {
         return NumberUtils.toString(year) + '-' + NumberUtils.toString(month) + '-' + NumberUtils.toString(day);
     }
-
 }
