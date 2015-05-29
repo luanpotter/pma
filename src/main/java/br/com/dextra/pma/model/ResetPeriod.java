@@ -1,6 +1,7 @@
 package br.com.dextra.pma.model;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 import lombok.Getter;
 import br.com.dextra.pma.date.Date;
@@ -13,7 +14,7 @@ public class ResetPeriod implements Serializable {
     private Date start;
     private Date end;
 
-    private ResetPeriod(Date start, Date end) {
+    public ResetPeriod(Date start, Date end) {
         this.start = start;
         this.end = end;
     }
@@ -40,5 +41,25 @@ public class ResetPeriod implements Serializable {
 
     public static int getQuadrismestre(Date date) {
         return (date.getMonth() - MOUNTH_START - 1) / MOUNTH_COUNT;
+    }
+
+    public int countWeekDays() {
+        Calendar startCal = start.toCalendar();
+        Calendar endCal = end.toCalendar();
+
+        int workDays = 0;
+
+        do {
+            if (isWeekDay(startCal)) {
+                ++workDays;
+            }
+            startCal.add(Calendar.DAY_OF_MONTH, 1);
+        } while (startCal.getTimeInMillis() <= endCal.getTimeInMillis());
+
+        return workDays;
+    }
+
+    private boolean isWeekDay(Calendar cal) {
+        return cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY;
     }
 }

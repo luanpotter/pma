@@ -39,11 +39,15 @@ public class Date implements Serializable {
     }
 
     public int daysInMonth() {
+        return toCalendar().getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+
+    public Calendar toCalendar() {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_MONTH, day);
         cal.set(Calendar.MONTH, month - 1);
         cal.set(Calendar.YEAR, year);
-        return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        return cal;
     }
 
     public Date firstDay() {

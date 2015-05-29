@@ -9,6 +9,18 @@ import static br.com.dextra.pma.model.ResetPeriod.getQuadrismestre;
 public class ResetPeriodTest {
 
     @Test
+    public void countWeekDays() {
+        ResetPeriod period = new ResetPeriod(new Date("2015-03-03"), new Date("2015-04-08"));
+        Assert.assertEquals(27, period.countWeekDays());
+
+        period = new ResetPeriod(new Date("2015-05-02"), new Date("2015-05-03"));
+        Assert.assertEquals(0, period.countWeekDays());
+
+        period = new ResetPeriod(new Date("2015-05-05"), new Date("2015-05-05"));
+        Assert.assertEquals(1, period.countWeekDays());
+    }
+
+    @Test
     public void findFor() {
         ResetPeriod period = ResetPeriod.findFor(new Date("2015-01-30"));
         Assert.assertEquals(new Date("2014-12-01"), period.getStart());
