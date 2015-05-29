@@ -46,6 +46,10 @@ public class Date implements Serializable {
         return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
+    public Date firstDay() {
+        return new Date(year, month, 1);
+    }
+
     public Date lastDay() {
         return new Date(year, month, daysInMonth());
     }

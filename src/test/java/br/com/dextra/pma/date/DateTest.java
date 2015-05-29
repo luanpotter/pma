@@ -6,6 +6,13 @@ import org.junit.Test;
 public class DateTest {
 
     @Test
+    public void firstDay() {
+        Assert.assertEquals(new Date("2013-05-01"), new Date("2013-05-02").firstDay());
+        Assert.assertEquals(new Date("2013-02-01"), new Date("2013-02-03").firstDay());
+        Assert.assertEquals(new Date("2016-02-01"), new Date("2016-02-28").firstDay());
+    }
+
+    @Test
     public void lastDay() {
         Assert.assertEquals(new Date("2013-05-31"), new Date("2013-05-02").lastDay());
         Assert.assertEquals(new Date("2013-02-28"), new Date("2013-02-03").lastDay());
