@@ -9,6 +9,7 @@ import xyz.luan.console.parser.callable.ActionCall;
 import xyz.luan.console.parser.callable.Callable;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.model.Day;
+import br.com.dextra.pma.model.ResetPeriod;
 import br.com.dextra.pma.service.PmaService;
 
 @FnController
@@ -38,11 +39,23 @@ public class DaysController extends BaseController {
         return minutes(firstDay, firstDay.lastDay());
     }
 
+    @Action("status")
+    public CallResult status(Date date, Integer feriados) {
+        ResetPeriod period = ResetPeriod.findFor(date);
+        int minutes = PmaService.fetchMinutesWorked(period.getStart(), period.getEnd());
+        System.out.println("m" + minutes);
+        int expectedMinutes = (new ResetPeriod(period.getStart(), date).countWeekDays() - feriados) * 6;
+        System.out.println("e" + expectedMinutes);
+        console.result("status: " + (minutes - expectedMinutes) + " min");
+        return CallResult.SUCCESS;
+    }
+
     public static void defaultCallables(String name, List<Callable> callables) {
         callables.add(new ActionCall(name + ":show", ":show date", "Show the past date (how it is in PMA)"));
         callables.add(new ActionCall(name + ":minutes", ":minutes start end",
                 "Sums all time worked in between the dates provided (inclusive)(in minutes)(fetches from PMA)"));
         callables.add(new ActionCall(name + ":minutesForMonth", ":minutes month",
                 "Sums all time worked in given month (as yyyy-mm) (in minutes)(fetches from PMA)"));
+        callables.add(new ActionCall(name + ":status", ":status date feriados", "Show the status for the given date."));
     }
 }
