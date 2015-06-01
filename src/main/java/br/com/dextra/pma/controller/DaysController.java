@@ -43,9 +43,7 @@ public class DaysController extends BaseController {
     public CallResult status(Date date, Integer feriados) {
         ResetPeriod period = ResetPeriod.findFor(date);
         int minutes = PmaService.fetchMinutesWorked(period.getStart(), period.getEnd());
-        System.out.println("m" + minutes);
-        int expectedMinutes = (new ResetPeriod(period.getStart(), date).countWeekDays() - feriados) * 6;
-        System.out.println("e" + expectedMinutes);
+        int expectedMinutes = (new ResetPeriod(period.getStart(), date).countWeekDays() - feriados) * 6 * 60;
         console.result("status: " + (minutes - expectedMinutes) + " min");
         return CallResult.SUCCESS;
     }
