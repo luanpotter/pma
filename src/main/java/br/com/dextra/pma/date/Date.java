@@ -70,6 +70,12 @@ public class Date implements Serializable {
         return this.toMillis() > date.toMillis();
     }
 
+    public Date addDays(int days) {
+        Calendar c = toCalendar();
+        c.add(Calendar.DAY_OF_MONTH, days);
+        return new Date(c);
+    }
+
     @Override
     public String toString() {
         return NumberUtils.toString(year) + '-' + NumberUtils.toString(month) + '-' + NumberUtils.toString(day);

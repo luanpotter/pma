@@ -40,11 +40,11 @@ public class DaysController extends BaseController {
     }
 
     @Action("status")
-    public CallResult status(Date date, Integer feriados) {
-        ResetPeriod period = ResetPeriod.findFor(date);
+    public CallResult status(Date date) {
+        ResetPeriod period = ResetPeriod.findFor(date).withEnd(date);
         int minutes = PmaService.fetchMinutesWorked(period.getStart(), period.getEnd());
-        int expectedMinutes = (new ResetPeriod(period.getStart(), date).countWeekDays() - feriados) * 6 * 60;
-        console.result("status: " + (minutes - expectedMinutes) + " min");
+        System.out.println("m: " + minutes);
+        console.result("status: " + (minutes - period.expectedMinutes()) + " min");
         return CallResult.SUCCESS;
     }
 
@@ -54,6 +54,6 @@ public class DaysController extends BaseController {
                 "Sums all time worked in between the dates provided (inclusive)(in minutes)(fetches from PMA)"));
         callables.add(new ActionCall(name + ":minutesForMonth", ":minutes month",
                 "Sums all time worked in given month (as yyyy-mm) (in minutes)(fetches from PMA)"));
-        callables.add(new ActionCall(name + ":status", ":status date feriados", "Show the status for the given date."));
+        callables.add(new ActionCall(name + ":status", ":status date", "Show the status for the given date."));
     }
 }
