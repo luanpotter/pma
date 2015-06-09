@@ -50,12 +50,24 @@ public class Date implements Serializable {
         return cal;
     }
 
+    public long toMillis() {
+        return toCalendar().getTime().getTime();
+    }
+
     public Date firstDay() {
         return new Date(year, month, 1);
     }
 
     public Date lastDay() {
         return new Date(year, month, daysInMonth());
+    }
+
+    public boolean before(Date date) {
+        return this.toMillis() < date.toMillis();
+    }
+
+    public boolean after(Date date) {
+        return this.toMillis() > date.toMillis();
     }
 
     @Override

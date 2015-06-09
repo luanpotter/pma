@@ -45,4 +45,25 @@ public class DateTest {
         Assert.assertEquals(new Date("2000-04-05"), new Date(2000, 4, 5));
         Assert.assertNotEquals(new Date("2000-05-04"), new Date(2000, 4, 5));
     }
+
+    @Test
+    public void before() {
+        Assert.assertTrue(new Date("2000-04-02").before(new Date("2000-04-03")));
+        Assert.assertTrue(new Date("2000-04-02").before(new Date("2000-05-01")));
+        Assert.assertTrue(new Date("2000-04-02").before(new Date("2001-03-01")));
+        Assert.assertFalse(new Date("2000-04-02").before(new Date("2000-04-01")));
+        Assert.assertFalse(new Date("2000-04-02").before(new Date("2000-03-01")));
+        Assert.assertFalse(new Date("2000-04-02").before(new Date("1999-03-01")));
+    }
+
+    @Test
+    public void after() {
+        Assert.assertFalse(new Date("2000-04-02").after(new Date("2000-04-03")));
+        Assert.assertFalse(new Date("2000-04-02").after(new Date("2000-05-01")));
+        Assert.assertFalse(new Date("2000-04-02").after(new Date("2001-03-01")));
+        Assert.assertTrue(new Date("2000-04-02").after(new Date("2000-04-01")));
+        Assert.assertTrue(new Date("2000-04-02").after(new Date("2000-03-01")));
+        Assert.assertTrue(new Date("2000-04-02").after(new Date("1999-03-01")));
+    }
+
 }
