@@ -5,6 +5,9 @@ import java.util.Calendar;
 
 import lombok.Getter;
 import br.com.dextra.pma.date.Date;
+import br.com.dextra.pma.service.FeriadosService;
+
+import com.google.common.base.Predicate;
 
 @Getter
 public class ResetPeriod implements Serializable {
@@ -55,13 +58,21 @@ public class ResetPeriod implements Serializable {
     }
 
     public int countWeekDays() {
+        return countDays(c -> isWeekDay(c));
+    }
+
+    public int countWorkingDays() {
+        return countDays(c -> isWeekDay(c) && isNotFeriado(c));
+    }
+
+    private int countDays(Predicate<Calendar> where) {
         Calendar startCal = start.toCalendar();
         Calendar endCal = end.toCalendar();
 
         int workDays = 0;
 
         do {
-            if (isWeekDay(startCal)) {
+            if (where.apply(startCal)) {
                 ++workDays;
             }
             startCal.add(Calendar.DAY_OF_MONTH, 1);
@@ -70,19 +81,23 @@ public class ResetPeriod implements Serializable {
         return workDays;
     }
 
+    private static boolean isNotFeriado(Calendar cal) {
+        return !FeriadosService.isFeriado(new Date(cal));
+    }
+
     private boolean isWeekDay(Calendar cal) {
         return cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY;
     }
 
     public ResetPeriod[] splitOn(Date date) {
-	if (date.before(start) || date.equals(start)) {
+        if (date.before(start) || date.equals(start)) {
             return new ResetPeriod[] { null, this };
         }
         if (date.after(start) && date.before(end)) {
             return new ResetPeriod[] { new ResetPeriod(start, date.addDays(-1)), new ResetPeriod(date, end) };
         }
 
-	assert date.after(end) || date.equals(end);
+        assert date.after(end) || date.equals(end);
         return new ResetPeriod[] { this, null };
     }
 
@@ -92,11 +107,9 @@ public class ResetPeriod implements Serializable {
         final int minutesPerHour = 60;
 
         ResetPeriod[] periods = splitOn(turningPoint);
-        //System.out.println("8h: " + periods[0].start + " -> " + periods[0].end + " | 6: " + periods[1].start + " -> " + periods[1].end);
         int expectedMinutes = 0;
         for (int i = 0; i < periods.length; i++) {
-            int days = periods[i] == null ? 0 : periods[i].countWeekDays();
-            System.out.println("p" + i + " : " + days + " days");
+            int days = periods[i] == null ? 0 : periods[i].countWorkingDays();
             expectedMinutes += days * hoursPerDay[i] * minutesPerHour;
         }
         return expectedMinutes;

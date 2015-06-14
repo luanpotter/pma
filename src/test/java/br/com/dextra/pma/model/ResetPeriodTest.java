@@ -21,6 +21,12 @@ public class ResetPeriodTest {
     }
 
     @Test
+    public void countWorkingDays() {
+        ResetPeriod period = new ResetPeriod(new Date("2015-03-03"), new Date("2015-04-08"));
+        Assert.assertEquals(26, period.countWorkingDays());
+    }
+
+    @Test
     public void findFor() {
         ResetPeriod period = ResetPeriod.findFor(new Date("2015-01-30"));
         Assert.assertEquals(new Date("2014-12-01"), period.getStart());

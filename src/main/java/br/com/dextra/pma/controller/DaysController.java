@@ -43,7 +43,6 @@ public class DaysController extends BaseController {
     public CallResult status(Date date) {
         ResetPeriod period = ResetPeriod.findFor(date).withEnd(date);
         int minutes = PmaService.fetchMinutesWorked(period.getStart(), period.getEnd());
-        System.out.println("m: " + minutes);
         console.result("status: " + (minutes - period.expectedMinutes()) + " min");
         return CallResult.SUCCESS;
     }
