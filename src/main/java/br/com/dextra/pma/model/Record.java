@@ -1,5 +1,6 @@
 package br.com.dextra.pma.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.date.Time;
@@ -11,6 +12,7 @@ import br.com.dextra.pma.parser.InvalidFormatException;
  * 
  * @author luan
  */
+@AllArgsConstructor
 public class Record {
 
     @Getter
@@ -71,5 +73,10 @@ public class Record {
             desc += "+" + parts[i];
         }
         return desc;
+    }
+
+    @Override
+    public String toString() {
+        return date + "+" + time + (task == -1 ? "" : "+" + task) + (desc == null ? "" : "+" + desc);
     }
 }

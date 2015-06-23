@@ -38,6 +38,10 @@ public class Time implements Serializable {
         this(parseString(t));
     }
 
+    public Time(Time startTime) {
+        this.minutes = startTime.minutes;
+    }
+
     private static int parseString(String t) {
         String[] p = t.split(":");
         if (p.length != 2)

@@ -114,4 +114,20 @@ public class Day implements Serializable {
     public void setAppointments(Map<Long, Appointment> appointments) {
         this.appointments = appointments;
     }
+
+    public List<Record> toRecordList() {
+        List<Record> records = new ArrayList<>();
+        Time current = new Time(startTime);
+        for (Long id : appointments.keySet()) {
+            Appointment appointment = appointments.get(id);
+            records.add(new Record(date, new Time(current), id, appointment.getComment()));
+            current.addMinutes(appointment.getDuration().getMinutes());
+        }
+        records.add(new Record(date, new Time(current), -1, null));
+        current.addMinutes(interval.getMinutes());
+        assert current.equals(endTime);
+        records.add(new Record(date, new Time(current), appointments.keySet().iterator().next(), null));
+        records.add(new Record(date, new Time(current), -1, null));
+        return records;
+    }
 }
