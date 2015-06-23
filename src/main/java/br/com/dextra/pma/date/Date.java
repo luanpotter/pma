@@ -76,6 +76,10 @@ public class Date implements Serializable {
         return new Date(c);
     }
 
+    public static Date today() {
+        return new Date(Calendar.getInstance());
+    }
+
     @Override
     public String toString() {
         return NumberUtils.toString(year) + '-' + NumberUtils.toString(month) + '-' + NumberUtils.toString(day);

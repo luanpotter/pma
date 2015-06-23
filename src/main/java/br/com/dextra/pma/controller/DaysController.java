@@ -11,6 +11,7 @@ import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.model.Day;
 import br.com.dextra.pma.model.ResetPeriod;
 import br.com.dextra.pma.service.PmaService;
+import br.com.dextra.pma.utils.MapBuilder;
 
 @FnController
 public class DaysController extends BaseController {
@@ -54,5 +55,6 @@ public class DaysController extends BaseController {
         callables.add(new ActionCall(name + ":minutesForMonth", ":minutes month",
                 "Sums all time worked in given month (as yyyy-mm) (in minutes)(fetches from PMA)"));
         callables.add(new ActionCall(name + ":status", ":status date", "Show the status for the given date."));
+        callables.add(new ActionCall(name + ":status", ":status", MapBuilder.from("date", Date.today().toString()), "Show the status for today."));
     }
 }
