@@ -12,7 +12,7 @@ import xyz.luan.console.parser.callable.Callable;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.model.Day;
 import br.com.dextra.pma.model.Record;
-import br.com.dextra.pma.model.ResetPeriod;
+import br.com.dextra.pma.model.Period;
 import br.com.dextra.pma.service.PmaService;
 import br.com.dextra.pma.utils.MapBuilder;
 
@@ -67,7 +67,7 @@ public class DaysController extends BaseController {
 
     @Action("status")
     public CallResult status(Date date) {
-        ResetPeriod period = ResetPeriod.findFor(date).withEnd(date);
+        Period period = Period.findQuadrismestre(date).withEnd(date);
         int minutes = PmaService.fetchMinutesWorked(period.getStart(), period.getEnd());
         console.result("status: " + (minutes - period.expectedMinutes()) + " min");
         return CallResult.SUCCESS;
