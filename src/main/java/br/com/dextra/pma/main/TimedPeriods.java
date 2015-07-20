@@ -96,7 +96,7 @@ public class TimedPeriods implements Serializable {
 
 	public boolean remove(Integer i) {
 		try {
-			periods.remove(CollectionUtils.get(periods, i));
+			CollectionUtils.remove(periods, i);
 			return true;
 		} catch (ArrayIndexOutOfBoundsException ex) {
 			return false;
