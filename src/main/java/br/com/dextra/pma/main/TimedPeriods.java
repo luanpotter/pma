@@ -1,16 +1,41 @@
 package br.com.dextra.pma.main;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Comparator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import lombok.Getter;
 import lombok.Setter;
+import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.model.TimedPeriod;
+import br.com.dextra.pma.utils.CollectionUtils;
 import br.com.dextra.pma.utils.SimpleObjectAccess;
 
 @Getter
 public class TimedPeriods implements Serializable {
+
+	private final class CompareByStartDate implements Comparator<TimedPeriod>, Serializable {
+
+		private static final long serialVersionUID = 2437492556492244229L;
+
+		@Override
+		public int compare(TimedPeriod thiz, TimedPeriod that) {
+			Date thizStart = thiz.getPeriod().getStart();
+			Date thatStart = that.getPeriod().getStart();
+
+			if (thizStart == null) {
+				if (thatStart == null) {
+					return 0;
+				}
+				return -1;
+			}
+			if (thatStart == null) {
+				return +1;
+			}
+			return thizStart.compareTo(thatStart);
+		}
+	}
 
 	private static final long serialVersionUID = 1306367033533807140L;
 
@@ -19,11 +44,11 @@ public class TimedPeriods implements Serializable {
 	@Setter
 	private int defaultHoursPerDay;
 
-	private List<TimedPeriod> periods;
+	private SortedSet<TimedPeriod> periods;
 
 	public TimedPeriods() {
 		this.defaultHoursPerDay = 8;
-		this.periods = new ArrayList<>();
+		this.periods = new TreeSet<>(new CompareByStartDate());
 	}
 
 	public static TimedPeriods readOrCreate() {
@@ -37,5 +62,44 @@ public class TimedPeriods implements Serializable {
 
 	public void save() {
 		SimpleObjectAccess.saveTo(FILE_NAME, this);
+	}
+
+	public boolean add(TimedPeriod period) {
+		boolean result = periods.add(period);
+		if (result) {
+			if (validatePeriods()) {
+				return true;
+			}
+			periods.remove(period);
+			return false;
+		}
+		return false;
+	}
+
+	private boolean validatePeriods() {
+		TimedPeriod before = null;
+		for (TimedPeriod period : periods) {
+			if (before != null && before.getPeriod().getEnd() == null) {
+				return false;
+			}
+			if (period.getPeriod().getStart() == null) {
+				if (before != null) {
+					return false;
+				}
+			} else if (before != null && !before.getPeriod().getEnd().before(period.getPeriod().getStart())) {
+				return false;
+			}
+			before = period;
+		}
+		return true;
+	}
+
+	public boolean remove(Integer i) {
+		try {
+			periods.remove(CollectionUtils.get(periods, i));
+			return true;
+		} catch (ArrayIndexOutOfBoundsException ex) {
+			return false;
+		}
 	}
 }

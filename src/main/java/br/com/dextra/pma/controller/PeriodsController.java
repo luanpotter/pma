@@ -27,14 +27,22 @@ public class PeriodsController extends BaseController {
 
 	@Action("add")
 	public CallResult add(NullableDate start, NullableDate end, Integer hoursPerDay) {
-		context.t().getPeriods().add(new TimedPeriod(new Period(start, end), hoursPerDay));
+		boolean result = context.t().add(new TimedPeriod(new Period(start, end), hoursPerDay));
+		if (!result) {
+			console.result("Errored: period intercepts with others.");
+			return CallResult.ERROR;
+		}
 		context.t().save();
 		return CallResult.SUCCESS;
 	}
 
 	@Action("remove")
 	public CallResult remove(Integer index) {
-		context.t().getPeriods().remove((int) index);
+		boolean removed = context.t().remove(index);
+		if (!removed) {
+			console.result("Errored: index out of bounds.");
+			return CallResult.ERROR;
+		}
 		context.t().save();
 		return CallResult.SUCCESS;
 	}

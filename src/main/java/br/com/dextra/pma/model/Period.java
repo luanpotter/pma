@@ -3,6 +3,7 @@ package br.com.dextra.pma.model;
 import java.io.Serializable;
 import java.util.Calendar;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.service.FeriadosService;
@@ -10,6 +11,7 @@ import br.com.dextra.pma.service.FeriadosService;
 import com.google.common.base.Predicate;
 
 @Getter
+@EqualsAndHashCode
 public class Period implements Serializable {
 
 	private static final long serialVersionUID = -39166215184122953L;
