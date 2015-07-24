@@ -1,16 +1,19 @@
 package br.com.dextra.pma.main;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import lombok.Getter;
-import lombok.Setter;
 import br.com.dextra.pma.date.Date;
+import br.com.dextra.pma.model.Period;
 import br.com.dextra.pma.model.TimedPeriod;
 import br.com.dextra.pma.utils.CollectionUtils;
 import br.com.dextra.pma.utils.SimpleObjectAccess;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class TimedPeriods implements Serializable {
@@ -92,6 +95,11 @@ public class TimedPeriods implements Serializable {
 			before = period;
 		}
 		return true;
+	}
+
+	public List<TimedPeriod> split(Period period) {
+		// TODO this method
+		return Collections.emptyList();
 	}
 
 	public boolean remove(Integer i) {
