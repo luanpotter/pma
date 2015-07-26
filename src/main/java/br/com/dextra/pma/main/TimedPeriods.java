@@ -1,19 +1,20 @@
 package br.com.dextra.pma.main;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import lombok.Getter;
+import lombok.Setter;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.model.Period;
 import br.com.dextra.pma.model.TimedPeriod;
 import br.com.dextra.pma.utils.CollectionUtils;
 import br.com.dextra.pma.utils.SimpleObjectAccess;
-import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class TimedPeriods implements Serializable {
@@ -24,8 +25,8 @@ public class TimedPeriods implements Serializable {
 
 		@Override
 		public int compare(TimedPeriod thiz, TimedPeriod that) {
-			Date thizStart = thiz.getPeriod().getStart();
-			Date thatStart = that.getPeriod().getStart();
+			Date thizStart = thiz.getStart();
+			Date thatStart = that.getStart();
 
 			if (thizStart == null) {
 				if (thatStart == null) {
@@ -82,14 +83,14 @@ public class TimedPeriods implements Serializable {
 	private boolean validatePeriods() {
 		TimedPeriod before = null;
 		for (TimedPeriod period : periods) {
-			if (before != null && before.getPeriod().getEnd() == null) {
+			if (before != null && before.getEnd() == null) {
 				return false;
 			}
-			if (period.getPeriod().getStart() == null) {
+			if (period.getStart() == null) {
 				if (before != null) {
 					return false;
 				}
-			} else if (before != null && !before.getPeriod().getEnd().before(period.getPeriod().getStart())) {
+			} else if (before != null && !before.getEnd().before(period.getStart())) {
 				return false;
 			}
 			before = period;
@@ -97,8 +98,36 @@ public class TimedPeriods implements Serializable {
 		return true;
 	}
 
+	private List<TimedPeriod> toExtensiveList() {
+		List<TimedPeriod> results = new ArrayList<>();
+		TimedPeriod before = CollectionUtils.first(periods);
+		if (before.getStart() != null) {
+			results.add(timedPeriod(null, before.theDayBefore()));
+		}
+		for (TimedPeriod current : CollectionUtils.tail(periods)) {
+			results.add(before);
+			if (before.theDayAfter().before(current.theDayBefore())) {
+				results.add(timedPeriod(before.theDayAfter(), current.theDayBefore()));
+			}
+			before = current;
+		}
+		results.add(before);
+		if (before.getEnd() != null) {
+			Date theyDayAfter = before.getEnd().addDays(+1);
+			results.add(timedPeriod(theyDayAfter, null));
+		}
+		return results;
+	}
+
+	private TimedPeriod timedPeriod(Date start, Date end) {
+		return new TimedPeriod(start, end, defaultHoursPerDay);
+	}
+
 	public List<TimedPeriod> split(Period period) {
-		// TODO this method
+		Date current = period.getStart();
+		for (TimedPeriod p : toExtensiveList()) {
+			// TODO this loop
+		}
 		return Collections.emptyList();
 	}
 

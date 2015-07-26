@@ -27,6 +27,14 @@ public class Period implements Serializable {
 		}
 	}
 
+	public Date theDayBefore() {
+		return start.addDays(-1);
+	}
+
+	public Date theDayAfter() {
+		return end.addDays(+1);
+	}
+
 	private static final int MOUNTH_START = -1, MOUNTH_COUNT = 4;
 
 	public static Period findQuadrismestre(Date date) {

@@ -2,13 +2,12 @@ package br.com.dextra.pma.controller;
 
 import java.util.List;
 
+import br.com.dextra.pma.model.TimedPeriod;
 import xyz.luan.console.fn.FnController;
 import xyz.luan.console.parser.actions.Action;
 import xyz.luan.console.parser.call.CallResult;
 import xyz.luan.console.parser.callable.ActionCall;
 import xyz.luan.console.parser.callable.Callable;
-import br.com.dextra.pma.model.Period;
-import br.com.dextra.pma.model.TimedPeriod;
 
 @FnController
 public class PeriodsController extends BaseController {
@@ -27,7 +26,7 @@ public class PeriodsController extends BaseController {
 
 	@Action("add")
 	public CallResult add(NullableDate start, NullableDate end, Integer hoursPerDay) {
-		boolean result = context.t().add(new TimedPeriod(new Period(start, end), hoursPerDay));
+		boolean result = context.t().add(new TimedPeriod(start, end, hoursPerDay));
 		if (!result) {
 			console.result("Errored: period intercepts with others.");
 			return CallResult.ERROR;

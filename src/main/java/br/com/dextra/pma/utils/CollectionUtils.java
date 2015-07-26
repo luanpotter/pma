@@ -18,6 +18,22 @@ public class CollectionUtils {
 		return iterate(iterable, n).next();
 	}
 
+	public <T> T first(Iterable<T> iterable) {
+		return get(iterable, 0);
+	}
+
+	public <T> Iterable<T> tail(Iterable<T> iterable) {
+		return new Iterable<T>() {
+
+			private Iterator<T> it = iterate(iterable, 1);
+
+			@Override
+			public Iterator<T> iterator() {
+				return it;
+			}
+		};
+	}
+
 	private <T> Iterator<T> iterate(Iterable<T> iterable, int n) {
 		Iterator<T> it = iterable.iterator();
 		if (n < 0) {

@@ -1,23 +1,22 @@
 package br.com.dextra.pma.model;
 
-import java.io.Serializable;
-
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
+import br.com.dextra.pma.date.Date;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
-@EqualsAndHashCode(exclude = { "hoursPerDay" })
-public class TimedPeriod implements Serializable {
+public class TimedPeriod extends Period {
 
 	private static final long serialVersionUID = -7799340576068423872L;
 
-	private Period period;
 	private int hoursPerDay;
+
+	public TimedPeriod(Date start, Date end, int hoursPerDay) {
+		super(start, end);
+		this.hoursPerDay = hoursPerDay;
+	}
 
 	@Override
 	public String toString() {
-		return period + ": " + hoursPerDay + " h/day";
+		return super.toString() + ": " + hoursPerDay + " h/day";
 	}
 }
