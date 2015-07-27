@@ -1,5 +1,6 @@
 package br.com.dextra.pma.utils;
 
+import java.util.Collections;
 import java.util.Iterator;
 
 import lombok.experimental.UtilityClass;
@@ -23,9 +24,11 @@ public class CollectionUtils {
 	}
 
 	public <T> Iterable<T> tail(Iterable<T> iterable) {
+		boolean notEmpty = iterable.iterator().hasNext();
+		final Iterator<T> iterator = notEmpty ? iterateUnsafe(iterable, 1) : Collections.emptyIterator();
 		return new Iterable<T>() {
 
-			private Iterator<T> it = iterate(iterable, 1);
+			private Iterator<T> it = iterator;
 
 			@Override
 			public Iterator<T> iterator() {
@@ -35,6 +38,14 @@ public class CollectionUtils {
 	}
 
 	private <T> Iterator<T> iterate(Iterable<T> iterable, int n) {
+		Iterator<T> it = iterateUnsafe(iterable, n);
+		if (!it.hasNext()) {
+			throw new ArrayIndexOutOfBoundsException(n);
+		}
+		return it;
+	}
+
+	private <T> Iterator<T> iterateUnsafe(Iterable<T> iterable, int n) {
 		Iterator<T> it = iterable.iterator();
 		if (n < 0) {
 			throw new ArrayIndexOutOfBoundsException(n);
@@ -44,9 +55,6 @@ public class CollectionUtils {
 				throw new ArrayIndexOutOfBoundsException(n);
 			}
 			it.next();
-		}
-		if (!it.hasNext()) {
-			throw new ArrayIndexOutOfBoundsException(n);
 		}
 		return it;
 	}

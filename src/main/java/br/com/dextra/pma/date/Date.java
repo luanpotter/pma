@@ -89,4 +89,12 @@ public class Date implements Serializable, Comparable<Date> {
 	public int compareTo(Date that) {
 		return new Long(this.toMillis()).compareTo(that.toMillis());
 	}
+
+	public static Date max(Date d1, Date d2) {
+		return d1.after(d2) ? d1 : d2;
+	}
+
+	public static Date min(Date d1, Date d2) {
+		return d1.before(d2) ? d1 : d2;
+	}
 }

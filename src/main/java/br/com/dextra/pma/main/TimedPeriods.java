@@ -2,19 +2,19 @@ package br.com.dextra.pma.main;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import lombok.Getter;
-import lombok.Setter;
 import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.model.Period;
 import br.com.dextra.pma.model.TimedPeriod;
 import br.com.dextra.pma.utils.CollectionUtils;
 import br.com.dextra.pma.utils.SimpleObjectAccess;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class TimedPeriods implements Serializable {
@@ -99,6 +99,9 @@ public class TimedPeriods implements Serializable {
 	}
 
 	private List<TimedPeriod> toExtensiveList() {
+		if (periods.isEmpty()) {
+			return Arrays.asList(new TimedPeriod(null, null, defaultHoursPerDay));
+		}
 		List<TimedPeriod> results = new ArrayList<>();
 		TimedPeriod before = CollectionUtils.first(periods);
 		if (before.getStart() != null) {
@@ -124,11 +127,23 @@ public class TimedPeriods implements Serializable {
 	}
 
 	public List<TimedPeriod> split(Period period) {
-		Date current = period.getStart();
+		List<TimedPeriod> merged = new ArrayList<>();
 		for (TimedPeriod p : toExtensiveList()) {
-			// TODO this loop
+			if (p.getEnd() != null && p.getEnd().before(period.getStart())) {
+				continue;
+			}
+			if (p.getStart() != null && p.getStart().after(period.getEnd())) {
+				continue;
+			}
+			Date start = Date.max(period.getStart(), p.getStart() != null ? p.getStart() : period.getStart());
+			Date end = Date.min(period.getEnd(), p.getEnd() != null ? p.getEnd() : period.getEnd());
+			merged.add(new TimedPeriod(start, end, p.getHoursPerDay()));
 		}
-		return Collections.emptyList();
+		return merged;
+	}
+
+	public int expectedMinutes(Period p) {
+		return split(p).stream().mapToInt(d -> d.countWorkingMinutes()).sum();
 	}
 
 	public boolean remove(Integer i) {
