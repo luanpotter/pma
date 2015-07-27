@@ -27,7 +27,8 @@ There are tons of other features, they can be listed with `pma help` command.
 
 ### Logging
 
-There are a few commands to log the times of the activities.
+There are a few commands to log the times of the activities.  
+
 `here` - Start counting on default task  
 `here :taskNameOrAliasOrId...` - Start counting on taskNameOrId task  
 `start :taskNameOrAliasOrId on :description...` - Start counting on taskNameOrId task with description description  
@@ -103,8 +104,8 @@ One can also see what's on the server with:
 
 Or count the minutes he worked:
 
-`minutes :start :end` - Sums all time worked in between the dates provided (inclusive)(in minutes)  
-`minutes :month` - Sums all time worked in given month (as yyyy-mm) (in minutes)  
+`minutes :start :end` - Sums all time worked in between the dates provided (inclusive)  
+`minutes :month` - Sums all time worked in given month (as yyyy-mm)  
 
 And most importantly, see current satus (time balance):  
 
