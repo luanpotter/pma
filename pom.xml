@@ -10,7 +10,7 @@
 
 	<groupId>br.com.dextra.pma</groupId>
 	<artifactId>pma-helper</artifactId>
-	<version>0.4</version>
+	<version>1.0</version>
 	<packaging>jar</packaging>
 
 	<name>PMA Helper</name>
