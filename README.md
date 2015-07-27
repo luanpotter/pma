@@ -53,7 +53,7 @@ You can add aliases to tasks you use daily to save work.
 
 Firstly, one needs to run update to see all projects or tasks:  
 
-< update - Update the list of projects and tasks  
+`update` - Update the list of projects and tasks  
 
 Then, one can:
 
