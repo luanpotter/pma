@@ -24,7 +24,9 @@ public class LoggingController extends BaseController {
     private static final String ERROR_MESSAGE = "No name or id is specified, and default task is invalid: '%s'. To change the default task, run options set default-task taskNameOrId";
 
     @Action("here")
-    public CallResult here(@Optional String taskNameOrId, @Optional String description) {
+    public CallResult here(@Optional String taskNameOrId, @Optional String description, @Optional String when) {
+	System.out.println(taskNameOrId + "-" + description + "-" + when);
+        Moment time = when == null ? new Moment() : new Moment(when);
         if (taskNameOrId == null) {
             taskNameOrId = context.o().get(Option.DEFAULT_TASK);
         }
@@ -39,14 +41,15 @@ public class LoggingController extends BaseController {
             return CallResult.ERROR;
         }
 
-        log(new Moment(), task.getId(), description);
+        log(time, task.getId(), description);
         console.result("Logged successfully.");
         return CallResult.SUCCESS;
     }
 
     @Action("exit")
-    public CallResult exit() {
-        log(new Moment(), -1, null);
+    public CallResult exit(@Optional String when) {
+        Moment time = when == null ? new Moment() : new Moment(when);
+        log(time, -1, null);
         console.result("Logged successfully.");
         return CallResult.SUCCESS;
     }
@@ -72,7 +75,9 @@ public class LoggingController extends BaseController {
     public static void defaultCallables(String name, List<Callable> callables) {
         callables.add(new ActionCall(name + ":here", ":here", "Start counting on default task"));
         callables.add(new ActionCall(new ActionRef(name + ":here"), new Pattern(":here taskNameOrId", true), "Start counting on taskNameOrId task"));
+        callables.add(new ActionCall(new ActionRef(name + ":here"), new Pattern(":start taskNameOrId :when when", true), "Start counting on taskNameOrId task with timemachine"));
         callables.add(new ActionCall(new ActionRef(name + ":here"), new Pattern(":start taskNameOrId :on description", true), "Start counting on taskNameOrId task with description description"));
         callables.add(new ActionCall(name + ":exit", ":exit", "Exit to break"));
+        callables.add(new ActionCall(new ActionRef(name + ":exit"), new Pattern(":exit :when when", true), "Exit to break with timemachine"));
     }
 }
