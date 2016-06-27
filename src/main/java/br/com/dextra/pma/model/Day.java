@@ -9,6 +9,7 @@ import java.util.Map;
 import lombok.Getter;
 
 import org.jdom2.Element;
+import com.google.common.collect.Iterables;
 
 import xyz.luan.console.parser.Console;
 import br.com.dextra.pma.date.Date;
@@ -113,6 +114,14 @@ public class Day implements Serializable {
 
     public void setAppointments(Map<Long, Appointment> appointments) {
         this.appointments = appointments;
+    }
+
+    public Record lastRecord() {
+	if (appointments.size() == 0) {
+		return null;
+	}
+        Long id = Iterables.getLast(appointments.keySet());
+        return new Record(date, new Time(), id, appointments.get(id).getComment());
     }
 
     public List<Record> toRecordList() {

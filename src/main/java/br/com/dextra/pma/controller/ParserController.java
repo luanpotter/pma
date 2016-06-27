@@ -13,6 +13,7 @@ import br.com.dextra.pma.date.Date;
 import br.com.dextra.pma.exception.NotLoggedIn;
 import br.com.dextra.pma.main.Options.Option;
 import br.com.dextra.pma.model.Day;
+import br.com.dextra.pma.model.Record;
 import br.com.dextra.pma.parser.FileParser;
 import br.com.dextra.pma.parser.InvalidFormatException;
 import br.com.dextra.pma.service.PmaService;
@@ -79,10 +80,27 @@ public class ParserController extends BaseController {
         return CallResult.SUCCESS;
     }
 
+    @Action("current-task")
+    public CallResult currentTask() throws InvalidFormatException {
+        Day day = FileParser.parseDay(context.o().get(Option.LOG_FILE), new Date(Calendar.getInstance()));
+        if (day == null) {
+            console.error("Today was not logged in the file yet.");
+            return CallResult.ERROR;
+        }
+	Record lastRecord = day.lastRecord();
+	if (lastRecord == null) {
+            console.error("Today was not logged in the file yet.");
+            return CallResult.ERROR;
+	}
+	console.result(lastRecord.getTask());
+        return CallResult.SUCCESS;
+    }
+
     public static void defaultCallables(String name, List<Callable> callables) {
         callables.add(new ActionCall(name + ":save", ":save", "Save current day on web service"));
         callables.add(new ActionCall(name + ":log", ":log", "Show current log"));
         callables.add(new ActionCall(name + ":log", ":log :backup", MapBuilder.<String, String> from("backup", "true"), "Show current log backup"));
         callables.add(new ActionCall(name + ":today", ":today", "Show what has been done today already"));
+        callables.add(new ActionCall(name + ":current-task", ":current-task", "Show the last task id"));
     }
 }

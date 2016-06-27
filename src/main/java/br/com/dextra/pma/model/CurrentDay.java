@@ -35,6 +35,11 @@ public class CurrentDay extends Day {
     }
 
     @Override
+    public Record lastRecord() {
+        return lastRecord;
+    }
+
+    @Override
     protected int getTotalTimeInTasks() {
         return super.getTotalTimeInTasks() + diff();
     }
