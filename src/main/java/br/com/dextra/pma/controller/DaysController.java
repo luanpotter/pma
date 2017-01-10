@@ -32,6 +32,22 @@ public class DaysController extends BaseController {
 		return CallResult.SUCCESS;
 	}
 
+	@Action("copy")
+	public CallResult copy(Date from, Date to) {
+		Day day = PmaService.fetchDay(context, from);
+		if (day == null) {
+			console.error("Nothing found on the specified day.");
+			return CallResult.ERROR;
+		}
+		console.message("From:");
+		day.print(console);
+		console.message("To:");
+		day.setDate(to);
+		day.print(console);
+		day.save(console);
+		return CallResult.SUCCESS;
+	}
+
 	@Action("showRecord")
 	public CallResult showRecord(Date date) {
 		Day day = PmaService.fetchDay(context, date);
@@ -78,6 +94,7 @@ public class DaysController extends BaseController {
 
 	public static void defaultCallables(String name, List<Callable> callables) {
 		callables.add(new ActionCall(name + ":show", ":show date", "Show the given date (how it is in PMA)"));
+		callables.add(new ActionCall(name + ":copy", ":copy from :to to", "Copy all records from a given date to another."));
 		callables.add(new ActionCall(name + ":showRecord", ":show :record date", "Show the given date (how it is in PMA) as record lines"));
 		callables.add(new ActionCall(name + ":shownterval", ":show :record start end", "Show the records in the interval"));
 		callables.add(new ActionCall(name + ":minutes", ":minutes start end",

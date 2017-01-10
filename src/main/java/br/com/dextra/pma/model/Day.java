@@ -8,6 +8,7 @@ import java.util.Map;
 
 import lombok.Getter;
 
+import lombok.Setter;
 import org.jdom2.Element;
 import com.google.common.collect.Iterables;
 
@@ -23,7 +24,7 @@ public class Day implements Serializable {
     private static final int MAX_DELTA = 5;
     private static final String MAX_DELTA_EXCEEDED_ERROR = "Something went wrong! The sum of the activities specified does not comply with the start/ending times. Did you edit the log.dat file by hand?";
 
-    @Getter
+    @Getter @Setter
     protected Date date;
 
     @Getter
