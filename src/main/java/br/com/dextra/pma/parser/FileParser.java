@@ -1,6 +1,8 @@
 package br.com.dextra.pma.parser;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,6 +12,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
@@ -84,9 +87,9 @@ public class FileParser {
         return results;
     }
 
-    private Scanner getScanner(File file) {
+    private Iterator<String> getScanner(File file) {
         try {
-            return new Scanner(file);
+            return new BufferedReader(new FileReader(file)).lines().iterator();
         } catch (IOException ex) {
             throw new RuntimeException("Unable to read from log file.", ex);
         }
