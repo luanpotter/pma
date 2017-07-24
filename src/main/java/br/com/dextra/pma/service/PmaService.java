@@ -40,7 +40,7 @@ import br.com.dextra.pma.model.Task;
 
 public final class PmaService {
 
-    private static final String DOMAIN = "https://dextranet.dextra.com.br/pma/services/";
+    private static final String DOMAIN = "https://pma.dextra.com.br/services/";
 
     private static final String TOKEN_FILE_NAME = "token.dat";
     private static final String INVALID_TOKEN_MESSAGE = "token inválido";
