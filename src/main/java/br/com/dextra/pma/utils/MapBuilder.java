@@ -8,7 +8,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class MapBuilder {
 
-    public class Builder<K, V> {
+    public static class Builder<K, V> {
         private Map<K, V> map;
 
         public Builder() {
