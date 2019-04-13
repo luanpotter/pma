@@ -1,3 +1,0 @@
-[ -d dist ] || ./compile
-cd dist
-java -jar pma-helper.jar "$@"
