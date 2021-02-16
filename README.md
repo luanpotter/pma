@@ -1,6 +1,7 @@
 # pma
 
 [![Build Status](https://github.com/luanpotter/pma/workflows/Test/badge.svg?branch=master&event=push)](https://github.com/luanpotter/pma/actions)
+[ ![Bintray](https://api.bintray.com/packages/luanpotter/pma/pma/images/download.svg?version=1.0.1) ](https://bintray.com/luanpotter/pma/pma/1.0.1/link)
 
 This is a simple and powerful PMA helper program. It can help you use the Dextra's PMA system with few, consistent commands and elegance.  
 It uses the powerful `console-parser` lib for the console commands binding, `console-fn` flavored.  
